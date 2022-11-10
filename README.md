@@ -1,5 +1,5 @@
 <p align="center">
-    <img width="150" src="docs/resources/img/logo.png" />
+    <img width="150" src="src/assets/img/onlydust-logo.png" />
 </p>
 <div align="center">
   <h1 align="center">Marketplace frontend</h1>
