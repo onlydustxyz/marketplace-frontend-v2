@@ -2,18 +2,18 @@ import { describe, expect, it } from "vitest";
 import { screen, render } from "@testing-library/react";
 import matchers from "@testing-library/jest-dom/matchers";
 
-import Logo from "./Logo";
+import Logo from ".";
 
 expect.extend(matchers);
 
-describe('"All projects" page', () => {
+describe('"Logo" component', () => {
   render(<Logo />);
 
   const image = screen.getByRole("img", {
     name: /onlydust logo/i,
   });
 
-  it("should not display a project with no contributions", () => {
+  it("should display the logo", () => {
     expect(image).toBeInTheDocument();
   });
 });
