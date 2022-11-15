@@ -1,45 +1,45 @@
+import axios from "axios";
 import { createContext, PropsWithChildren, useContext, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocalStorage } from "react-use";
+import { RoutePaths } from "src/App";
+import config from "src/config";
 
-export const LOCAL_STORAGE_TOKEN_KEY = "token";
-const LOGIN_LOADING_TIME_MS = 1000;
-
-function wait(milliseconds: number) {
-  return new Promise(resolve => setTimeout(resolve, milliseconds));
-}
+export const LOCAL_STORAGE_HASURA_JWT_KEY = "hasura_jwt";
 
 const AuthContext = createContext<
   | {
-      token: Record<string, string> | null | undefined;
-      login: (data: Record<string, string>) => Promise<void>;
+      hasuraJwt: any;
+      login: (data: string) => Promise<void>;
       logout: () => void;
     }
   | undefined
 >(undefined);
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
-  const [token, setToken] = useLocalStorage<Record<string, string> | null>(LOCAL_STORAGE_TOKEN_KEY, null);
+  const [hasuraJwt, setHasuraJwt] = useLocalStorage<Record<string, string> | null>(LOCAL_STORAGE_HASURA_JWT_KEY, null);
   const navigate = useNavigate();
 
-  const login = async (data: Record<string, string>) => {
-    await wait(LOGIN_LOADING_TIME_MS);
-    setToken(data);
-    navigate("/");
+  const login = async (refreshToken: string) => {
+    const accessToken = await axios.post(`${config.HASURA_AUTH_BASE_URL}/token`, {
+      refreshToken,
+    });
+    setHasuraJwt(accessToken.data);
+    navigate(RoutePaths.Projects);
   };
 
   const logout = () => {
-    setToken(null);
-    navigate("/login", { replace: true });
+    setHasuraJwt(null);
+    navigate(RoutePaths.Login, { replace: true });
   };
 
   const value = useMemo(
     () => ({
-      token,
+      hasuraJwt,
       login,
       logout,
     }),
-    [token]
+    [hasuraJwt]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
