@@ -15,14 +15,14 @@ export default function Layout() {
           <div className="flex-1">
             <Logo />
           </div>
-          <div className="flex flex-1 justify-center align-center text-4xl drop-shadow-lg saturate-200 outline-4 font-extrabold">
+          <div className="flex flex-1 justify-center align-center text-5xl drop-shadow-lg saturate-200 outline-4 font-alfreda font-extrabold">
             OnlyDust
           </div>
           <div className="flex flex-1 justify-end">
             {!hasuraJwt && (
               <a href={GITHUB_SIGN_IN_URL} className="rounded-xl p-4 bg-white">
                 <div className="flex flex-row items-center gap-4">
-                  <div className="text-2xl text-black font-bold">Sign in with Github</div>
+                  <div className="text-2xl md:flex hidden text-black font-alfreda font-bold">Sign in with Github</div>
                   <GithubLogo />
                 </div>
               </a>
