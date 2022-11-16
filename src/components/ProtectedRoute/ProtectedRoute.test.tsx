@@ -12,6 +12,10 @@ const CHILD_ELEMENT_TEXT = "child-test";
 const HASURA_JWT_TEST_VALUE = "test";
 
 describe('"ProtectedRoute" component', () => {
+  afterEach(() => {
+    window.localStorage.clear();
+  });
+
   it("should display its child element when there is a token in the local storage", () => {
     window.localStorage.setItem(LOCAL_STORAGE_HASURA_JWT_KEY, JSON.stringify(HASURA_JWT_TEST_VALUE));
     render(
