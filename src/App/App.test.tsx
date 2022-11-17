@@ -6,12 +6,21 @@ import App, { RoutePaths } from ".";
 import { AUTH_CODE_QUERY_KEY } from "src/pages/Login";
 import { LOCAL_STORAGE_HASURA_JWT_KEY } from "src/hooks/useAuth";
 import { checkLocalStorageValue, MemoryRouterProviderFactory } from "src/test/utils";
+import { GET_PROJECTS_QUERY } from "src/pages/Projects";
+import { GET_PROFILE_QUERY } from "src/pages/Profile";
 
 const AUTH_CODE_TEST_VALUE = "code";
 const LOGGING_IN_TEXT_QUERY = /logging in/i;
-const LOGGED_IN_TEXT_QUERY = /logged in/i;
 const AUTH_TOKEN_MISSING_TEXT_QUERY = /github authentication token missing !/i;
-const HASURA_JWT_TEST_VALUE = "test";
+const TEST_USER_ID = "test-user-id";
+const TEST_USER_EMAIL = "test@user.email";
+const HASURA_JWT_TEST_VALUE = {
+  user: {
+    id: TEST_USER_ID,
+  },
+};
+const PROFILE_TEXT_QUERY = `Your user id is ${TEST_USER_ID} and your e-mail address is ${TEST_USER_EMAIL}`;
+const TEST_PROJECT_ID = "test-project-id";
 
 expect.extend(matchers);
 
@@ -21,17 +30,46 @@ vi.mock("axios", () => ({
   },
 }));
 
+const graphQlMocks = [
+  {
+    request: {
+      query: GET_PROJECTS_QUERY,
+    },
+    result: {
+      data: {
+        projects: [{ id: TEST_PROJECT_ID }],
+      },
+    },
+  },
+  {
+    request: {
+      query: GET_PROFILE_QUERY,
+      variables: {
+        id: TEST_USER_ID,
+      },
+    },
+    result: {
+      data: {
+        user: { id: TEST_USER_ID, email: TEST_USER_EMAIL },
+      },
+    },
+  },
+];
+
 describe('"Login" page', () => {
   afterEach(() => {
     window.localStorage.clear();
   });
 
-  it("should log in if a refresh token is passed as a query parameter in the URL", async () => {
+  it("should log in and go to projects page if a refresh token is passed as a query parameter in the URL", async () => {
     render(<App />, {
-      wrapper: MemoryRouterProviderFactory(`${RoutePaths.Login}?${AUTH_CODE_QUERY_KEY}=${AUTH_CODE_TEST_VALUE}`),
+      wrapper: MemoryRouterProviderFactory({
+        route: `${RoutePaths.Login}?${AUTH_CODE_QUERY_KEY}=${AUTH_CODE_TEST_VALUE}`,
+        mocks: graphQlMocks,
+      }),
     });
     await screen.findByText(LOGGING_IN_TEXT_QUERY);
-    await screen.findByText(LOGGED_IN_TEXT_QUERY);
+    await screen.findByText(TEST_PROJECT_ID);
     expect(screen.queryByText(LOGGING_IN_TEXT_QUERY)).not.toBeInTheDocument();
     checkLocalStorageValue({
       key: LOCAL_STORAGE_HASURA_JWT_KEY,
@@ -39,8 +77,19 @@ describe('"Login" page', () => {
     });
   });
 
+  it("should be able to access the profile page and display profile info when having a token in local storage", async () => {
+    window.localStorage.setItem(LOCAL_STORAGE_HASURA_JWT_KEY, JSON.stringify(HASURA_JWT_TEST_VALUE));
+    render(<App />, {
+      wrapper: MemoryRouterProviderFactory({
+        route: `${RoutePaths.Profile}`,
+        mocks: graphQlMocks,
+      }),
+    });
+    await screen.findByText(PROFILE_TEXT_QUERY);
+  });
+
   it("should display an error message if no refresh token is passed as a query parameter in the URL", async () => {
-    render(<App />, { wrapper: MemoryRouterProviderFactory(RoutePaths.Login) });
+    render(<App />, { wrapper: MemoryRouterProviderFactory({ route: RoutePaths.Login, mocks: graphQlMocks }) });
     await screen.findByText(AUTH_TOKEN_MISSING_TEXT_QUERY);
     checkLocalStorageValue({
       key: LOCAL_STORAGE_HASURA_JWT_KEY,
@@ -48,8 +97,8 @@ describe('"Login" page', () => {
     });
   });
 
-  it("should redirect to the login page if the projects route is accessed without a token in the local storage", async () => {
-    render(<App />, { wrapper: MemoryRouterProviderFactory(RoutePaths.Projects) });
-    await screen.findByText(AUTH_TOKEN_MISSING_TEXT_QUERY);
+  it("should redirect to the projects page if the profile route is accessed without a token in the local storage", async () => {
+    render(<App />, { wrapper: MemoryRouterProviderFactory({ route: RoutePaths.Profile, mocks: graphQlMocks }) });
+    await screen.findByText(TEST_PROJECT_ID);
   });
 });

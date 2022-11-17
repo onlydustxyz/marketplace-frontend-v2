@@ -9,10 +9,12 @@ import { AuthProvider } from "src/hooks/useAuth";
 import ErrorFallback from "src/components/ErrorFallback";
 import Login from "src/pages/Login";
 import Projects from "src/pages/Projects";
+import Profile from "src/pages/Profile";
 
 export enum RoutePaths {
   Projects = "/",
   Login = "/login",
+  Profile = "/profile",
   CatchAll = "*",
 }
 
@@ -23,9 +25,13 @@ function App() {
       children: [
         {
           path: RoutePaths.Projects,
+          element: <Projects />,
+        },
+        {
+          path: RoutePaths.Profile,
           element: (
             <ProtectedRoute>
-              <Projects />
+              <Profile />
             </ProtectedRoute>
           ),
         },
@@ -35,11 +41,7 @@ function App() {
         },
         {
           path: RoutePaths.CatchAll,
-          element: (
-            <ProtectedRoute>
-              <Projects />
-            </ProtectedRoute>
-          ),
+          element: <Projects />,
         },
       ],
     },
