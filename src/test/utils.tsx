@@ -1,10 +1,20 @@
 import { MemoryRouter } from "react-router-dom";
 import { PropsWithChildren } from "react";
+import { MockedProvider } from "@apollo/client/testing";
+
+interface MemoryRouterProviderFactoryProps {
+  route: string;
+  mocks: any;
+}
 
 export const MemoryRouterProviderFactory =
-  (route: string) =>
+  ({ route, mocks }: MemoryRouterProviderFactoryProps) =>
   ({ children }: PropsWithChildren) =>
-    <MemoryRouter initialEntries={[route]}>{children}</MemoryRouter>;
+    (
+      <MockedProvider mocks={mocks} addTypename={false}>
+        <MemoryRouter initialEntries={[route]}>{children}</MemoryRouter>
+      </MockedProvider>
+    );
 
 interface CheckLocalStorageValueProps<T> {
   key: string;
