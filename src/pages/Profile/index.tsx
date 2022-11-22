@@ -5,8 +5,7 @@ import { USER_ROLES } from "src/types";
 
 export default function Profile() {
   const { hasuraJwt } = useAuth();
-  const { loading, error, data } = useHasuraQuery(GET_PROFILE_QUERY, {
-    role: USER_ROLES.USER,
+  const { loading, error, data } = useHasuraQuery(GET_PROFILE_QUERY, USER_ROLES.USER, {
     skip: !hasuraJwt,
     variables: { id: hasuraJwt?.user.id },
   });
