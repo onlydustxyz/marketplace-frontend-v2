@@ -4,27 +4,27 @@ import { useNavigate } from "react-router-dom";
 import { useLocalStorage } from "react-use";
 import { RoutePaths } from "src/App";
 import config from "src/config";
+import { HasuraToken } from "src/types";
 
 export const LOCAL_STORAGE_HASURA_JWT_KEY = "hasura_jwt";
 
-const AuthContext = createContext<
-  | {
-      hasuraJwt: any;
-      login: (data: string) => Promise<void>;
-      logout: () => void;
-    }
-  | undefined
->(undefined);
+type AuthContextType = {
+  hasuraJwt: HasuraToken | null;
+  login: (data: string) => Promise<void>;
+  logout: () => void;
+};
+
+const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
-  const [hasuraJwt, setHasuraJwt] = useLocalStorage<Record<string, string> | null>(LOCAL_STORAGE_HASURA_JWT_KEY, null);
+  const [hasuraJwt, setHasuraJwt] = useLocalStorage<HasuraToken | null>(LOCAL_STORAGE_HASURA_JWT_KEY, null);
   const navigate = useNavigate();
 
   const login = async (refreshToken: string) => {
     const accessToken = await axios.post(`${config.HASURA_AUTH_BASE_URL}/token`, {
       refreshToken,
     });
-    setHasuraJwt(accessToken.data);
+    setHasuraJwt(accessToken.data ?? null);
     navigate(RoutePaths.Projects);
   };
 
@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 
   const value = useMemo(
     () => ({
-      hasuraJwt,
+      hasuraJwt: hasuraJwt ?? null,
       login,
       logout,
     }),
@@ -45,9 +45,9 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-export const useAuth = () => {
+export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
