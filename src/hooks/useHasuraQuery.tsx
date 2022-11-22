@@ -2,10 +2,13 @@ import { QueryHookOptions, TypedDocumentNode, useQuery } from "@apollo/client";
 import merge from "lodash/merge";
 import { USER_ROLES } from "src/types";
 
-export const useHasuraQuery = (
-  query: TypedDocumentNode,
-  role: USER_ROLES = USER_ROLES.PUBLIC,
-  options: QueryHookOptions = {}
-) => {
-  return useQuery(query, merge(options, { context: { headers: { "X-Hasura-Role": role } } }));
+type HasuraQueryOptions = QueryHookOptions & {
+  role?: USER_ROLES;
+};
+
+export const useHasuraQuery = (query: TypedDocumentNode, options: HasuraQueryOptions = {}) => {
+  return useQuery(
+    query,
+    merge(options, { context: { headers: { "X-Hasura-Role": options?.role ?? USER_ROLES.PUBLIC } } })
+  );
 };

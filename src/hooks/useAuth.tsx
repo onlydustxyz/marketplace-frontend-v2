@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     const accessToken = await axios.post(`${config.HASURA_AUTH_BASE_URL}/token`, {
       refreshToken,
     });
-    setHasuraJwt(accessToken.data || null);
+    setHasuraJwt(accessToken.data ?? null);
     navigate(RoutePaths.Projects);
   };
 
