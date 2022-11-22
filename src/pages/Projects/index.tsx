@@ -1,4 +1,5 @@
-import { useQuery, gql } from "@apollo/client";
+import { gql } from "@apollo/client";
+import { useHasuraQuery } from "src/hooks/useHasuraQuery";
 
 interface Project {
   // to be replaced with codegen types
@@ -6,7 +7,7 @@ interface Project {
 }
 
 export default function Projects() {
-  const { loading, error, data } = useQuery(GET_PROJECTS_QUERY);
+  const { loading, error, data } = useHasuraQuery(GET_PROJECTS_QUERY);
   return (
     <>
       {loading && <div className="flex justify-center mt-10 text-2xl">Loading</div>}
