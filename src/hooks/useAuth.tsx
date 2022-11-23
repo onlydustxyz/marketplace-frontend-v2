@@ -4,42 +4,54 @@ import { useNavigate } from "react-router-dom";
 import { useLocalStorage } from "react-use";
 import { RoutePaths } from "src/App";
 import config from "src/config";
-import { HasuraToken } from "src/types";
+import { HasuraToken, User } from "src/types";
 
-export const LOCAL_STORAGE_HASURA_JWT_KEY = "hasura_jwt";
+export const LOCAL_STORAGE_HASURA_TOKEN_KEY = "hasura_token";
 
 type AuthContextType = {
-  hasuraJwt: HasuraToken | null;
-  login: (data: string) => Promise<void>;
+  isLoggedIn: boolean;
+  getToken: () => HasuraToken | null;
+  consumeRefreshToken: (data: string) => Promise<HasuraToken>;
   logout: () => void;
+  getUser: () => User | null;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
-  const [hasuraJwt, setHasuraJwt] = useLocalStorage<HasuraToken | null>(LOCAL_STORAGE_HASURA_JWT_KEY, null);
+  const [hasuraToken, setHasuraToken] = useLocalStorage<HasuraToken | null>(LOCAL_STORAGE_HASURA_TOKEN_KEY, null);
   const navigate = useNavigate();
 
-  const login = async (refreshToken: string) => {
+  const getToken = (): HasuraToken | null => hasuraToken ?? null;
+  const getUser = () => (hasuraToken ? hasuraToken.user : null);
+
+  const consumeRefreshToken = async (refreshToken: string): Promise<HasuraToken> => {
     const accessToken = await axios.post(`${config.HASURA_AUTH_BASE_URL}/token`, {
       refreshToken,
     });
-    setHasuraJwt(accessToken.data ?? null);
+
+    if (!accessToken.data) throw new Error("Could not refresh token");
+    const hasuraToken = { ...accessToken.data, creationDate: Date.now() };
+    setHasuraToken(hasuraToken);
     navigate(RoutePaths.Projects);
+
+    return hasuraToken;
   };
 
   const logout = () => {
-    setHasuraJwt(null);
+    setHasuraToken(null);
     navigate(RoutePaths.Login, { replace: true });
   };
 
   const value = useMemo(
     () => ({
-      hasuraJwt: hasuraJwt ?? null,
-      login,
+      isLoggedIn: !!hasuraToken,
+      getUser,
+      getToken,
+      consumeRefreshToken,
       logout,
     }),
-    [hasuraJwt]
+    [hasuraToken]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

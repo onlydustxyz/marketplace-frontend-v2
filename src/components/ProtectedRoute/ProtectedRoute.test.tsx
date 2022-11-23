@@ -4,12 +4,12 @@ import matchers from "@testing-library/jest-dom/matchers";
 import { BrowserRouter } from "react-router-dom";
 
 import ProtectedRoute from ".";
-import { AuthProvider, LOCAL_STORAGE_HASURA_JWT_KEY } from "src/hooks/useAuth";
+import { AuthProvider, LOCAL_STORAGE_HASURA_TOKEN_KEY } from "src/hooks/useAuth";
 
 expect.extend(matchers);
 
 const CHILD_ELEMENT_TEXT = "child-test";
-const HASURA_JWT_TEST_VALUE = "test";
+const HASURA_TOKEN_TEST_VALUE = "test";
 
 describe('"ProtectedRoute" component', () => {
   afterEach(() => {
@@ -17,7 +17,7 @@ describe('"ProtectedRoute" component', () => {
   });
 
   it("should display its child element when there is a token in the local storage", () => {
-    window.localStorage.setItem(LOCAL_STORAGE_HASURA_JWT_KEY, JSON.stringify(HASURA_JWT_TEST_VALUE));
+    window.localStorage.setItem(LOCAL_STORAGE_HASURA_TOKEN_KEY, JSON.stringify(HASURA_TOKEN_TEST_VALUE));
     render(
       <AuthProvider>
         <ProtectedRoute>{CHILD_ELEMENT_TEXT}</ProtectedRoute>
