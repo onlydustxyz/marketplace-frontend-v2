@@ -73,7 +73,7 @@ describe('"Login" page', () => {
     expect(screen.queryByText(LOGGING_IN_TEXT_QUERY)).not.toBeInTheDocument();
     checkLocalStorageValue({
       key: LOCAL_STORAGE_HASURA_TOKEN_KEY,
-      expectedValue: JSON.stringify(HASURA_TOKEN_TEST_VALUE),
+      expectedIncludedObject: HASURA_TOKEN_TEST_VALUE,
     });
   });
 
