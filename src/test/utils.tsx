@@ -1,6 +1,7 @@
 import { MemoryRouter } from "react-router-dom";
 import { PropsWithChildren } from "react";
 import { MockedProvider } from "@apollo/client/testing";
+import { AuthProvider } from "src/hooks/useAuth";
 
 interface MemoryRouterProviderFactoryProps {
   route: string;
@@ -12,7 +13,9 @@ export const MemoryRouterProviderFactory =
   ({ children }: PropsWithChildren) =>
     (
       <MockedProvider mocks={mocks} addTypename={false}>
-        <MemoryRouter initialEntries={[route]}>{children}</MemoryRouter>
+        <MemoryRouter initialEntries={[route]}>
+          <AuthProvider>{children}</AuthProvider>
+        </MemoryRouter>
       </MockedProvider>
     );
 
