@@ -4,7 +4,7 @@ import matchers from "@testing-library/jest-dom/matchers";
 
 import App, { RoutePaths } from ".";
 import { AUTH_CODE_QUERY_KEY } from "src/pages/Login";
-import { LOCAL_STORAGE_HASURA_JWT_KEY } from "src/hooks/useAuth";
+import { LOCAL_STORAGE_HASURA_TOKEN_KEY } from "src/hooks/useAuth";
 import { checkLocalStorageValue, MemoryRouterProviderFactory } from "src/test/utils";
 import { GET_PROJECTS_QUERY } from "src/pages/Projects";
 import { GET_PROFILE_QUERY } from "src/pages/Profile";
@@ -14,7 +14,7 @@ const LOGGING_IN_TEXT_QUERY = /logging in/i;
 const AUTH_TOKEN_MISSING_TEXT_QUERY = /github authentication token missing !/i;
 const TEST_USER_ID = "test-user-id";
 const TEST_USER_EMAIL = "test@user.email";
-const HASURA_JWT_TEST_VALUE = {
+const HASURA_TOKEN_TEST_VALUE = {
   user: {
     id: TEST_USER_ID,
   },
@@ -26,7 +26,7 @@ expect.extend(matchers);
 
 vi.mock("axios", () => ({
   default: {
-    post: () => ({ data: HASURA_JWT_TEST_VALUE }),
+    post: () => ({ data: HASURA_TOKEN_TEST_VALUE }),
   },
 }));
 
@@ -72,13 +72,13 @@ describe('"Login" page', () => {
     await screen.findByText(TEST_PROJECT_ID);
     expect(screen.queryByText(LOGGING_IN_TEXT_QUERY)).not.toBeInTheDocument();
     checkLocalStorageValue({
-      key: LOCAL_STORAGE_HASURA_JWT_KEY,
-      expectedValue: JSON.stringify(HASURA_JWT_TEST_VALUE),
+      key: LOCAL_STORAGE_HASURA_TOKEN_KEY,
+      expectedValue: JSON.stringify(HASURA_TOKEN_TEST_VALUE),
     });
   });
 
   it("should be able to access the profile page and display profile info when having a token in local storage", async () => {
-    window.localStorage.setItem(LOCAL_STORAGE_HASURA_JWT_KEY, JSON.stringify(HASURA_JWT_TEST_VALUE));
+    window.localStorage.setItem(LOCAL_STORAGE_HASURA_TOKEN_KEY, JSON.stringify(HASURA_TOKEN_TEST_VALUE));
     render(<App />, {
       wrapper: MemoryRouterProviderFactory({
         route: `${RoutePaths.Profile}`,
@@ -92,7 +92,7 @@ describe('"Login" page', () => {
     render(<App />, { wrapper: MemoryRouterProviderFactory({ route: RoutePaths.Login, mocks: graphQlMocks }) });
     await screen.findByText(AUTH_TOKEN_MISSING_TEXT_QUERY);
     checkLocalStorageValue({
-      key: LOCAL_STORAGE_HASURA_JWT_KEY,
+      key: LOCAL_STORAGE_HASURA_TOKEN_KEY,
       expectNotToExist: true,
     });
   });

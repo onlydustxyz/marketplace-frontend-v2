@@ -5,7 +5,7 @@ import GithubLink from "./GithubLink";
 import Logo from "./OnlyDustLogo";
 
 export default function Layout() {
-  const { hasuraJwt } = useAuth();
+  const { isLoggedIn } = useAuth();
   return (
     <div>
       <div className=" bg-black/50">
@@ -17,9 +17,9 @@ export default function Layout() {
             <Link to={RoutePaths.Projects}>Projects</Link>
           </div>
           <div className="flex flex-1 justify-center align-center text-3xl drop-shadow-lg saturate-200 outline-4 font-alfreda font-extrabold">
-            {hasuraJwt && <Link to={RoutePaths.Profile}>Profile</Link>}
+            {isLoggedIn && <Link to={RoutePaths.Profile}>Profile</Link>}
           </div>
-          <div className="flex flex-1 justify-end">{!hasuraJwt && <GithubLink />}</div>
+          <div className="flex flex-1 justify-end">{!isLoggedIn && <GithubLink />}</div>
         </div>
       </div>
       <Outlet />

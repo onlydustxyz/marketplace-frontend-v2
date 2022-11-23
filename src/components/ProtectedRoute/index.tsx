@@ -4,8 +4,8 @@ import { RoutePaths } from "src/App";
 import { useAuth } from "src/hooks/useAuth";
 
 export default function ProtectedRoute({ children }: PropsWithChildren) {
-  const { hasuraJwt } = useAuth();
-  if (!hasuraJwt) {
+  const { isLoggedIn } = useAuth();
+  if (!isLoggedIn) {
     return <Navigate to={RoutePaths.Projects} />;
   }
   return <>{children}</>;
