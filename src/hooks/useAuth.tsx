@@ -10,7 +10,7 @@ export const LOCAL_STORAGE_HASURA_TOKEN_KEY = "hasura_token";
 
 type AuthContextType = {
   isLoggedIn: boolean;
-  getToken: () => HasuraToken | null;
+  getToken: () => Promise<HasuraToken | null>;
   consumeRefreshToken: (data: string) => Promise<HasuraToken>;
   logout: () => void;
   getUser: () => User | null;
@@ -18,11 +18,24 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
+const checkTokenValidity = (token: HasuraToken): boolean => {
+  const creationDate = new Date(token.creationDate);
+  const expirationDate = creationDate.setSeconds(creationDate.getSeconds() + token.accessTokenExpiresIn);
+
+  return expirationDate > Date.now();
+};
+
 export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [hasuraToken, setHasuraToken] = useLocalStorage<HasuraToken | null>(LOCAL_STORAGE_HASURA_TOKEN_KEY, null);
   const navigate = useNavigate();
 
-  const getToken = (): HasuraToken | null => hasuraToken ?? null;
+  const getToken = async (): Promise<HasuraToken | null> => {
+    if (!hasuraToken) return null;
+    if (checkTokenValidity(hasuraToken)) return hasuraToken;
+
+    return await consumeRefreshToken(hasuraToken.refreshToken);
+  };
+
   const getUser = () => (hasuraToken ? hasuraToken.user : null);
 
   const consumeRefreshToken = async (refreshToken: string): Promise<HasuraToken> => {
@@ -45,7 +58,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 
   const value = useMemo(
     () => ({
-      isLoggedIn: !!hasuraToken,
+      isLoggedIn: hasuraToken !== null,
       getUser,
       getToken,
       consumeRefreshToken,

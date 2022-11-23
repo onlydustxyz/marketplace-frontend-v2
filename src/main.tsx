@@ -1,7 +1,7 @@
-import React, { PropsWithChildren, useState } from "react";
+import React, { PropsWithChildren } from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
-import { ApolloClient, InMemoryCache, ApolloProvider, createHttpLink } from "@apollo/client";
+import { ApolloClient, InMemoryCache, ApolloProvider, createHttpLink, ApolloLink } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { AuthProvider, useAuth } from "src/hooks/useAuth";
 
@@ -13,9 +13,9 @@ import "src/assets/fonts/Alfreda/stylesheet.css";
 
 const ApolloWrapper: React.FC<PropsWithChildren> = ({ children }) => {
   const { getToken } = useAuth();
-  const token = getToken();
 
-  const authLink = setContext((_, { headers }) => {
+  const AuthenticationLink = setContext(async (_, { headers }) => {
+    const token = await getToken();
     const authorizationHeaders = token ? { Authorization: `Bearer ${token.accessToken}` } : {};
     return {
       headers: {
@@ -25,12 +25,12 @@ const ApolloWrapper: React.FC<PropsWithChildren> = ({ children }) => {
     };
   });
 
-  const httpLink = createHttpLink({
+  const HttpLink = createHttpLink({
     uri: `${config.HASURA_BASE_URL}/v1/graphql`,
   });
 
   const client = new ApolloClient({
-    link: authLink.concat(httpLink),
+    link: ApolloLink.from([AuthenticationLink, HttpLink]),
     cache: new InMemoryCache(),
   });
 
