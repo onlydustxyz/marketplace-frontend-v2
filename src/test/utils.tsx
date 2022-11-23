@@ -5,7 +5,7 @@ import { AuthProvider } from "src/hooks/useAuth";
 
 interface MemoryRouterProviderFactoryProps {
   route: string;
-  mocks: any;
+  mocks?: any;
 }
 
 export const MemoryRouterProviderFactory =
