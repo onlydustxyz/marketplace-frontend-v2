@@ -42,3 +42,15 @@ describe("getToken", () => {
     expect(setToken).toHaveBeenCalledWith(expect.objectContaining(REFRESHED_TOKEN));
   });
 });
+
+describe("logout", () => {
+  it("should reset token to null on logout", () => {
+    const setToken = vi.fn();
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    vi.spyOn(reactUse, "useLocalStorage").mockImplementation(() => [null, setToken]);
+    const { result } = renderHook(() => useAuth(), { wrapper: MemoryRouterProviderFactory({ route: "" }) });
+    result.current.logout();
+    expect(setToken).toHaveBeenCalledWith(null);
+  });
+});
