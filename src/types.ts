@@ -6,23 +6,26 @@ export enum USER_ROLES {
 export type HasuraToken = {
   accessToken: string;
   accessTokenExpiresIn: number;
+  creationDate: Date;
   refreshToken: Uuid;
-  user: {
-    id: Uuid;
-    createdAt: Date;
-    displayName: string;
-    avatarUrl: Url | null;
-    locale: Locale;
-    email: Email;
-    isAnonymous: boolean;
-    defaultRole: USER_ROLES;
-    metadata: Record<string, unknown>;
-    emailVerified: boolean;
-    phoneNumber: PhoneNumber | null;
-    phoneNumberVerified: boolean;
-    activeMfaType: null;
-    roles: USER_ROLES[];
-  };
+  user: User;
+};
+
+export type User = {
+  id: Uuid;
+  createdAt: Date;
+  displayName: string;
+  avatarUrl: Url | null;
+  locale: Locale;
+  email: Email;
+  isAnonymous: boolean;
+  defaultRole: USER_ROLES;
+  metadata: Record<string, unknown>;
+  emailVerified: boolean;
+  phoneNumber: PhoneNumber | null;
+  phoneNumberVerified: boolean;
+  activeMfaType: null;
+  roles: USER_ROLES[];
 };
 
 type Date = string;

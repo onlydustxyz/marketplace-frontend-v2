@@ -4,42 +4,71 @@ import { useNavigate } from "react-router-dom";
 import { useLocalStorage } from "react-use";
 import { RoutePaths } from "src/App";
 import config from "src/config";
-import { HasuraToken } from "src/types";
+import { HasuraToken, User } from "src/types";
 
-export const LOCAL_STORAGE_HASURA_JWT_KEY = "hasura_jwt";
+export const LOCAL_STORAGE_HASURA_TOKEN_KEY = "hasura_token";
 
 type AuthContextType = {
-  hasuraJwt: HasuraToken | null;
-  login: (data: string) => Promise<void>;
+  isLoggedIn: boolean;
+  getToken: () => Promise<HasuraToken | null>;
+  login: (refreshToken: string) => void;
   logout: () => void;
+  getUser: () => User | null;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
+const checkTokenValidity = (token: HasuraToken): boolean => {
+  const creationDate = new Date(token.creationDate);
+  const expirationDate = creationDate.setSeconds(creationDate.getSeconds() + token.accessTokenExpiresIn);
+
+  return expirationDate > Date.now();
+};
+
 export const AuthProvider = ({ children }: PropsWithChildren) => {
-  const [hasuraJwt, setHasuraJwt] = useLocalStorage<HasuraToken | null>(LOCAL_STORAGE_HASURA_JWT_KEY, null);
+  const [hasuraToken, setHasuraToken] = useLocalStorage<HasuraToken | null>(LOCAL_STORAGE_HASURA_TOKEN_KEY, null);
   const navigate = useNavigate();
 
-  const login = async (refreshToken: string) => {
+  const getToken = async (): Promise<HasuraToken | null> => {
+    if (!hasuraToken) return null;
+    if (checkTokenValidity(hasuraToken)) return hasuraToken;
+
+    return await consumeRefreshToken(hasuraToken.refreshToken);
+  };
+
+  const getUser = () => (hasuraToken ? hasuraToken.user : null);
+
+  const consumeRefreshToken = async (refreshToken: string): Promise<HasuraToken> => {
     const accessToken = await axios.post(`${config.HASURA_AUTH_BASE_URL}/token`, {
       refreshToken,
     });
-    setHasuraJwt(accessToken.data ?? null);
+
+    if (!accessToken.data) throw new Error("Could not refresh token");
+    const hasuraToken = { ...accessToken.data, creationDate: Date.now() };
+    setHasuraToken(hasuraToken);
+
+    return hasuraToken;
+  };
+
+  const login = async (refreshToken: string) => {
+    await consumeRefreshToken(refreshToken);
     navigate(RoutePaths.Projects);
   };
 
   const logout = () => {
-    setHasuraJwt(null);
+    setHasuraToken(null);
     navigate(RoutePaths.Login, { replace: true });
   };
 
   const value = useMemo(
     () => ({
-      hasuraJwt: hasuraJwt ?? null,
+      isLoggedIn: hasuraToken !== null,
+      getUser,
+      getToken,
       login,
       logout,
     }),
-    [hasuraJwt]
+    [hasuraToken]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
