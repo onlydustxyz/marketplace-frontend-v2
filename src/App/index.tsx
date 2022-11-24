@@ -1,55 +1,23 @@
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { useRoutes } from "react-router-dom";
 
+import type { Router } from "src/routes";
 import Loader from "src/assets/icons/Loader";
-import Layout from "src/components/Layout";
-import ProtectedRoute from "src/components/ProtectedRoute";
 import ErrorFallback from "src/components/ErrorFallback";
-import Login from "src/pages/Login";
-import Projects from "src/pages/Projects";
-import Profile from "src/pages/Profile";
+import { RouterProvider } from "react-router-dom";
 
-export enum RoutePaths {
-  Projects = "/",
-  Login = "/login",
-  Profile = "/profile",
-  CatchAll = "*",
-}
+type PropsType = {
+  router: Router;
+};
 
-function App() {
-  const routes = useRoutes([
-    {
-      element: <Layout />,
-      children: [
-        {
-          path: RoutePaths.Projects,
-          element: <Projects />,
-        },
-        {
-          path: RoutePaths.Profile,
-          element: (
-            <ProtectedRoute>
-              <Profile />
-            </ProtectedRoute>
-          ),
-        },
-        {
-          path: RoutePaths.Login,
-          element: <Login />,
-        },
-        {
-          path: RoutePaths.CatchAll,
-          element: <Projects />,
-        },
-      ],
-    },
-  ]);
+const App = ({ router }: PropsType) => {
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
-      <Suspense fallback={<Loader className="animate-spin mt-[30vh]" size={62} />}>{routes}</Suspense>
+      <Suspense fallback={<Loader className="animate-spin mt-[30vh]" size={62} />}>
+        <RouterProvider router={router}></RouterProvider>
+      </Suspense>
     </ErrorBoundary>
   );
-}
+};
 
 export default App;

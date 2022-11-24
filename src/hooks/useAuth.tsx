@@ -2,7 +2,7 @@ import axios from "axios";
 import { createContext, PropsWithChildren, useContext, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocalStorage } from "react-use";
-import { RoutePaths } from "src/App";
+import { RoutePaths } from "src/routes";
 import config from "src/config";
 import { HasuraToken, User } from "src/types";
 

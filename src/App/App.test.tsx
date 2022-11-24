@@ -2,7 +2,8 @@ import { describe, expect, it, vi } from "vitest";
 import { screen, render } from "@testing-library/react";
 import matchers from "@testing-library/jest-dom/matchers";
 
-import App, { RoutePaths } from ".";
+import App from ".";
+import { createTestRouter, RoutePaths } from "src/routes";
 import { AUTH_CODE_QUERY_KEY } from "src/pages/Login";
 import { LOCAL_STORAGE_HASURA_TOKEN_KEY } from "src/hooks/useAuth";
 import { checkLocalStorageValue, MemoryRouterProviderFactory } from "src/test/utils";
@@ -62,9 +63,11 @@ describe('"Login" page', () => {
   });
 
   it("should log in and go to projects page if a refresh token is passed as a query parameter in the URL", async () => {
-    render(<App />, {
+    const router = createTestRouter({
+      initialEntries: [`${RoutePaths.Login}?${AUTH_CODE_QUERY_KEY}=${AUTH_CODE_TEST_VALUE}`],
+    });
+    render(<App router={router} />, {
       wrapper: MemoryRouterProviderFactory({
-        route: `${RoutePaths.Login}?${AUTH_CODE_QUERY_KEY}=${AUTH_CODE_TEST_VALUE}`,
         mocks: graphQlMocks,
       }),
     });
@@ -79,9 +82,11 @@ describe('"Login" page', () => {
 
   it("should be able to access the profile page and display profile info when having a token in local storage", async () => {
     window.localStorage.setItem(LOCAL_STORAGE_HASURA_TOKEN_KEY, JSON.stringify(HASURA_TOKEN_TEST_VALUE));
-    render(<App />, {
+    const router = createTestRouter({
+      initialEntries: [RoutePaths.Profile],
+    });
+    render(<App router={router} />, {
       wrapper: MemoryRouterProviderFactory({
-        route: `${RoutePaths.Profile}`,
         mocks: graphQlMocks,
       }),
     });
@@ -89,7 +94,10 @@ describe('"Login" page', () => {
   });
 
   it("should display an error message if no refresh token is passed as a query parameter in the URL", async () => {
-    render(<App />, { wrapper: MemoryRouterProviderFactory({ route: RoutePaths.Login, mocks: graphQlMocks }) });
+    const router = createTestRouter({
+      initialEntries: [RoutePaths.Login],
+    });
+    render(<App router={router} />, { wrapper: MemoryRouterProviderFactory({ mocks: graphQlMocks }) });
     await screen.findByText(AUTH_TOKEN_MISSING_TEXT_QUERY);
     checkLocalStorageValue({
       key: LOCAL_STORAGE_HASURA_TOKEN_KEY,
@@ -98,7 +106,10 @@ describe('"Login" page', () => {
   });
 
   it("should redirect to the projects page if the profile route is accessed without a token in the local storage", async () => {
-    render(<App />, { wrapper: MemoryRouterProviderFactory({ route: RoutePaths.Profile, mocks: graphQlMocks }) });
+    const router = createTestRouter({
+      initialEntries: [RoutePaths.Profile],
+    });
+    render(<App router={router} />, { wrapper: MemoryRouterProviderFactory({ mocks: graphQlMocks }) });
     await screen.findByText(TEST_PROJECT_ID);
   });
 });

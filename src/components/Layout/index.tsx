@@ -1,5 +1,5 @@
 import { Link, Outlet } from "react-router-dom";
-import { RoutePaths } from "src/App";
+import { RoutePaths } from "src/routes";
 import { useAuth } from "src/hooks/useAuth";
 import GithubLink from "./GithubLink";
 import Logo from "./OnlyDustLogo";
