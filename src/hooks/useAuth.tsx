@@ -11,7 +11,7 @@ export const LOCAL_STORAGE_HASURA_TOKEN_KEY = "hasura_token";
 type AuthContextType = {
   isLoggedIn: boolean;
   getToken: () => Promise<HasuraToken | null>;
-  consumeRefreshToken: (data: string) => Promise<HasuraToken>;
+  login: (refreshToken: string) => void;
   logout: () => void;
   getUser: () => User | null;
 };
@@ -46,9 +46,13 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     if (!accessToken.data) throw new Error("Could not refresh token");
     const hasuraToken = { ...accessToken.data, creationDate: Date.now() };
     setHasuraToken(hasuraToken);
-    navigate(RoutePaths.Projects);
 
     return hasuraToken;
+  };
+
+  const login = async (refreshToken: string) => {
+    await consumeRefreshToken(refreshToken);
+    navigate(RoutePaths.Projects);
   };
 
   const logout = () => {
@@ -61,7 +65,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       isLoggedIn: hasuraToken !== null,
       getUser,
       getToken,
-      consumeRefreshToken,
+      login,
       logout,
     }),
     [hasuraToken]

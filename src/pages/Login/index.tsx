@@ -5,12 +5,12 @@ import { useAuth } from "src/hooks/useAuth";
 export const AUTH_CODE_QUERY_KEY = "refreshToken";
 
 export default function Login() {
-  const { consumeRefreshToken } = useAuth();
+  const { login } = useAuth();
   const [searchParams] = useSearchParams();
   const refreshToken = searchParams.get(AUTH_CODE_QUERY_KEY);
   useEffect(() => {
     if (refreshToken) {
-      consumeRefreshToken(refreshToken);
+      login(refreshToken);
     }
   }, [refreshToken]);
   return (
