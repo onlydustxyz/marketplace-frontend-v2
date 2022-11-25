@@ -4,18 +4,20 @@ import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { Fragment } from "react";
 
 const ProfileButton = () => {
-  const { logout } = useAuth();
+  const { logout, getUser } = useAuth();
+  const { avatarUrl, displayName } = getUser() ?? { avatarUrl: null, displayName: "My Account" };
   return (
     <div className="relative w-56 text-right">
       <Menu as="div" className="relative inline-block text-left">
         <div>
           <Menu.Button
             className="
-							inline-flex w-full justify-center px-4 py-2
+							inline-flex w-full justify-center px-4 py-2 items-center
 							rounded-md bg-black bg-opacity-20 text-sm font-medium text-white
 							hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
           >
-            Options
+            {avatarUrl && <img className="w-4 rounded-full mr-2" src={avatarUrl} />}
+            {displayName}
             <ChevronDownIcon
               className="
 								ml-2 -mr-1 h-5 w-5
