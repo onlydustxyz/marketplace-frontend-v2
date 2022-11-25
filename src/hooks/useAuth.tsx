@@ -56,6 +56,9 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   };
 
   const logout = () => {
+    axios.post(`${config.HASURA_AUTH_BASE_URL}/signout`, {
+      refreshToken: hasuraToken?.refreshToken,
+    });
     setHasuraToken(null);
     navigate(RoutePaths.Login, { replace: true });
   };
