@@ -3,6 +3,7 @@ import { RoutePaths } from "src/App";
 import { useAuth } from "src/hooks/useAuth";
 import GithubLink from "./GithubLink";
 import Logo from "./OnlyDustLogo";
+import ProfileButton from "./ProfileButton";
 
 export default function Layout() {
   const { isLoggedIn } = useAuth();
@@ -19,7 +20,7 @@ export default function Layout() {
           <div className="flex flex-1 justify-center align-center text-3xl drop-shadow-lg saturate-200 outline-4 font-alfreda font-extrabold">
             {isLoggedIn && <Link to={RoutePaths.Profile}>Profile</Link>}
           </div>
-          <div className="flex flex-1 justify-end">{!isLoggedIn && <GithubLink />}</div>
+          <div className="flex flex-1 justify-end">{!isLoggedIn ? <GithubLink /> : <ProfileButton />}</div>
         </div>
       </div>
       <Outlet />
