@@ -1,5 +1,5 @@
 import axios from "axios";
-import { createContext, PropsWithChildren, useContext, useMemo } from "react";
+import { createContext, PropsWithChildren, useCallback, useContext, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocalStorage } from "react-use";
 import { RoutePaths } from "src/App";
@@ -10,10 +10,11 @@ export const LOCAL_STORAGE_HASURA_TOKEN_KEY = "hasura_token";
 
 type AuthContextType = {
   isLoggedIn: boolean;
-  getToken: () => Promise<HasuraToken | null>;
+  hasuraToken: HasuraToken | null | undefined;
+  getUpToDateHasuraToken: () => Promise<HasuraToken | null | undefined>;
   login: (refreshToken: string) => void;
   logout: () => void;
-  getUser: () => User | null;
+  user: User | null;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -21,7 +22,6 @@ const AuthContext = createContext<AuthContextType | null>(null);
 const checkTokenValidity = (token: HasuraToken): boolean => {
   const creationDate = new Date(token.creationDate);
   const expirationDate = creationDate.setSeconds(creationDate.getSeconds() + token.accessTokenExpiresIn);
-
   return expirationDate > Date.now();
 };
 
@@ -29,30 +29,30 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [hasuraToken, setHasuraToken] = useLocalStorage<HasuraToken | null>(LOCAL_STORAGE_HASURA_TOKEN_KEY, null);
   const navigate = useNavigate();
 
-  const getToken = async (): Promise<HasuraToken | null> => {
-    if (!hasuraToken) return null;
-    if (checkTokenValidity(hasuraToken)) return hasuraToken;
-
-    return await consumeRefreshToken(hasuraToken.refreshToken);
-  };
-
-  const getUser = () => (hasuraToken ? hasuraToken.user : null);
-
-  const consumeRefreshToken = async (refreshToken: string): Promise<HasuraToken> => {
+  const consumeRefreshToken = useCallback(async (refreshToken: string) => {
     const accessToken = await axios.post(`${config.HASURA_AUTH_BASE_URL}/token`, {
-      refreshToken,
+      refreshToken: refreshToken,
     });
+    if (!accessToken.data) throw new Error("Could not consume refresh token");
+    const newHasuraToken = { ...accessToken.data, creationDate: Date.now() };
+    setHasuraToken(newHasuraToken);
+    return newHasuraToken;
+  }, []);
 
-    if (!accessToken.data) throw new Error("Could not refresh token");
-    const hasuraToken = { ...accessToken.data, creationDate: Date.now() };
-    setHasuraToken(hasuraToken);
-
+  const getUpToDateHasuraToken = useCallback(async () => {
+    if (hasuraToken && !checkTokenValidity(hasuraToken)) {
+      return consumeRefreshToken(hasuraToken.refreshToken);
+    }
     return hasuraToken;
-  };
+  }, [hasuraToken]);
+
+  useEffect(() => {
+    getUpToDateHasuraToken();
+  }, []);
 
   const login = async (refreshToken: string) => {
     await consumeRefreshToken(refreshToken);
-    navigate(RoutePaths.Projects);
+    navigate(RoutePaths.Profile);
   };
 
   const logout = () => {
@@ -60,14 +60,15 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       refreshToken: hasuraToken?.refreshToken,
     });
     setHasuraToken(null);
-    navigate(RoutePaths.Login, { replace: true });
+    navigate(RoutePaths.Projects, { replace: true });
   };
 
   const value = useMemo(
     () => ({
+      hasuraToken,
+      getUpToDateHasuraToken,
       isLoggedIn: hasuraToken !== null,
-      getUser,
-      getToken,
+      user: hasuraToken ? hasuraToken.user : null,
       login,
       logout,
     }),

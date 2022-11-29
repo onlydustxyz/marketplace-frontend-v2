@@ -5,11 +5,11 @@ import config from "src/config";
 import { useAuth } from "src/hooks/useAuth";
 
 const ApolloWrapper: React.FC<PropsWithChildren> = ({ children }) => {
-  const { getToken } = useAuth();
+  const { getUpToDateHasuraToken } = useAuth();
 
   const AuthenticationLink = setContext(async (_, { headers }) => {
-    const token = await getToken();
-    const authorizationHeaders = token ? { Authorization: `Bearer ${token.accessToken}` } : {};
+    const hasuraToken = await getUpToDateHasuraToken();
+    const authorizationHeaders = hasuraToken ? { Authorization: `Bearer ${hasuraToken.accessToken}` } : {};
     return {
       headers: {
         ...headers,

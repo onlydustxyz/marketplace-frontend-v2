@@ -69,7 +69,7 @@ describe('"Login" page', () => {
       }),
     });
     await screen.findByText(LOGGING_IN_TEXT_QUERY);
-    await screen.findByText(TEST_PROJECT_ID);
+    await screen.findByText(PROFILE_TEXT_QUERY);
     expect(screen.queryByText(LOGGING_IN_TEXT_QUERY)).not.toBeInTheDocument();
     checkLocalStorageValue({
       key: LOCAL_STORAGE_HASURA_TOKEN_KEY,

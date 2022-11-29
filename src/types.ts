@@ -1,7 +1,13 @@
-export enum USER_ROLES {
-  PUBLIC = "public",
-  USER = "user",
+export enum HasuraUserRole {
+  Public = "public",
+  User = "user",
 }
+
+export enum CustomUserRole {
+  ProjectLead = "project_lead",
+}
+
+export type UserRole = HasuraUserRole | CustomUserRole;
 
 export type HasuraToken = {
   accessToken: string;
@@ -19,13 +25,13 @@ export type User = {
   locale: Locale;
   email: Email;
   isAnonymous: boolean;
-  defaultRole: USER_ROLES;
+  defaultRole: HasuraUserRole;
   metadata: Record<string, unknown>;
   emailVerified: boolean;
   phoneNumber: PhoneNumber | null;
   phoneNumberVerified: boolean;
   activeMfaType: null;
-  roles: USER_ROLES[];
+  roles: HasuraUserRole[];
 };
 
 type Date = string;

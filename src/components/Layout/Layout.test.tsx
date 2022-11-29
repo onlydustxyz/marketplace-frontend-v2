@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { screen, render } from "@testing-library/react";
 import matchers from "@testing-library/jest-dom/matchers";
 
@@ -11,6 +11,12 @@ expect.extend(matchers);
 const HASURA_TOKEN_TEST_VALUE = "test";
 const ONLYDUST_LOGO_NAME_QUERY = /onlydust logo/i;
 const GITHUB_LOGO_NAME_QUERY = /github logo/i;
+
+vi.mock("axios", () => ({
+  default: {
+    post: () => ({ data: HASURA_TOKEN_TEST_VALUE }),
+  },
+}));
 
 describe('"Layout" component', () => {
   afterEach(() => {

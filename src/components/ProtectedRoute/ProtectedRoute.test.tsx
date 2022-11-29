@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { screen, render } from "@testing-library/react";
 import matchers from "@testing-library/jest-dom/matchers";
 import { BrowserRouter } from "react-router-dom";
@@ -10,6 +10,12 @@ expect.extend(matchers);
 
 const CHILD_ELEMENT_TEXT = "child-test";
 const HASURA_TOKEN_TEST_VALUE = "test";
+
+vi.mock("axios", () => ({
+  default: {
+    post: () => ({ data: HASURA_TOKEN_TEST_VALUE }),
+  },
+}));
 
 describe('"ProtectedRoute" component', () => {
   afterEach(() => {
