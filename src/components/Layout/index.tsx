@@ -12,7 +12,7 @@ export default function Layout() {
   const { isLoggedIn, role } = useJwtRole(hasuraToken?.accessToken);
   return (
     <div>
-      <div className=" bg-black/50">
+      <div className="bg-black/50">
         <div className="flex flex-row justify-between items-center px-5 py-5">
           <div className="flex-1">
             <OnlyDustLogo />

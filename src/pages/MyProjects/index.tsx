@@ -1,35 +1,62 @@
 import { gql } from "@apollo/client";
+import { useAuth } from "src/hooks/useAuth";
 import { useHasuraQuery } from "src/hooks/useHasuraQuery";
+import { useJwtRole } from "src/hooks/useJwtRole";
+import MyProject from "./MyProject";
 
-interface MyProject {
-  // to be replaced with codegen types
-  id: string;
+const PROJECTS_BY_PK_KEY = "projects_by_pk";
+const REMAINING_AMOUNT_KEY = "remaining_amount";
+const INITIAL_AMOUNT_KEY = "initial_amount";
+
+interface MyProjectsProps {
+  projectIds: string[];
 }
 
-export default function MyProjects() {
-  const { loading, error, data } = useHasuraQuery(GET_PROJECTS_QUERY);
+export default function MyProjectsProps() {
+  const { hasuraToken } = useAuth();
+  const { ledProjectIds } = useJwtRole(hasuraToken?.accessToken);
   return (
     <>
-      {loading && <div className="flex justify-center mt-10 text-2xl">Loading</div>}
-      {data && (
-        <>
-          <div className="flex justify-center mt-10 text-2xl">My project ids:</div>
-          {data.projects.map((project: MyProject) => (
-            <div className="flex justify-center mt-10 text-2xl" key={project.id}>
-              {project.id}
-            </div>
-          ))}
-        </>
-      )}
-      {error && <div className="flex justify-center mt-10 text-2xl">{JSON.stringify(error)}</div>}
+      <div className="px-10 flex flex-col align-center items-center">
+        {ledProjectIds.map((projectId: string) => (
+          <div key={projectId} className="flex w-5/6 my-3">
+            <MyProjectContainer projectId={projectId} />
+          </div>
+        ))}
+      </div>
     </>
   );
 }
 
-export const GET_PROJECTS_QUERY = gql`
-  query MyQuery {
-    projects {
-      id
+interface MyProjectContainerProps {
+  projectId: string;
+}
+
+function MyProjectContainer({ projectId }: MyProjectContainerProps) {
+  const { data } = useHasuraQuery(GET_MY_PROJECT_QUERY, undefined, {
+    variables: { id: projectId },
+  });
+  return (
+    <>
+      {data && (
+        <MyProject
+          projectName={data[PROJECTS_BY_PK_KEY].name}
+          remainingBudget={data[PROJECTS_BY_PK_KEY].budgets[0][REMAINING_AMOUNT_KEY]}
+          initialBudget={data[PROJECTS_BY_PK_KEY].budgets[0][INITIAL_AMOUNT_KEY]}
+        />
+      )}
+    </>
+  );
+}
+
+export const GET_MY_PROJECT_QUERY = gql`
+  query MyProject($id: uuid!) {
+    projects_by_pk(id: $id) {
+      name
+      budgets {
+        initial_amount
+        remaining_amount
+      }
     }
   }
 `;
