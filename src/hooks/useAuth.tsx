@@ -9,7 +9,6 @@ import { HasuraToken, User } from "src/types";
 export const LOCAL_STORAGE_HASURA_TOKEN_KEY = "hasura_token";
 
 type AuthContextType = {
-  isLoggedIn: boolean;
   hasuraToken: HasuraToken | null | undefined;
   getUpToDateHasuraToken: () => Promise<HasuraToken | null | undefined>;
   login: (refreshToken: string) => void;
@@ -67,7 +66,6 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     () => ({
       hasuraToken,
       getUpToDateHasuraToken,
-      isLoggedIn: hasuraToken !== null,
       user: hasuraToken ? hasuraToken.user : null,
       login,
       logout,

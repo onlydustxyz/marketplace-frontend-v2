@@ -18,6 +18,7 @@ const HASURA_TOKEN_TEST_VALUE = {
   user: {
     id: TEST_USER_ID,
   },
+  accessToken: "TEST_ACCESS_TOKEN",
 };
 const PROFILE_TEXT_QUERY = `Your user id is ${TEST_USER_ID} and your e-mail address is ${TEST_USER_EMAIL}`;
 const TEST_PROJECT_ID = "test-project-id";

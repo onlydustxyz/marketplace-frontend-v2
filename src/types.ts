@@ -40,3 +40,37 @@ type Uuid = string;
 type Email = string;
 type PhoneNumber = string;
 type Locale = "en" | "fr";
+
+export const CLAIMS_KEY = "https://hasura.io/jwt/claims";
+export const PROJECTS_LED_KEY = "x-hasura-projects_leaded";
+
+interface ObjectWithClaimsKey {
+  [CLAIMS_KEY]: unknown;
+}
+
+interface ObjectWithProjectsLedKey {
+  [PROJECTS_LED_KEY]: unknown;
+}
+
+interface HasuraJWT {
+  [CLAIMS_KEY]: {
+    [PROJECTS_LED_KEY]: string;
+  };
+}
+
+function hasClaimsKey(x: unknown): x is ObjectWithClaimsKey {
+  return typeof x === "object" && x !== null && CLAIMS_KEY in x;
+}
+
+function hasProjectsLedKey(x: unknown): x is ObjectWithProjectsLedKey {
+  return typeof x === "object" && x !== null && PROJECTS_LED_KEY in x;
+}
+
+export function isHasuraJWT(decodedToken: unknown): decodedToken is HasuraJWT {
+  if (hasClaimsKey(decodedToken)) {
+    if (hasProjectsLedKey(decodedToken[CLAIMS_KEY])) {
+      return typeof decodedToken[CLAIMS_KEY][PROJECTS_LED_KEY] === "string";
+    }
+  }
+  return false;
+}
