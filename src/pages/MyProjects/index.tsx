@@ -4,9 +4,9 @@ import { useHasuraQuery } from "src/hooks/useHasuraQuery";
 import { useJwtRole } from "src/hooks/useJwtRole";
 import MyProject from "./MyProject";
 
-const PROJECTS_BY_PK_KEY = "projects_by_pk";
-const REMAINING_AMOUNT_KEY = "remaining_amount";
-const INITIAL_AMOUNT_KEY = "initial_amount";
+export const PROJECTS_BY_PK_KEY = "projects_by_pk";
+export const REMAINING_AMOUNT_KEY = "remaining_amount";
+export const INITIAL_AMOUNT_KEY = "initial_amount";
 
 interface MyProjectsProps {
   projectIds: string[];

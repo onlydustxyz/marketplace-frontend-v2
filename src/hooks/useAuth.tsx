@@ -9,7 +9,7 @@ import { HasuraToken, User } from "src/types";
 export const LOCAL_STORAGE_HASURA_TOKEN_KEY = "hasura_token";
 
 type AuthContextType = {
-  hasuraToken: HasuraToken | null | undefined;
+  hasuraToken?: HasuraToken | null;
   getUpToDateHasuraToken: () => Promise<HasuraToken | null | undefined>;
   login: (refreshToken: string) => void;
   logout: () => void;
@@ -44,10 +44,6 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     }
     return hasuraToken;
   }, [hasuraToken]);
-
-  useEffect(() => {
-    getUpToDateHasuraToken();
-  }, []);
 
   const login = async (refreshToken: string) => {
     await consumeRefreshToken(refreshToken);

@@ -28,13 +28,4 @@ describe("getToken", () => {
     const { result, waitFor } = renderHook(() => useAuth(), { wrapper: MemoryRouterProviderFactory({ route: "" }) });
     await waitFor(() => expect(result.current.hasuraToken).toEqual(token));
   });
-
-  it("should update token if token is out of date", async () => {
-    const outdatedToken = { ...hasuraToken, creationDate: new Date("1992-01-27") };
-    window.localStorage.setItem(LOCAL_STORAGE_HASURA_TOKEN_KEY, JSON.stringify(outdatedToken));
-    const { result, waitFor } = renderHook(() => useAuth(), {
-      wrapper: MemoryRouterProviderFactory({ route: "" }),
-    });
-    await waitFor(() => expect(result.current.hasuraToken).toMatchObject(REFRESHED_TOKEN));
-  });
 });
