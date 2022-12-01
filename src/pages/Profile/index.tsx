@@ -3,26 +3,26 @@ import { useHasuraQuery } from "src/hooks/useHasuraQuery";
 import { useAuth } from "src/hooks/useAuth";
 import { HasuraUserRole } from "src/types";
 import { useJwtRole } from "src/hooks/useJwtRole";
+import QueryWrapper from "src/components/QueryWrapper";
 
-export default function Profile() {
+const Profile: React.FC = () => {
   const { user, hasuraToken } = useAuth();
   const { isLoggedIn } = useJwtRole(hasuraToken?.accessToken);
-  const { loading, error, data } = useHasuraQuery(GET_PROFILE_QUERY, HasuraUserRole.User, {
+  const query = useHasuraQuery(GET_PROFILE_QUERY, HasuraUserRole.User, {
     skip: !isLoggedIn,
     variables: { id: user?.id },
   });
+  const { data } = query;
   return (
-    <>
-      {loading && <div className="flex justify-center mt-10 text-2xl">Loading</div>}
+    <QueryWrapper errorMessage="Error fetching profile" query={query}>
       {data && (
         <div className="flex justify-center mt-10 text-2xl">
           Your user id is {data.user.id} and your e-mail address is {data.user.email}
         </div>
       )}
-      {error && <div className="flex justify-center mt-10 text-2xl">Error fetching profile</div>}
-    </>
+    </QueryWrapper>
   );
-}
+};
 
 export const GET_PROFILE_QUERY = gql`
   query Profile($id: uuid!) {
@@ -32,3 +32,5 @@ export const GET_PROFILE_QUERY = gql`
     }
   }
 `;
+
+export default Profile;
