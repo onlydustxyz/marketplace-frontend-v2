@@ -3,6 +3,7 @@ import { HasuraUserRole, PaymentReceiverType, User } from "src/types";
 import { useForm, SubmitHandler, FormProvider } from "react-hook-form";
 import Input from "./Input";
 import { useHasuraMutation } from "src/hooks/useHasuraQuery";
+import Radio from "./Radio";
 
 type Inputs = {
   paymentReceiverType: PaymentReceiverType;
@@ -32,7 +33,7 @@ const ProfileForm: React.FC<PropsType> = ({ user }) => {
       country: user.metadata?.location?.country ?? "",
     },
   });
-  const { register, handleSubmit } = formMethods;
+  const { handleSubmit } = formMethods;
   const [updateUser, { data, loading }] = useHasuraMutation(UPDATE_USER_MUTATION, HasuraUserRole.User);
   const success = !!data;
 
@@ -71,26 +72,19 @@ const ProfileForm: React.FC<PropsType> = ({ user }) => {
         <div className="flex flex-col">
           Type of Profile
           <div className="flex flex-row gap-3">
-            <label html-for={PaymentReceiverType.INDIVIDUAL}>
-              <input
-                type="radio"
-                {...register("paymentReceiverType")}
-                id={PaymentReceiverType.INDIVIDUAL}
-                value={PaymentReceiverType.INDIVIDUAL}
-                className="mr-2"
-              />
-              Individual
-            </label>
-            <label html-for={PaymentReceiverType.COMPANY}>
-              <input
-                type="radio"
-                {...register("paymentReceiverType")}
-                id={PaymentReceiverType.COMPANY}
-                value={PaymentReceiverType.COMPANY}
-                className="mr-2"
-              />
-              Company
-            </label>
+            <Radio
+              name="paymentReceiverType"
+              options={[
+                {
+                  value: PaymentReceiverType.INDIVIDUAL,
+                  label: "Individual",
+                },
+                {
+                  value: PaymentReceiverType.COMPANY,
+                  label: "Company",
+                },
+              ]}
+            />
           </div>
         </div>
         <div className="flex flex-row gap-5">
