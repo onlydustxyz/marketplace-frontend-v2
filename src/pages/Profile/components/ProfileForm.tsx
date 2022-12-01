@@ -1,7 +1,8 @@
-import { gql, useMutation } from "@apollo/client";
-import { PaymentReceiverType, User } from "src/types";
+import { gql } from "@apollo/client";
+import { HasuraUserRole, PaymentReceiverType, User } from "src/types";
 import { useForm, SubmitHandler, FormProvider } from "react-hook-form";
 import Input from "./Input";
+import { useHasuraMutation } from "src/hooks/useHasuraQuery";
 
 type Inputs = {
   paymentReceiverType: PaymentReceiverType;
@@ -31,12 +32,9 @@ const ProfileForm: React.FC<PropsType> = ({ user }) => {
       country: user.metadata?.location?.country ?? "",
     },
   });
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = formMethods;
-  const [updateUser, { data, loading }] = useMutation(UPDATE_USER_MUTATION);
+  const { register, handleSubmit } = formMethods;
+  const [updateUser, { data, loading }] = useHasuraMutation(UPDATE_USER_MUTATION, HasuraUserRole.User);
+  const success = !!data;
 
   const onSubmit: SubmitHandler<Inputs> = async ({
     email,
@@ -65,8 +63,6 @@ const ProfileForm: React.FC<PropsType> = ({ user }) => {
         },
       },
     });
-
-    // const result = useHasuraQuery(query, HasuraUserRole.User);
   };
 
   return (
@@ -115,7 +111,7 @@ const ProfileForm: React.FC<PropsType> = ({ user }) => {
         >
           {loading ? "Loading..." : "Send"}
         </button>
-        {data && <p>Your data has been saved!</p>}
+        {success && <p>Your data has been saved!</p>}
       </form>
     </FormProvider>
   );
