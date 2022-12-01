@@ -4,6 +4,7 @@ import { useAuth } from "src/hooks/useAuth";
 import { HasuraUserRole } from "src/types";
 import { useJwtRole } from "src/hooks/useJwtRole";
 import QueryWrapper from "src/components/QueryWrapper";
+import ProfileForm from "./components/ProfileForm";
 
 const Profile: React.FC = () => {
   const { user, hasuraToken } = useAuth();
@@ -17,7 +18,7 @@ const Profile: React.FC = () => {
     <QueryWrapper errorMessage="Error fetching profile" query={query}>
       {data && (
         <div className="flex justify-center mt-10 text-2xl">
-          Your user id is {data.user.id} and your e-mail address is {data.user.email}
+          <ProfileForm user={data.user} />
         </div>
       )}
     </QueryWrapper>
