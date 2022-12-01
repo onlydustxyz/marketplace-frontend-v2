@@ -26,7 +26,12 @@ export type User = {
   email: Email;
   isAnonymous: boolean;
   defaultRole: HasuraUserRole;
-  metadata: Record<string, unknown>;
+  metadata: {
+    paymentReceiverType?: PaymentReceiverType;
+    firstName?: string;
+    lastName?: string;
+    location?: Location;
+  };
   emailVerified: boolean;
   phoneNumber: PhoneNumber | null;
   phoneNumberVerified: boolean;
@@ -37,9 +42,20 @@ export type User = {
 type Date = string;
 type Url = string;
 type Uuid = string;
-type Email = string;
-type PhoneNumber = string;
+export type Email = string;
+export type PhoneNumber = string;
+export type Location = {
+  address: string;
+  zipcode: string;
+  city: string;
+  country: string;
+};
 type Locale = "en" | "fr";
+
+export enum PaymentReceiverType {
+  INDIVIDUAL = "INDIVIDUAL",
+  COMPANY = "COMPANY",
+}
 
 export const CLAIMS_KEY = "https://hasura.io/jwt/claims";
 export const PROJECTS_LED_KEY = "x-hasura-projects_leaded";

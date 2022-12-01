@@ -30,6 +30,7 @@ export const GET_PROFILE_QUERY = gql`
     user(id: $id) {
       id
       email
+      metadata
     }
   }
 `;
