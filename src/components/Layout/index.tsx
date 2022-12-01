@@ -25,9 +25,6 @@ export default function Layout() {
               <Link to={RoutePaths.MyProjects}>My Projects</Link>
             </div>
           )}
-          <div className="flex flex-1 justify-center align-center text-3xl drop-shadow-lg saturate-200 outline-4 font-alfreda font-extrabold">
-            {isLoggedIn && <Link to={RoutePaths.Profile}>Profile</Link>}
-          </div>
           <div className="flex flex-1 justify-end">{!isLoggedIn ? <GithubLink /> : <ProfileButton />}</div>
         </div>
       </div>
