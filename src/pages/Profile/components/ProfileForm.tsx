@@ -34,36 +34,13 @@ const ProfileForm: React.FC<PropsType> = ({ user }) => {
     },
   });
   const { handleSubmit } = formMethods;
-  const [updateUser, { data, loading }] = useHasuraMutation(UPDATE_USER_MUTATION, HasuraUserRole.User);
+  const [updateUser, { data, loading }] = useHasuraMutation(UPDATE_USER_MUTATION, HasuraUserRole.User, {
+    variables: { userId: user.id },
+  });
   const success = !!data;
 
-  const onSubmit: SubmitHandler<Inputs> = async ({
-    email,
-    lastName,
-    firstName,
-    address,
-    city,
-    country,
-    paymentReceiverType,
-    zipcode,
-  }) => {
-    await updateUser({
-      variables: {
-        userId: user.id,
-        email,
-        metadata: {
-          paymentReceiverType,
-          firstName,
-          lastName,
-          location: {
-            address,
-            city,
-            country,
-            zipcode,
-          },
-        },
-      },
-    });
+  const onSubmit: SubmitHandler<Inputs> = async formData => {
+    await updateUser(mapFormDataToSchema(formData));
   };
 
   return (
@@ -119,5 +96,31 @@ export const UPDATE_USER_MUTATION = gql`
     }
   }
 `;
+
+const mapFormDataToSchema = ({
+  email,
+  lastName,
+  firstName,
+  address,
+  city,
+  country,
+  paymentReceiverType,
+  zipcode,
+}: Inputs) => ({
+  variables: {
+    email,
+    metadata: {
+      paymentReceiverType,
+      firstName,
+      lastName,
+      location: {
+        address,
+        city,
+        country,
+        zipcode,
+      },
+    },
+  },
+});
 
 export default ProfileForm;
