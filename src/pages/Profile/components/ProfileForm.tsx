@@ -71,43 +71,52 @@ const ProfileForm: React.FC<PropsType> = ({ user }) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
-      <label html-for={PaymentReceiverType.INDIVIDUAL}>
-        <input
-          type="radio"
-          {...register("paymentReceiverType")}
-          id={PaymentReceiverType.INDIVIDUAL}
-          value={PaymentReceiverType.INDIVIDUAL}
-        />
-        Individual
-      </label>
-      <label html-for={PaymentReceiverType.COMPANY}>
-        <input
-          type="radio"
-          {...register("paymentReceiverType")}
-          id={PaymentReceiverType.COMPANY}
-          value={PaymentReceiverType.COMPANY}
-        />
-        Company
-      </label>
-      <label html-for="firstName">
-        FirstName
-        <input
-          id="firstName"
-          placeholder="firstName"
-          {...register("firstName", { required: true })}
-          className={errors.firstName ? "border-2 border-rose-600" : ""}
-        />
-      </label>
-      <label html-for="lastName">
-        LastName
-        <input
-          id="lastName"
-          placeholder="lastName"
-          {...register("lastName", { required: true })}
-          className={errors.lastName ? "border-2 border-rose-600" : ""}
-        />
-      </label>
-      <label html-for="email">
+      <div className="flex flex-col">
+        Type of Profile
+        <div className="flex flex-row gap-3">
+          <label html-for={PaymentReceiverType.INDIVIDUAL}>
+            <input
+              type="radio"
+              {...register("paymentReceiverType")}
+              id={PaymentReceiverType.INDIVIDUAL}
+              value={PaymentReceiverType.INDIVIDUAL}
+              className="mr-2"
+            />
+            Individual
+          </label>
+          <label html-for={PaymentReceiverType.COMPANY}>
+            <input
+              type="radio"
+              {...register("paymentReceiverType")}
+              id={PaymentReceiverType.COMPANY}
+              value={PaymentReceiverType.COMPANY}
+              className="mr-2"
+            />
+            Company
+          </label>
+        </div>
+      </div>
+      <div className="flex flex-row gap-5">
+        <label html-for="firstName" className="flex flex-col">
+          FirstName
+          <input
+            id="firstName"
+            placeholder="firstName"
+            {...register("firstName", { required: true })}
+            className={errors.firstName ? "border-2 border-rose-600" : ""}
+          />
+        </label>
+        <label html-for="lastName" className="flex flex-col">
+          LastName
+          <input
+            id="lastName"
+            placeholder="lastName"
+            {...register("lastName", { required: true })}
+            className={errors.lastName ? "border-2 border-rose-600" : ""}
+          />
+        </label>
+      </div>
+      <label html-for="email" className="flex flex-col">
         Email
         <input
           id="email"
@@ -116,7 +125,7 @@ const ProfileForm: React.FC<PropsType> = ({ user }) => {
           className={errors.email ? "border-2 border-rose-600" : ""}
         />
       </label>
-      <label html-for="address">
+      <label html-for="address" className="flex flex-col">
         Location
         <input
           id="address"
@@ -125,23 +134,29 @@ const ProfileForm: React.FC<PropsType> = ({ user }) => {
           className={errors.address ? "border-2 border-rose-600" : ""}
         />
       </label>
-      <input
-        placeholder="zipcode"
-        {...register("zipcode", { required: true })}
-        className={errors.zipcode ? "border-2 border-rose-600" : ""}
-      />
-      <input
-        placeholder="city"
-        {...register("city", { required: true })}
-        className={errors.city ? "border-2 border-rose-600" : ""}
-      />
-      <input
-        placeholder="country"
-        {...register("country", { required: true })}
-        className={errors.country ? "border-2 border-rose-600" : ""}
-      />
+      <div className="flex flex-row gap-2">
+        <input
+          placeholder="zipcode"
+          {...register("zipcode", { required: true })}
+          className={errors.zipcode ? "border-2 border-rose-600" : ""}
+        />
+        <input
+          placeholder="city"
+          {...register("city", { required: true })}
+          className={errors.city ? "border-2 border-rose-600" : ""}
+        />
+        <input
+          placeholder="country"
+          {...register("country", { required: true })}
+          className={errors.country ? "border-2 border-rose-600" : ""}
+        />
+      </div>
 
-      <button type="submit" onClick={handleSubmit(onSubmit)}>
+      <button
+        type="submit"
+        onClick={handleSubmit(onSubmit)}
+        className="self-start border-white border-2 px-3 py-2 rounded-md"
+      >
         {loading ? "Loading..." : "Send"}
       </button>
       {data && <p>Your data has been saved!</p>}
