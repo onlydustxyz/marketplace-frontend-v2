@@ -36,13 +36,14 @@ function MyProjectContainer({ projectId }: MyProjectContainerProps) {
   const { data } = useHasuraQuery(GET_MY_PROJECT_QUERY, undefined, {
     variables: { id: projectId },
   });
+  const project = data ? data[PROJECTS_BY_PK_KEY] : null;
   return (
     <>
-      {data && (
+      {project && (
         <MyProject
-          projectName={data[PROJECTS_BY_PK_KEY].name}
-          remainingBudget={data[PROJECTS_BY_PK_KEY].budgets[0][REMAINING_AMOUNT_KEY]}
-          initialBudget={data[PROJECTS_BY_PK_KEY].budgets[0][INITIAL_AMOUNT_KEY]}
+          projectName={project.name}
+          remainingBudget={project.budgets[0][REMAINING_AMOUNT_KEY]}
+          initialBudget={project.budgets[0][INITIAL_AMOUNT_KEY]}
         />
       )}
     </>

@@ -14,7 +14,7 @@ const LOGGING_IN_TEXT_QUERY = /logging in/i;
 const AUTH_TOKEN_MISSING_TEXT_QUERY = /github authentication token missing !/i;
 const TEST_USER_ID = "test-user-id";
 const TEST_USER_EMAIL = "test@user.email";
-const HASURA_TOKEN_TEST_VALUE = {
+const HASURA_TOKEN_BASIC_TEST_VALUE = {
   user: {
     id: TEST_USER_ID,
   },
@@ -27,7 +27,7 @@ expect.extend(matchers);
 
 vi.mock("axios", () => ({
   default: {
-    post: () => ({ data: HASURA_TOKEN_TEST_VALUE }),
+    post: () => ({ data: HASURA_TOKEN_BASIC_TEST_VALUE }),
   },
 }));
 
@@ -74,12 +74,12 @@ describe('"Login" page', () => {
     expect(screen.queryByText(LOGGING_IN_TEXT_QUERY)).not.toBeInTheDocument();
     checkLocalStorageValue({
       key: LOCAL_STORAGE_HASURA_TOKEN_KEY,
-      expectedIncludedObject: HASURA_TOKEN_TEST_VALUE,
+      expectedIncludedObject: HASURA_TOKEN_BASIC_TEST_VALUE,
     });
   });
 
   it("should be able to access the profile page and display profile info when having a token in local storage", async () => {
-    window.localStorage.setItem(LOCAL_STORAGE_HASURA_TOKEN_KEY, JSON.stringify(HASURA_TOKEN_TEST_VALUE));
+    window.localStorage.setItem(LOCAL_STORAGE_HASURA_TOKEN_KEY, JSON.stringify(HASURA_TOKEN_BASIC_TEST_VALUE));
     render(<App />, {
       wrapper: MemoryRouterProviderFactory({
         route: `${RoutePaths.Profile}`,
@@ -101,5 +101,16 @@ describe('"Login" page', () => {
   it("should redirect to the projects page if the profile route is accessed without a token in the local storage", async () => {
     render(<App />, { wrapper: MemoryRouterProviderFactory({ route: RoutePaths.Profile, mocks: graphQlMocks }) });
     await screen.findByText(TEST_PROJECT_ID);
+  });
+
+  it("should be able to access the profile page and display profile info when having a token in local storage", async () => {
+    window.localStorage.setItem(LOCAL_STORAGE_HASURA_TOKEN_KEY, JSON.stringify(HASURA_TOKEN_BASIC_TEST_VALUE));
+    render(<App />, {
+      wrapper: MemoryRouterProviderFactory({
+        route: `${RoutePaths.Profile}`,
+        mocks: graphQlMocks,
+      }),
+    });
+    await screen.findByText(PROFILE_TEXT_QUERY);
   });
 });

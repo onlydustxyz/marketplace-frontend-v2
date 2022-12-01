@@ -6,17 +6,14 @@ import { useJwtRole } from "src/hooks/useJwtRole";
 import { HasuraUserRole, UserRole } from "src/types";
 
 interface ProtectedRouteProps extends PropsWithChildren {
-  allowedRoles?: UserRole[];
+  requiredRole: UserRole;
 }
 
-export default function ProtectedRoute({
-  allowedRoles = [HasuraUserRole.Public, HasuraUserRole.User],
-  children,
-}: ProtectedRouteProps) {
+export default function ProtectedRoute({ requiredRole = HasuraUserRole.User, children }: ProtectedRouteProps) {
   const { hasuraToken } = useAuth();
-  const { role } = useJwtRole(hasuraToken?.accessToken);
-  if (role && allowedRoles && allowedRoles.indexOf(role) < 0) {
-    return <Navigate to={RoutePaths.Projects} />;
+  const { roleList } = useJwtRole(hasuraToken?.accessToken);
+  if (roleList.includes(requiredRole)) {
+    return <>{children}</>;
   }
-  return <>{children}</>;
+  return <Navigate to={RoutePaths.Projects} />;
 }

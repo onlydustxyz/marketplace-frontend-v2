@@ -9,7 +9,7 @@ import ProfileButton from "./ProfileButton";
 
 export default function Layout() {
   const { hasuraToken } = useAuth();
-  const { isLoggedIn, role } = useJwtRole(hasuraToken?.accessToken);
+  const { isLoggedIn, roleList } = useJwtRole(hasuraToken?.accessToken);
   return (
     <div>
       <div className="bg-black/50">
@@ -20,7 +20,7 @@ export default function Layout() {
           <div className="flex flex-1 justify-center align-center text-3xl drop-shadow-lg saturate-200 outline-4 font-alfreda font-extrabold">
             <Link to={RoutePaths.Projects}>Projects</Link>
           </div>
-          {role === CustomUserRole.ProjectLead && (
+          {roleList.includes(CustomUserRole.ProjectLead) && (
             <div className="flex flex-1 justify-center align-center text-3xl drop-shadow-lg saturate-200 outline-4 font-alfreda font-extrabold">
               <Link to={RoutePaths.MyProjects}>My Projects</Link>
             </div>

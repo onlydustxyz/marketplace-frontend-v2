@@ -33,7 +33,7 @@ function App() {
         {
           path: RoutePaths.Profile,
           element: (
-            <ProtectedRoute allowedRoles={[HasuraUserRole.User, CustomUserRole.ProjectLead]}>
+            <ProtectedRoute requiredRole={HasuraUserRole.User}>
               <Profile />
             </ProtectedRoute>
           ),
@@ -41,7 +41,7 @@ function App() {
         {
           path: RoutePaths.MyProjects,
           element: (
-            <ProtectedRoute allowedRoles={[CustomUserRole.ProjectLead]}>
+            <ProtectedRoute requiredRole={CustomUserRole.ProjectLead}>
               <MyProjects />
             </ProtectedRoute>
           ),

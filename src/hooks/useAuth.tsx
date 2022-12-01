@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 
   const consumeRefreshToken = useCallback(async (refreshToken: string) => {
     const accessToken = await axios.post(`${config.HASURA_AUTH_BASE_URL}/token`, {
-      refreshToken: refreshToken,
+      refreshToken,
     });
     if (!accessToken.data) throw new Error("Could not consume refresh token");
     const newHasuraToken = { ...accessToken.data, creationDate: Date.now() };
