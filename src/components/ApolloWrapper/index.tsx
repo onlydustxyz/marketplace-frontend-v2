@@ -4,6 +4,8 @@ import { setContext } from "@apollo/client/link/context";
 import config from "src/config";
 import { useAuth } from "src/hooks/useAuth";
 
+export const buildApolloCache = () => new InMemoryCache();
+
 const ApolloWrapper: React.FC<PropsWithChildren> = ({ children }) => {
   const { getUpToDateHasuraToken } = useAuth();
 
@@ -24,7 +26,7 @@ const ApolloWrapper: React.FC<PropsWithChildren> = ({ children }) => {
 
   const client = new ApolloClient({
     link: ApolloLink.from([AuthenticationLink, HttpLink]),
-    cache: new InMemoryCache(),
+    cache: buildApolloCache(),
   });
 
   return <ApolloProvider client={client}>{children}</ApolloProvider>;
