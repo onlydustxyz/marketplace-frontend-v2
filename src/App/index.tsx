@@ -9,11 +9,14 @@ import ErrorFallback from "src/components/ErrorFallback";
 import Login from "src/pages/Login";
 import Projects from "src/pages/Projects";
 import Profile from "src/pages/Profile";
+import MyProjects from "src/pages/MyProjects";
+import { CustomUserRole, HasuraUserRole } from "src/types";
 
 export enum RoutePaths {
   Projects = "/",
   Login = "/login",
   Profile = "/profile",
+  MyProjects = "/myprojects",
   CatchAll = "*",
 }
 
@@ -26,11 +29,20 @@ function App() {
           path: RoutePaths.Projects,
           element: <Projects />,
         },
+
         {
           path: RoutePaths.Profile,
           element: (
-            <ProtectedRoute>
+            <ProtectedRoute requiredRole={HasuraUserRole.User}>
               <Profile />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: RoutePaths.MyProjects,
+          element: (
+            <ProtectedRoute requiredRole={CustomUserRole.ProjectLead}>
+              <MyProjects />
             </ProtectedRoute>
           ),
         },
@@ -45,6 +57,7 @@ function App() {
       ],
     },
   ]);
+
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <Suspense fallback={<Loader className="animate-spin mt-[30vh]" size={62} />}>{routes}</Suspense>

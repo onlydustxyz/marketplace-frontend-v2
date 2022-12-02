@@ -1,12 +1,13 @@
 import { gql } from "@apollo/client";
 import { useHasuraQuery } from "src/hooks/useHasuraQuery";
 import { useAuth } from "src/hooks/useAuth";
-import { USER_ROLES } from "src/types";
+import { HasuraUserRole } from "src/types";
+import { useJwtRole } from "src/hooks/useJwtRole";
 
 export default function Profile() {
-  const { getUser, isLoggedIn } = useAuth();
-  const user = getUser();
-  const { loading, error, data } = useHasuraQuery(GET_PROFILE_QUERY, USER_ROLES.USER, {
+  const { user, hasuraToken } = useAuth();
+  const { isLoggedIn } = useJwtRole(hasuraToken?.accessToken);
+  const { loading, error, data } = useHasuraQuery(GET_PROFILE_QUERY, HasuraUserRole.User, {
     skip: !isLoggedIn,
     variables: { id: user?.id },
   });

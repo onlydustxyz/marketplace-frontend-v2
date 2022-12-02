@@ -4,8 +4,8 @@ import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { Fragment } from "react";
 
 const ProfileButton = () => {
-  const { logout, getUser } = useAuth();
-  const { avatarUrl, displayName } = getUser() ?? { avatarUrl: null, displayName: "My Account" };
+  const { logout, user } = useAuth();
+  const { avatarUrl, displayName } = user ?? { avatarUrl: null, displayName: "My Account" };
   return (
     <div className="relative w-56 text-right">
       <Menu as="div" className="relative inline-block text-left">

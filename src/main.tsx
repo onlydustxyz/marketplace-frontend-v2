@@ -8,6 +8,7 @@ import App from "./App";
 
 import "src/assets/css/index.css";
 import "src/assets/fonts/Alfreda/stylesheet.css";
+import "src/assets/fonts/GTWalsheimPro/stylesheet.css";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
