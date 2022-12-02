@@ -9,12 +9,9 @@ import { checkLocalStorageValue, MemoryRouterProviderFactory } from "src/test/ut
 import { GET_PROJECTS_QUERY } from "src/pages/Projects";
 import { GET_PROFILE_QUERY } from "src/pages/Profile";
 import { CLAIMS_KEY, PROJECTS_LED_KEY } from "src/types";
-import {
-  GET_MY_PROJECT_QUERY,
-  INITIAL_AMOUNT_KEY,
-  PROJECTS_BY_PK_KEY,
-  REMAINING_AMOUNT_KEY,
-} from "src/pages/MyProjects";
+import { GET_MY_PROJECT_QUERY, PROJECTS_BY_PK_KEY, PROJECT_DETAILS_KEY } from "src/pages/MyProjects";
+import { INITIAL_AMOUNT_KEY, REMAINING_AMOUNT_KEY } from "src/pages/MyProjects/MyProject";
+import { TELEGRAM_LINK_KEY } from "src/pages/MyProjects/MyProject";
 
 const AUTH_CODE_TEST_VALUE = "code";
 const LOGGING_IN_TEXT_QUERY = /logging in/i;
@@ -37,6 +34,8 @@ const HASURA_TOKEN_WITH_VALID_JWT_TEST_VALUE = {
 const PROFILE_TEXT_QUERY = `Your user id is ${TEST_USER_ID} and your e-mail address is ${TEST_USER_EMAIL}`;
 const TEST_PROJECT_ID = "test-project-id";
 const TEST_PROJECT_NAME = "test-project-name";
+const TEST_TELEGRAM_LINK = "test-link";
+const TEST_DESCRIPTION = "test-description";
 
 expect.extend(matchers);
 
@@ -90,6 +89,7 @@ const graphQlMocks = [
         [PROJECTS_BY_PK_KEY]: {
           name: TEST_PROJECT_NAME,
           budgets: [{ [INITIAL_AMOUNT_KEY]: 500, [REMAINING_AMOUNT_KEY]: 300 }],
+          [PROJECT_DETAILS_KEY]: { [TELEGRAM_LINK_KEY]: TEST_TELEGRAM_LINK, description: TEST_DESCRIPTION },
         },
       },
     },

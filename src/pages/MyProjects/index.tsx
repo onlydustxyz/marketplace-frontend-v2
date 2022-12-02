@@ -5,8 +5,7 @@ import { useJwtRole } from "src/hooks/useJwtRole";
 import MyProject from "./MyProject";
 
 export const PROJECTS_BY_PK_KEY = "projects_by_pk";
-export const REMAINING_AMOUNT_KEY = "remaining_amount";
-export const INITIAL_AMOUNT_KEY = "initial_amount";
+export const PROJECT_DETAILS_KEY = "project_details";
 
 interface MyProjectsProps {
   projectIds: string[];
@@ -40,11 +39,7 @@ function MyProjectContainer({ projectId }: MyProjectContainerProps) {
   return (
     <>
       {project && (
-        <MyProject
-          projectName={project.name}
-          remainingBudget={project.budgets[0][REMAINING_AMOUNT_KEY]}
-          initialBudget={project.budgets[0][INITIAL_AMOUNT_KEY]}
-        />
+        <MyProject name={project.name} budget={project?.budgets[0]} details={project?.[PROJECT_DETAILS_KEY]} />
       )}
     </>
   );
@@ -57,6 +52,10 @@ export const GET_MY_PROJECT_QUERY = gql`
       budgets {
         initial_amount
         remaining_amount
+      }
+      project_details {
+        description
+        telegram_link
       }
     }
   }
