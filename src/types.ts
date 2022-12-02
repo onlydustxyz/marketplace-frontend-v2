@@ -23,20 +23,23 @@ export type User = {
   displayName: string;
   avatarUrl: Url | null;
   locale: Locale;
-  email: Email;
   isAnonymous: boolean;
   defaultRole: HasuraUserRole;
+  emailVerified: boolean;
+  phoneNumber: PhoneNumber | null;
+  phoneNumberVerified: boolean;
+  activeMfaType: null;
+  roles: HasuraUserRole[];
+} & UserInfo;
+
+export type UserInfo = {
   metadata: {
     paymentReceiverType?: PaymentReceiverType;
     firstName?: string;
     lastName?: string;
     location?: Location;
   };
-  emailVerified: boolean;
-  phoneNumber: PhoneNumber | null;
-  phoneNumberVerified: boolean;
-  activeMfaType: null;
-  roles: HasuraUserRole[];
+  email: Email;
 };
 
 type Date = string;

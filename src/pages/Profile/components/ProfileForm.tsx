@@ -23,7 +23,7 @@ type PropsType = {
 const ProfileForm: React.FC<PropsType> = ({ user }) => {
   const formMethods = useForm<Inputs>({
     defaultValues: {
-      paymentReceiverType: user.metadata?.paymentReceiverType ?? PaymentReceiverType.INDIVIDUAL,
+      paymentReceiverType: user.metadata.paymentReceiverType ?? PaymentReceiverType.INDIVIDUAL,
       firstName: user.metadata?.firstName ?? "",
       lastName: user.metadata?.lastName ?? "",
       email: user.email ?? "",
@@ -75,11 +75,7 @@ const ProfileForm: React.FC<PropsType> = ({ user }) => {
           <Input name="city" placeholder="city" options={{ required: "Required" }} />
           <Input name="country" placeholder="country" options={{ required: "Required" }} />
         </div>
-        <button
-          type="submit"
-          onClick={handleSubmit(onSubmit)}
-          className="self-start border-white border-2 px-3 py-2 rounded-md"
-        >
+        <button type="submit" className="self-start border-white border-2 px-3 py-2 rounded-md">
           {loading ? "Loading..." : "Send"}
         </button>
         {success && <p>Your data has been saved!</p>}

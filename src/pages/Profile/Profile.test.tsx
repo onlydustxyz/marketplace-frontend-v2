@@ -6,9 +6,10 @@ import matchers from "@testing-library/jest-dom/matchers";
 import ProfilePage from ".";
 import { LOCAL_STORAGE_HASURA_TOKEN_KEY } from "src/hooks/useAuth";
 import { GET_PROFILE_QUERY } from "src/pages/Profile";
-import { CLAIMS_KEY, PaymentReceiverType, PROJECTS_LED_KEY, User } from "src/types";
+import { CLAIMS_KEY, PaymentReceiverType, PROJECTS_LED_KEY, UserInfo } from "src/types";
 import { RoutePaths } from "src/App";
 import { MemoryRouterProviderFactory } from "src/test/utils";
+import { UPDATE_USER_MUTATION } from "./components/ProfileForm";
 
 const mockUser = {
   id: "test-user-id",
@@ -39,21 +40,27 @@ vi.mock("jwt-decode", () => ({
   default: () => ({ [CLAIMS_KEY]: { [PROJECTS_LED_KEY]: '{"test-project-id"}' } }),
 }));
 
-const buildMockProfileQuery = (userId: string, userResponse: any) => [
-  {
-    request: {
-      query: GET_PROFILE_QUERY,
-      variables: {
-        id: userId,
-      },
-    },
-    result: {
-      data: {
-        user: userResponse,
-      },
+const buildMockProfileQuery = (userId: string, userResponse: UserInfo) => ({
+  request: {
+    query: GET_PROFILE_QUERY,
+    variables: {
+      id: userId,
     },
   },
-];
+  result: {
+    data: {
+      user: userResponse,
+    },
+  },
+});
+
+const buildMockMutationUpdateUser = (newUserInfo: UserInfo) => ({
+  request: {
+    query: UPDATE_USER_MUTATION,
+    variables: newUserInfo,
+  },
+  result: newUserInfo,
+});
 
 describe('"Profile" page', () => {
   beforeAll(() => {
@@ -64,7 +71,7 @@ describe('"Profile" page', () => {
     render(<ProfilePage />, {
       wrapper: MemoryRouterProviderFactory({
         route: RoutePaths.Profile,
-        mocks: buildMockProfileQuery(mockUser.id, mockUser),
+        mocks: [buildMockProfileQuery(mockUser.id, mockUser), buildMockMutationUpdateUser(mockUser)],
       }),
     });
   });
@@ -86,7 +93,9 @@ describe('"Profile" page', () => {
 
   it("should display error when required field missing", async () => {
     userEvent.clear(await screen.findByLabelText<HTMLInputElement>("Email"));
-    userEvent.click(await screen.findByText("Send"));
-    await screen.findByText("Required");
+    expect((await screen.findByLabelText<HTMLInputElement>("Email")).value).toBe("");
+    const sendButton = await screen.findByText("Send");
+    userEvent.click(sendButton);
+    expect(await screen.findByText("Required")).toBeInTheDocument();
   });
 });
