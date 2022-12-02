@@ -1,5 +1,5 @@
 import axios from "axios";
-import { createContext, PropsWithChildren, useCallback, useContext, useEffect, useMemo } from "react";
+import { createContext, PropsWithChildren, useCallback, useContext, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocalStorage } from "react-use";
 import { RoutePaths } from "src/App";

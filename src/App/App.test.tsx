@@ -60,7 +60,7 @@ const graphQlMocks = [
     },
     result: {
       data: {
-        projects: [{ id: TEST_PROJECT_ID }],
+        projects: [{ name: TEST_PROJECT_NAME }],
       },
     },
   },
@@ -139,7 +139,7 @@ describe('"Login" page', () => {
 
   it("should redirect to the projects page if the profile route is accessed without a token in the local storage", async () => {
     render(<App />, { wrapper: MemoryRouterProviderFactory({ route: RoutePaths.Profile, mocks: graphQlMocks }) });
-    await screen.findByText(TEST_PROJECT_ID);
+    await screen.findByText(TEST_PROJECT_NAME);
   });
 
   it("should be able to access the my projects page when having a token with the right jwt in local storage", async () => {

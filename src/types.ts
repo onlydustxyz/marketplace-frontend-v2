@@ -44,14 +44,6 @@ type Locale = "en" | "fr";
 export const CLAIMS_KEY = "https://hasura.io/jwt/claims";
 export const PROJECTS_LED_KEY = "x-hasura-projects_leaded";
 
-interface ObjectWithClaimsKey {
-  [CLAIMS_KEY]: unknown;
-}
-
-interface ObjectWithProjectsLedKey {
-  [PROJECTS_LED_KEY]: unknown;
-}
-
 export interface HasuraJWT {
   [CLAIMS_KEY]: {
     [PROJECTS_LED_KEY]: string;
