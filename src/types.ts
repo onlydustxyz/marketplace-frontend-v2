@@ -38,6 +38,7 @@ export type UserInfo = {
     firstName?: string;
     lastName?: string;
     location?: Location;
+    payoutSettings?: PayoutSettings;
   };
   email: Email;
 };
@@ -53,6 +54,20 @@ export type Location = {
   city: string;
   country: string;
 };
+export type PayoutSettings = {
+  type: PayoutSettingsType;
+  settings: {
+    ethWalletAddress?: string;
+    iban?: string;
+    bic?: string;
+  };
+};
+
+export enum PayoutSettingsType {
+  ETH = "ETH",
+  IBAN = "IBAN",
+}
+
 type Locale = "en" | "fr";
 
 export enum PaymentReceiverType {
