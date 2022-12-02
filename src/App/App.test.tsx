@@ -10,8 +10,7 @@ import { GET_PROJECTS_QUERY } from "src/pages/Projects";
 import { GET_PROFILE_QUERY } from "src/pages/Profile";
 import { CLAIMS_KEY, PROJECTS_LED_KEY } from "src/types";
 import { GET_MY_PROJECT_QUERY, PROJECTS_BY_PK_KEY, PROJECT_DETAILS_KEY } from "src/pages/MyProjects";
-import { INITIAL_AMOUNT_KEY, REMAINING_AMOUNT_KEY } from "src/pages/MyProjects/MyProject";
-import { TELEGRAM_LINK_KEY } from "src/pages/MyProjects/MyProject";
+import { INITIAL_AMOUNT_KEY, REMAINING_AMOUNT_KEY, TELEGRAM_LINK_KEY } from "src/components/ProjectInformation";
 
 const AUTH_CODE_TEST_VALUE = "code";
 const LOGGING_IN_TEXT_QUERY = /logging in/i;
