@@ -2,25 +2,35 @@ import jwtDecode from "jwt-decode";
 import { useEffect, useState } from "react";
 import { CLAIMS_KEY, CustomUserRole, HasuraJWT, HasuraUserRole, PROJECTS_LED_KEY, UserRole } from "src/types";
 
+const getProjectsLedFromJwt = (jwt: HasuraJWT): string[] => {
+  const projectsLedRaw = jwt?.[CLAIMS_KEY]?.[PROJECTS_LED_KEY];
+  if (!projectsLedRaw) return [];
+
+  return projectsLedRaw.replace("{", "").replace("}", "").split(",");
+};
+
 function getRoleListFromJwt(jwtString?: string) {
   const newRoleList: UserRole[] = [HasuraUserRole.Public];
-  if (jwtString) {
-    newRoleList.push(HasuraUserRole.User);
-    try {
-      const decodedToken = jwtDecode<HasuraJWT>(jwtString);
-      if (decodedToken[CLAIMS_KEY][PROJECTS_LED_KEY].length > 2) {
-        newRoleList.push(CustomUserRole.ProjectLead);
-      }
-    } catch (e) {
-      console.error(`Error decoding JWT: ${e}`);
+  if (!jwtString) return newRoleList;
+
+  newRoleList.push(HasuraUserRole.User);
+
+  try {
+    const decodedToken = jwtDecode<HasuraJWT>(jwtString);
+    const projectsLed = getProjectsLedFromJwt(decodedToken);
+    if (projectsLed.length > 0) {
+      newRoleList.push(CustomUserRole.ProjectLead);
     }
+  } catch (e) {
+    console.error(`Error decoding JWT: ${e}`);
   }
+
   return newRoleList;
 }
 
 export const useJwtRole = (jwtString?: string) => {
   const [roleList, setRoleList] = useState<UserRole[]>(getRoleListFromJwt(jwtString));
-  const [ledProjectIds, setLedProjectIds] = useState([]);
+  const [ledProjectIds, setLedProjectIds] = useState<string[]>([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => setRoleList(getRoleListFromJwt(jwtString)), [jwtString]);
@@ -28,8 +38,9 @@ export const useJwtRole = (jwtString?: string) => {
   useEffect(() => {
     if (jwtString && roleList.includes(CustomUserRole.ProjectLead)) {
       const decodedToken = jwtDecode<HasuraJWT>(jwtString);
-      if (decodedToken[CLAIMS_KEY][PROJECTS_LED_KEY].length > 2) {
-        setLedProjectIds(JSON.parse(convertCurlyBracesToBrackets(decodedToken[CLAIMS_KEY][PROJECTS_LED_KEY])));
+      const projectsLed = getProjectsLedFromJwt(decodedToken);
+      if (projectsLed.length > 0) {
+        setLedProjectIds(projectsLed);
       }
     }
   }, [JSON.stringify(roleList)]);
@@ -40,7 +51,3 @@ export const useJwtRole = (jwtString?: string) => {
 
   return { roleList, ledProjectIds, isLoggedIn };
 };
-
-function convertCurlyBracesToBrackets(x: string) {
-  return x.replace("{", "[").replace("}", "]");
-}
