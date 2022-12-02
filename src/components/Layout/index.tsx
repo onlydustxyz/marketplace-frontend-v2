@@ -11,7 +11,7 @@ export default function Layout() {
   const { hasuraToken } = useAuth();
   const { isLoggedIn, roleList } = useJwtRole(hasuraToken?.accessToken);
   return (
-    <div className="pb-10">
+    <div>
       <div className="bg-black/50">
         <div className="flex flex-row justify-between items-center px-5 py-5">
           <div className="flex-1">
@@ -28,7 +28,9 @@ export default function Layout() {
           <div className="flex flex-1 justify-end">{!isLoggedIn ? <GithubLink /> : <ProfileButton />}</div>
         </div>
       </div>
-      <Outlet />
+      <div className="container mx-auto pb-10">
+        <Outlet />
+      </div>
     </div>
   );
 }

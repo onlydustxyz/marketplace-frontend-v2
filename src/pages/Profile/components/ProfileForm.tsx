@@ -23,7 +23,7 @@ type PropsType = {
 const ProfileForm: React.FC<PropsType> = ({ user }) => {
   const formMethods = useForm<Inputs>({
     defaultValues: {
-      paymentReceiverType: user.metadata.paymentReceiverType ?? PaymentReceiverType.INDIVIDUAL,
+      paymentReceiverType: user.metadata?.paymentReceiverType ?? PaymentReceiverType.INDIVIDUAL,
       firstName: user.metadata?.firstName ?? "",
       lastName: user.metadata?.lastName ?? "",
       email: user.email ?? "",

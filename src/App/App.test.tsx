@@ -18,6 +18,7 @@ const LOGGING_IN_TEXT_QUERY = /logging in/i;
 const AUTH_TOKEN_MISSING_TEXT_QUERY = /github authentication token missing !/i;
 const TEST_USER_ID = "test-user-id";
 const TEST_USER_EMAIL = "test@user.email";
+const EDIT_PROFILE_TITLE = "Edit Profile";
 const HASURA_TOKEN_BASIC_TEST_VALUE = {
   user: {
     id: TEST_USER_ID,
@@ -31,7 +32,6 @@ const HASURA_TOKEN_WITH_VALID_JWT_TEST_VALUE = {
   accessToken: "VALID_ACCESS_TOKEN",
 };
 
-const PROFILE_TEXT_QUERY = `Your user id is ${TEST_USER_ID} and your e-mail address is ${TEST_USER_EMAIL}`;
 const TEST_PROJECT_ID = "test-project-id";
 const TEST_PROJECT_NAME = "test-project-name";
 const TEST_TELEGRAM_LINK = "test-link";
@@ -73,7 +73,7 @@ const graphQlMocks = [
     },
     result: {
       data: {
-        user: { id: TEST_USER_ID, email: TEST_USER_EMAIL },
+        user: { id: TEST_USER_ID, email: TEST_USER_EMAIL, metadata: {} },
       },
     },
   },
@@ -109,7 +109,7 @@ describe('"Login" page', () => {
       }),
     });
     await screen.findByText(LOGGING_IN_TEXT_QUERY);
-    await screen.findByText(PROFILE_TEXT_QUERY);
+    await screen.findByText(EDIT_PROFILE_TITLE);
     expect(screen.queryByText(LOGGING_IN_TEXT_QUERY)).not.toBeInTheDocument();
     checkLocalStorageValue({
       key: LOCAL_STORAGE_HASURA_TOKEN_KEY,
@@ -125,7 +125,7 @@ describe('"Login" page', () => {
         mocks: graphQlMocks,
       }),
     });
-    await screen.findByText(PROFILE_TEXT_QUERY);
+    await screen.findByText(EDIT_PROFILE_TITLE);
   });
 
   it("should display an error message if no refresh token is passed as a query parameter in the URL", async () => {

@@ -15,13 +15,13 @@ const Profile: React.FC = () => {
   });
   const { data } = query;
   return (
-    <QueryWrapper errorMessage="Error fetching profile" query={query}>
-      {data && (
-        <div className="flex justify-center mt-10 text-2xl">
-          <ProfileForm user={data.user} />
-        </div>
-      )}
-    </QueryWrapper>
+    <div className="flex flex-col mt-10 text-2xl">
+      <h1>Edit Profile</h1>
+      <br />
+      <QueryWrapper errorMessage="Error fetching profile" query={query}>
+        {data && <ProfileForm user={data.user} />}
+      </QueryWrapper>
+    </div>
   );
 };
 
