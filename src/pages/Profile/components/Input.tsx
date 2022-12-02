@@ -1,4 +1,5 @@
-import { useFormContext, RegisterOptions } from "react-hook-form";
+import { memo, useEffect, useState } from "react";
+import { useFormContext, useFormState, RegisterOptions } from "react-hook-form";
 
 type PropsType = {
   label?: string;
@@ -8,11 +9,16 @@ type PropsType = {
 };
 
 const Input: React.FC<PropsType> = ({ label, placeholder, name, options = {} }) => {
-  const {
-    register,
-    formState: { errors },
-  } = useFormContext();
+  const { register } = useFormContext();
+  const { errors } = useFormState({ name });
   const error = errors[name];
+
+  // @TODO: This hack is to force rerender in tests (-_.-)
+  const [_, makeReactive] = useState<unknown>();
+  useEffect(() => {
+    makeReactive(errors[name]);
+  }, [errors[name]]);
+
   return (
     <label html-for={name} className="flex flex-col">
       {label}
@@ -27,4 +33,4 @@ const Input: React.FC<PropsType> = ({ label, placeholder, name, options = {} }) 
   );
 };
 
-export default Input;
+export default memo(Input);

@@ -46,39 +46,41 @@ const ProfileForm: React.FC<PropsType> = ({ user }) => {
   return (
     <FormProvider {...formMethods}>
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3">
-        <div className="flex flex-col">
-          Type of Profile
-          <div className="flex flex-row gap-3">
-            <Radio
-              name="paymentReceiverType"
-              options={[
-                {
-                  value: PaymentReceiverType.INDIVIDUAL,
-                  label: "Individual",
-                },
-                {
-                  value: PaymentReceiverType.COMPANY,
-                  label: "Company",
-                },
-              ]}
-            />
+        <>
+          <div className="flex flex-col">
+            Type of Profile
+            <div className="flex flex-row gap-3">
+              <Radio
+                name="paymentReceiverType"
+                options={[
+                  {
+                    value: PaymentReceiverType.INDIVIDUAL,
+                    label: "Individual",
+                  },
+                  {
+                    value: PaymentReceiverType.COMPANY,
+                    label: "Company",
+                  },
+                ]}
+              />
+            </div>
           </div>
-        </div>
-        <div className="flex flex-row gap-5">
-          <Input label="FirstName" name="firstName" placeholder="firstName" options={{ required: "Required" }} />
-          <Input label="LastName" name="lastName" placeholder="lastName" options={{ required: "Required" }} />
-        </div>
-        <Input label="Email" name="email" placeholder="email" options={{ required: "Required" }} />
-        <Input label="Location" name="address" placeholder="address" options={{ required: "Required" }} />
-        <div className="flex flex-row gap-5">
-          <Input name="zipcode" placeholder="zipcode" options={{ required: "Required" }} />
-          <Input name="city" placeholder="city" options={{ required: "Required" }} />
-          <Input name="country" placeholder="country" options={{ required: "Required" }} />
-        </div>
-        <button type="submit" className="self-start border-white border-2 px-3 py-2 rounded-md">
-          {loading ? "Loading..." : "Send"}
-        </button>
-        {success && <p>Your data has been saved!</p>}
+          <div className="flex flex-row gap-5">
+            <Input label="FirstName" name="firstName" placeholder="firstName" options={{ required: "Required" }} />
+            <Input label="LastName" name="lastName" placeholder="lastName" options={{ required: "Required" }} />
+          </div>
+          <Input label="Email" name="email" placeholder="email" options={{ required: "Required" }} />
+          <Input label="Location" name="address" placeholder="address" options={{ required: "Required" }} />
+          <div className="flex flex-row gap-5">
+            <Input name="zipcode" placeholder="zipcode" options={{ required: "Required" }} />
+            <Input name="city" placeholder="city" options={{ required: "Required" }} />
+            <Input name="country" placeholder="country" options={{ required: "Required" }} />
+          </div>
+          <button type="submit" className="self-start border-white border-2 px-3 py-2 rounded-md">
+            {loading ? "Loading..." : "Send"}
+          </button>
+          {success && <p>Your data has been saved!</p>}
+        </>
       </form>
     </FormProvider>
   );

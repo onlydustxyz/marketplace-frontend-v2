@@ -6,7 +6,7 @@ import matchers from "@testing-library/jest-dom/matchers";
 import ProfilePage from ".";
 import { LOCAL_STORAGE_HASURA_TOKEN_KEY } from "src/hooks/useAuth";
 import { GET_PROFILE_QUERY } from "src/pages/Profile";
-import { CLAIMS_KEY, PaymentReceiverType, PROJECTS_LED_KEY, UserInfo } from "src/types";
+import { CLAIMS_KEY, Email, PaymentReceiverType, PROJECTS_LED_KEY, UserInfo } from "src/types";
 import { RoutePaths } from "src/App";
 import { MemoryRouterProviderFactory } from "src/test/utils";
 import { UPDATE_USER_MUTATION } from "./components/ProfileForm";
@@ -54,12 +54,12 @@ const buildMockProfileQuery = (userId: string, userResponse: UserInfo) => ({
   },
 });
 
-const buildMockMutationUpdateUser = (newUserInfo: UserInfo) => ({
+const buildMockMutationUpdateUser = (userId: string, email: Email, metadata: UserInfo["metadata"]) => ({
   request: {
     query: UPDATE_USER_MUTATION,
-    variables: newUserInfo,
+    variables: { userId, email, metadata },
   },
-  result: newUserInfo,
+  result: { data: { email, metadata } },
 });
 
 describe('"Profile" page', () => {
@@ -71,7 +71,10 @@ describe('"Profile" page', () => {
     render(<ProfilePage />, {
       wrapper: MemoryRouterProviderFactory({
         route: RoutePaths.Profile,
-        mocks: [buildMockProfileQuery(mockUser.id, mockUser), buildMockMutationUpdateUser(mockUser)],
+        mocks: [
+          buildMockProfileQuery(mockUser.id, mockUser),
+          buildMockMutationUpdateUser(mockUser.id, mockUser.email, mockUser.metadata),
+        ],
       }),
     });
   });
@@ -93,9 +96,14 @@ describe('"Profile" page', () => {
 
   it("should display error when required field missing", async () => {
     userEvent.clear(await screen.findByLabelText<HTMLInputElement>("Email"));
+    userEvent.clear(await screen.findByLabelText<HTMLInputElement>("FirstName"));
     expect((await screen.findByLabelText<HTMLInputElement>("Email")).value).toBe("");
-    const sendButton = await screen.findByText("Send");
-    userEvent.click(sendButton);
-    expect(await screen.findByText("Required")).toBeInTheDocument();
+    userEvent.click(await screen.findByText("Send"));
+    expect((await screen.findAllByText("Required")).length).toBe(2);
+  });
+
+  it("should display success message on success", async () => {
+    userEvent.click(await screen.findByText("Send"));
+    expect(await screen.findByText("Your data has been saved!")).toBeInTheDocument();
   });
 });
