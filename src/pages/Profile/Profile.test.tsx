@@ -6,7 +6,7 @@ import matchers from "@testing-library/jest-dom/matchers";
 import ProfilePage from ".";
 import { LOCAL_STORAGE_HASURA_TOKEN_KEY } from "src/hooks/useAuth";
 import { GET_PROFILE_QUERY } from "src/pages/Profile";
-import { CLAIMS_KEY, Email, PaymentReceiverType, PROJECTS_LED_KEY, UserInfo } from "src/types";
+import { CLAIMS_KEY, Email, PaymentReceiverType, PayoutSettingsType, PROJECTS_LED_KEY, UserInfo } from "src/types";
 import { RoutePaths } from "src/App";
 import { MemoryRouterProviderFactory } from "src/test/utils";
 import { UPDATE_USER_MUTATION } from "./components/ProfileForm";
@@ -23,6 +23,12 @@ const mockUser = {
       city: "Grenoble",
       country: "France",
       zipcode: "38000",
+    },
+    payoutSettings: {
+      type: PayoutSettingsType.ETH,
+      settings: {
+        ethWalletAddress: "0x1234567890",
+      },
     },
   },
 };
