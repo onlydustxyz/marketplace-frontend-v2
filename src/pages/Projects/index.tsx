@@ -1,9 +1,15 @@
 import { gql } from "@apollo/client";
 import { useHasuraQuery } from "src/hooks/useHasuraQuery";
+import { PROJECT_DETAILS_KEY } from "../MyProjects";
+import Project, { TELEGRAM_LINK_KEY } from "./Project";
 
 interface Project {
-  // to be replaced with codegen types
   id: string;
+  name: string;
+  [PROJECT_DETAILS_KEY]: {
+    description: string;
+    [TELEGRAM_LINK_KEY]: string;
+  };
 }
 
 export default function Projects() {
@@ -12,14 +18,13 @@ export default function Projects() {
     <>
       {loading && <div className="flex justify-center mt-10 text-2xl">Loading</div>}
       {data && (
-        <>
-          <div className="flex justify-center mt-10 text-2xl">Project ids:</div>
+        <div className="px-10 flex flex-col align-center items-center">
           {data.projects.map((project: Project) => (
-            <div className="flex justify-center mt-10 text-2xl" key={project.id}>
-              {project.id}
+            <div key={project.id} className="flex w-5/6 my-3">
+              <Project name={project.name} details={project?.[PROJECT_DETAILS_KEY]} />
             </div>
           ))}
-        </>
+        </div>
       )}
       {error && <div className="flex justify-center mt-10 text-2xl">{JSON.stringify(error)}</div>}
     </>
@@ -30,6 +35,11 @@ export const GET_PROJECTS_QUERY = gql`
   query MyQuery {
     projects {
       id
+      name
+      project_details {
+        description
+        telegram_link
+      }
     }
   }
 `;
