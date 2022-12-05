@@ -71,9 +71,18 @@ export enum PayoutSettingsType {
 export type Payment = {
   id: string;
   project: Project;
-  amount: number;
+  amount: {
+    value: number;
+    currency: Currency;
+  };
   status: PaymentStatus;
 };
+
+export enum Currency {
+  USD = "USD",
+  ETH = "ETH",
+  USDC = "USDC",
+}
 
 export enum PaymentStatus {
   ACCEPTED = "ACCEPTED",

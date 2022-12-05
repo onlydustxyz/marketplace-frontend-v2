@@ -4,7 +4,7 @@ import PaymentTable from "src/components/Payments";
 import QueryWrapper from "src/components/QueryWrapper";
 import { useAuth } from "src/hooks/useAuth";
 import { useHasuraQuery } from "src/hooks/useHasuraQuery";
-import { HasuraUserRole, Payment, PaymentStatus } from "src/types";
+import { Currency, HasuraUserRole, Payment, PaymentStatus } from "src/types";
 
 const MyContributions = () => {
   const { user } = useAuth();
@@ -23,16 +23,23 @@ const MyContributions = () => {
 };
 
 const mapApiPaymentsToProps = (apiPayment: any): Payment => {
-  const amount = apiPayment?.payment?.amount ?? apiPayment?.amount_in_usd;
-  const project = apiPayment?.budget?.project;
+  const getAmount = (apiPayment: any) => {
+    const payment = apiPayment?.payment;
+    if (payment?.amount) return { value: payment.amount, currency: payment.currency };
+
+    return { value: apiPayment.amount_in_usd, currency: Currency.USD };
+  };
+
+  const amount = getAmount(apiPayment);
+  const project = apiPayment.budget.project;
 
   return {
-    id: apiPayment?.id,
+    id: apiPayment.id,
     amount,
     project: {
-      id: project?.id,
-      title: project?.name,
-      description: project?.project_details?.description,
+      id: project.id,
+      title: project.name,
+      description: project.project_details.description,
     },
     status: apiPayment?.payment ? PaymentStatus.ACCEPTED : PaymentStatus.WAITING_PAYMENT,
   };
@@ -44,6 +51,7 @@ export const GET_MY_CONTRIBUTIONS_QUERY = gql`
       id
       payments {
         amount
+        currency_code
       }
       amount_in_usd
       budget {
