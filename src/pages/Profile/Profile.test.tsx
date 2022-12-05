@@ -112,6 +112,7 @@ describe('"Profile" page', () => {
   });
 
   it("should display success message on success", async () => {
+    // This triggers an error message 'Missing field updateUser'. The related issue on Apollo: https://github.com/apollographql/apollo-client/issues/8677
     userEvent.click(await screen.findByText("Send"));
     waitFor(() => {
       const successMessage = screen.getByText("Your data has been saved!");
