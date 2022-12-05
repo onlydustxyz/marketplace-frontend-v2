@@ -10,6 +10,7 @@ import Login from "src/pages/Login";
 import Projects from "src/pages/Projects";
 import Profile from "src/pages/Profile";
 import MyProjects from "src/pages/MyProjects";
+import MyContributions from "src/pages/MyContributions";
 import { CustomUserRole, HasuraUserRole } from "src/types";
 import ProjectDetails from "src/pages/ProjectDetails";
 
@@ -19,6 +20,7 @@ export enum RoutePaths {
   Profile = "/profile",
   MyProjects = "/myprojects",
   ProjectDetails = "/project/:projectId",
+  MyContributions = "/mycontributions",
   CatchAll = "*",
 }
 
@@ -36,6 +38,14 @@ function App() {
           element: (
             <ProtectedRoute requiredRole={HasuraUserRole.User}>
               <Profile />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: RoutePaths.MyContributions,
+          element: (
+            <ProtectedRoute requiredRole={HasuraUserRole.User}>
+              <MyContributions />
             </ProtectedRoute>
           ),
         },

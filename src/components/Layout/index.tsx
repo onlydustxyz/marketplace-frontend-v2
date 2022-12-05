@@ -2,7 +2,7 @@ import { Link, Outlet } from "react-router-dom";
 import { RoutePaths } from "src/App";
 import { useAuth } from "src/hooks/useAuth";
 import { useJwtRole } from "src/hooks/useJwtRole";
-import { CustomUserRole } from "src/types";
+import { CustomUserRole, HasuraUserRole } from "src/types";
 import GithubLink from "./GithubLink";
 import OnlyDustLogo from "./OnlyDustLogo";
 import ProfileButton from "./ProfileButton";
@@ -23,6 +23,11 @@ export default function Layout() {
           {roleList.includes(CustomUserRole.ProjectLead) && (
             <div className="flex flex-1 justify-center align-center text-3xl drop-shadow-lg saturate-200 outline-4 font-alfreda font-extrabold">
               <Link to={RoutePaths.MyProjects}>My Projects</Link>
+            </div>
+          )}
+          {roleList.includes(HasuraUserRole.User) && (
+            <div className="flex flex-1 justify-center align-center text-3xl drop-shadow-lg saturate-200 outline-4 font-alfreda font-extrabold">
+              <Link to={RoutePaths.MyContributions}>My Contributions</Link>
             </div>
           )}
           <div className="flex flex-1 justify-end">{!isLoggedIn ? <GithubLink /> : <ProfileButton />}</div>
