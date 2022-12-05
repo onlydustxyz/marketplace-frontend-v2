@@ -12,13 +12,13 @@ type ProjectDetailsParams = {
   projectId: string;
 };
 
-enum Tab {
+export enum ProjectDetailsTab {
   Overview = "Overview",
   Payment = "Payment",
 }
 
 export default function ProjectDetails() {
-  const [selectedTab, setSelectedTab] = useState<Tab>(Tab.Overview);
+  const [selectedTab, setSelectedTab] = useState<ProjectDetailsTab>(ProjectDetailsTab.Overview);
   const { projectId } = useParams<ProjectDetailsParams>();
   const { hasuraToken } = useAuth();
   const { ledProjectIds } = useJwtRole(hasuraToken?.accessToken);
@@ -27,7 +27,9 @@ export default function ProjectDetails() {
   });
 
   const availableTabs =
-    projectId && ledProjectIds && ledProjectIds.includes(projectId) ? [Tab.Overview, Tab.Payment] : [Tab.Overview];
+    projectId && ledProjectIds && ledProjectIds.includes(projectId)
+      ? [ProjectDetailsTab.Overview, ProjectDetailsTab.Payment]
+      : [ProjectDetailsTab.Overview];
   const project = data ? data[PROJECTS_BY_PK_KEY] : null;
 
   return (
@@ -39,13 +41,14 @@ export default function ProjectDetails() {
               <div className="pb-5">
                 <ProjectInformation
                   name={project.name}
-                  budget={project?.budgets[0]}
+                  budget={project?.budgets?.[0]}
                   details={project?.[PROJECT_DETAILS_KEY]}
                 />
               </div>
               <div className="flex flex-row align-start pt-5 space-x-3">
-                {availableTabs.map((tab: Tab) => (
+                {availableTabs.map((tab: ProjectDetailsTab) => (
                   <div
+                    key={tab}
                     className={`border-solid border-white border-2 w-fit p-2 hover:cursor-pointer ${
                       selectedTab === tab ? "font-bold border-3" : "opacity-70"
                     }`}
@@ -64,7 +67,7 @@ export default function ProjectDetails() {
 }
 
 export const GET_PROJECT_QUERY = gql`
-  query MyProject($id: uuid!) {
+  query Project($id: uuid!) {
     projects_by_pk(id: $id) {
       name
       budgets {

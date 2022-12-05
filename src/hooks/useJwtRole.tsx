@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { CLAIMS_KEY, CustomUserRole, HasuraJWT, HasuraUserRole, PROJECTS_LED_KEY, UserRole } from "src/types";
 
 const getProjectsLedFromJwt = (jwt: HasuraJWT): string[] => {
-  console.log(jwt);
   const projectsLedRaw = jwt?.[CLAIMS_KEY]?.[PROJECTS_LED_KEY];
   if (!projectsLedRaw) return [];
 
