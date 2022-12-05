@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 import { HasuraUserRole, PaymentReceiverType, PayoutSettingsType, User } from "src/types";
 import { useForm, SubmitHandler, FormProvider } from "react-hook-form";
-import Input from "./Input";
+import Input from "src/components/FormInput";
 import { useHasuraMutation } from "src/hooks/useHasuraQuery";
 import Radio from "./Radio";
 
