@@ -3,10 +3,16 @@ import Loader from "src/components/Loader";
 
 type PropsType = {
   query: QueryResult;
-  errorMessage: string;
+  errorMessage?: string;
 };
 
-const QueryWrapper: React.FC<React.PropsWithChildren<PropsType>> = ({ query, errorMessage, children }) => {
+const DEFAULT_ERROR = "Something happened...";
+
+const QueryWrapper: React.FC<React.PropsWithChildren<PropsType>> = ({
+  query,
+  errorMessage = DEFAULT_ERROR,
+  children,
+}) => {
   const { loading, data, error } = query;
   return (
     <>

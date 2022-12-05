@@ -68,6 +68,24 @@ export enum PayoutSettingsType {
   IBAN = "IBAN",
 }
 
+export type Payment = {
+  id: string;
+  project: Project;
+  amount: number;
+  status: PaymentStatus;
+};
+
+export enum PaymentStatus {
+  ACCEPTED = "ACCEPTED",
+  WAITING_PAYMENT = "WAITING_PAYMENT",
+}
+
+export type Project = {
+  id: string;
+  title: string;
+  description: string;
+};
+
 type Locale = "en" | "fr";
 
 export enum PaymentReceiverType {
