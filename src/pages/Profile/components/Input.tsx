@@ -13,12 +13,6 @@ const Input: React.FC<PropsType> = ({ label, placeholder, name, options = {} }) 
   const { errors } = useFormState({ name });
   const error = errors[name];
 
-  // @TODO: This hack is to force rerender in tests (-_.-)
-  const [_, makeReactive] = useState<unknown>();
-  useEffect(() => {
-    makeReactive(errors[name]);
-  }, [errors[name]]);
-
   return (
     <label html-for={name} className="flex flex-col">
       {label}

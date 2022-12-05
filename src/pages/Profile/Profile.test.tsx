@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { screen, render } from "@testing-library/react";
+import { screen, render, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import matchers from "@testing-library/jest-dom/matchers";
 
@@ -105,11 +105,17 @@ describe('"Profile" page', () => {
     userEvent.clear(await screen.findByLabelText<HTMLInputElement>("FirstName"));
     expect((await screen.findByLabelText<HTMLInputElement>("Email")).value).toBe("");
     userEvent.click(await screen.findByText("Send"));
-    expect((await screen.findAllByText("Required")).length).toBe(2);
+    waitFor(() => {
+      const errorMessages = screen.getAllByText("Required");
+      expect(errorMessages.length).toBe(2);
+    });
   });
 
   it("should display success message on success", async () => {
     userEvent.click(await screen.findByText("Send"));
-    expect(await screen.findByText("Your data has been saved!")).toBeInTheDocument();
+    waitFor(() => {
+      const successMessage = screen.getByText("Your data has been saved!");
+      expect(successMessage).toBeInTheDocument();
+    });
   });
 });
