@@ -15,5 +15,6 @@ export default function ProtectedRoute({ requiredRole = HasuraUserRole.User, chi
   if (roleList.includes(requiredRole)) {
     return <>{children}</>;
   }
+
   return <Navigate to={RoutePaths.Projects} />;
 }

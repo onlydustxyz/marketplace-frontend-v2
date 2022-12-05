@@ -11,7 +11,7 @@ interface ProjectProps {
 
 export default function Project(props: ProjectProps) {
   return (
-    <ProjectCard selectable={true}>
+    <ProjectCard>
       <ProjectInformation {...props} />
     </ProjectCard>
   );

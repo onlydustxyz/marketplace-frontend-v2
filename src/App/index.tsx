@@ -11,12 +11,14 @@ import Projects from "src/pages/Projects";
 import Profile from "src/pages/Profile";
 import MyProjects from "src/pages/MyProjects";
 import { CustomUserRole, HasuraUserRole } from "src/types";
+import ProjectDetails from "src/pages/ProjectDetails";
 
 export enum RoutePaths {
   Projects = "/",
   Login = "/login",
   Profile = "/profile",
   MyProjects = "/myprojects",
+  ProjectDetails = "/project/:projectId",
   CatchAll = "*",
 }
 
@@ -29,7 +31,6 @@ function App() {
           path: RoutePaths.Projects,
           element: <Projects />,
         },
-
         {
           path: RoutePaths.Profile,
           element: (
@@ -49,6 +50,10 @@ function App() {
         {
           path: RoutePaths.Login,
           element: <Login />,
+        },
+        {
+          path: RoutePaths.ProjectDetails,
+          element: <ProjectDetails />,
         },
         {
           path: RoutePaths.CatchAll,

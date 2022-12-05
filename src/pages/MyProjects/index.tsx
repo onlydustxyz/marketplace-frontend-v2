@@ -1,4 +1,5 @@
 import { gql } from "@apollo/client";
+import { Link } from "react-router-dom";
 import { useAuth } from "src/hooks/useAuth";
 import { useHasuraQuery } from "src/hooks/useHasuraQuery";
 import { useJwtRole } from "src/hooks/useJwtRole";
@@ -7,20 +8,16 @@ import MyProject from "./MyProject";
 export const PROJECTS_BY_PK_KEY = "projects_by_pk";
 export const PROJECT_DETAILS_KEY = "project_details";
 
-interface MyProjectsProps {
-  projectIds: string[];
-}
-
-export default function MyProjectsProps() {
+export default function MyProjects() {
   const { hasuraToken } = useAuth();
   const { ledProjectIds } = useJwtRole(hasuraToken?.accessToken);
   return (
     <>
       <div className="px-10 flex flex-col align-center items-center">
         {ledProjectIds.map((projectId: string) => (
-          <div key={projectId} className="flex w-5/6 my-3">
+          <Link key={projectId} className="flex w-5/6 my-3" to={`/project/${projectId}`}>
             <MyProjectContainer projectId={projectId} />
-          </div>
+          </Link>
         ))}
       </div>
     </>

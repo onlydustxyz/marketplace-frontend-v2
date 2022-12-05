@@ -1,9 +1,10 @@
 import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { TELEGRAM_LINK_KEY } from "src/components/ProjectInformation";
 
-import Project, { TELEGRAM_LINK_KEY } from ".";
+import Project from ".";
 
 export default {
-  title: "Project",
+  title: "Project Details Card",
   component: Project,
 } as ComponentMeta<typeof Project>;
 

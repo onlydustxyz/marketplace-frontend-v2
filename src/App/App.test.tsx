@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { screen, render } from "@testing-library/react";
 import matchers from "@testing-library/jest-dom/matchers";
+import userEvent from "@testing-library/user-event";
 
 import App, { RoutePaths } from ".";
 import { AUTH_CODE_QUERY_KEY } from "src/pages/Login";
@@ -10,8 +11,8 @@ import { GET_PROJECTS_QUERY } from "src/pages/Projects";
 import { GET_PROFILE_QUERY } from "src/pages/Profile";
 import { CLAIMS_KEY, PROJECTS_LED_KEY } from "src/types";
 import { GET_MY_PROJECT_QUERY, PROJECTS_BY_PK_KEY, PROJECT_DETAILS_KEY } from "src/pages/MyProjects";
-import { INITIAL_AMOUNT_KEY, REMAINING_AMOUNT_KEY } from "src/pages/MyProjects/MyProject";
-import { TELEGRAM_LINK_KEY } from "src/pages/MyProjects/MyProject";
+import { INITIAL_AMOUNT_KEY, REMAINING_AMOUNT_KEY, TELEGRAM_LINK_KEY } from "src/components/ProjectInformation";
+import { ProjectDetailsTab, GET_PROJECT_QUERY } from "src/pages/ProjectDetails";
 
 const AUTH_CODE_TEST_VALUE = "code";
 const LOGGING_IN_TEXT_QUERY = /logging in/i;
@@ -60,7 +61,13 @@ const graphQlMocks = [
     },
     result: {
       data: {
-        projects: [{ name: TEST_PROJECT_NAME }],
+        projects: [
+          {
+            id: TEST_PROJECT_ID,
+            name: TEST_PROJECT_NAME,
+            [PROJECT_DETAILS_KEY]: { [TELEGRAM_LINK_KEY]: TEST_TELEGRAM_LINK, description: TEST_DESCRIPTION },
+          },
+        ],
       },
     },
   },
@@ -89,6 +96,22 @@ const graphQlMocks = [
         [PROJECTS_BY_PK_KEY]: {
           name: TEST_PROJECT_NAME,
           budgets: [{ [INITIAL_AMOUNT_KEY]: 500, [REMAINING_AMOUNT_KEY]: 300 }],
+          [PROJECT_DETAILS_KEY]: { [TELEGRAM_LINK_KEY]: TEST_TELEGRAM_LINK, description: TEST_DESCRIPTION },
+        },
+      },
+    },
+  },
+  {
+    request: {
+      query: GET_PROJECT_QUERY,
+      variables: {
+        id: TEST_PROJECT_ID,
+      },
+    },
+    result: {
+      data: {
+        [PROJECTS_BY_PK_KEY]: {
+          name: TEST_PROJECT_NAME,
           [PROJECT_DETAILS_KEY]: { [TELEGRAM_LINK_KEY]: TEST_TELEGRAM_LINK, description: TEST_DESCRIPTION },
         },
       },
@@ -151,5 +174,31 @@ describe('"Login" page', () => {
       }),
     });
     await screen.findByText(TEST_PROJECT_NAME);
+  });
+
+  it("should be able to access the project details page from the projects list and only see the overview tab", async () => {
+    window.localStorage.setItem(LOCAL_STORAGE_HASURA_TOKEN_KEY, JSON.stringify(HASURA_TOKEN_BASIC_TEST_VALUE));
+    render(<App />, {
+      wrapper: MemoryRouterProviderFactory({
+        route: `${RoutePaths.Projects}`,
+        mocks: graphQlMocks,
+      }),
+    });
+    userEvent.click(await screen.findByText(TEST_PROJECT_NAME));
+    await screen.findByText(ProjectDetailsTab.Overview);
+    expect(screen.queryByText(ProjectDetailsTab.Payment)).not.toBeInTheDocument();
+  });
+
+  it("should be able to access the project details page from the my projects list and see both the overview and payment tabs", async () => {
+    window.localStorage.setItem(LOCAL_STORAGE_HASURA_TOKEN_KEY, JSON.stringify(HASURA_TOKEN_WITH_VALID_JWT_TEST_VALUE));
+    render(<App />, {
+      wrapper: MemoryRouterProviderFactory({
+        route: `${RoutePaths.MyProjects}`,
+        mocks: graphQlMocks,
+      }),
+    });
+    userEvent.click(await screen.findByText(TEST_PROJECT_NAME));
+    await screen.findByText(ProjectDetailsTab.Overview);
+    await screen.findByText(ProjectDetailsTab.Payment);
   });
 });
