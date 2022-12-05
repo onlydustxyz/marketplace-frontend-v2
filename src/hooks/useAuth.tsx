@@ -7,6 +7,7 @@ import config from "src/config";
 import { HasuraToken, User } from "src/types";
 
 export const LOCAL_STORAGE_HASURA_TOKEN_KEY = "hasura_token";
+const TOKEN_VALIDITY_TIME_THRESHOLD = 30;
 
 type AuthContextType = {
   hasuraToken?: HasuraToken | null;
@@ -20,7 +21,9 @@ const AuthContext = createContext<AuthContextType | null>(null);
 
 const checkTokenValidity = (token: HasuraToken): boolean => {
   const creationDate = new Date(token.creationDate);
-  const expirationDate = creationDate.setSeconds(creationDate.getSeconds() + token.accessTokenExpiresIn);
+  const expirationDate = creationDate.setSeconds(
+    creationDate.getSeconds() + token.accessTokenExpiresIn - TOKEN_VALIDITY_TIME_THRESHOLD
+  );
   return expirationDate > Date.now();
 };
 
