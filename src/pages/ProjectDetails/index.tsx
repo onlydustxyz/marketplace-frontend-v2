@@ -6,6 +6,7 @@ import ProjectInformation from "src/components/ProjectInformation";
 import { useAuth } from "src/hooks/useAuth";
 import { useHasuraQuery } from "src/hooks/useHasuraQuery";
 import { useJwtRole } from "src/hooks/useJwtRole";
+import { HasuraUserRole } from "src/types";
 import { PROJECTS_BY_PK_KEY, PROJECT_DETAILS_KEY } from "../MyProjects";
 
 type ProjectDetailsParams = {
@@ -22,7 +23,7 @@ export default function ProjectDetails() {
   const { projectId } = useParams<ProjectDetailsParams>();
   const { hasuraToken } = useAuth();
   const { ledProjectIds } = useJwtRole(hasuraToken?.accessToken);
-  const { data } = useHasuraQuery(GET_PROJECT_QUERY, undefined, {
+  const { data } = useHasuraQuery(GET_PROJECT_QUERY, HasuraUserRole.Public, {
     variables: { id: projectId },
   });
 

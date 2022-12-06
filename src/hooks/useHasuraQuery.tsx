@@ -2,17 +2,13 @@ import { QueryHookOptions, MutationHookOptions, TypedDocumentNode, useQuery, use
 import merge from "lodash/merge";
 import { HasuraUserRole } from "src/types";
 
-export const useHasuraQuery = (
-  query: TypedDocumentNode,
-  role: HasuraUserRole = HasuraUserRole.Public,
-  options: QueryHookOptions = {}
-) => {
+export const useHasuraQuery = (query: TypedDocumentNode, role: HasuraUserRole, options: QueryHookOptions = {}) => {
   return useQuery(query, merge(options, { context: { headers: { "X-Hasura-Role": role } } }));
 };
 
 export const useHasuraMutation = (
   query: TypedDocumentNode,
-  role: HasuraUserRole = HasuraUserRole.Public,
+  role: HasuraUserRole,
   options: MutationHookOptions = {}
 ) => {
   return useMutation(query, merge(options, { context: { headers: { "X-Hasura-Role": role } } }));

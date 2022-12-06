@@ -2,6 +2,7 @@ import { gql } from "@apollo/client";
 import { Link } from "react-router-dom";
 import { TELEGRAM_LINK_KEY } from "src/components/ProjectInformation";
 import { useHasuraQuery } from "src/hooks/useHasuraQuery";
+import { HasuraUserRole } from "src/types";
 import { PROJECT_DETAILS_KEY } from "../MyProjects";
 import Project from "./Project";
 
@@ -15,7 +16,7 @@ interface Project {
 }
 
 export default function Projects() {
-  const { loading, error, data } = useHasuraQuery(GET_PROJECTS_QUERY);
+  const { loading, error, data } = useHasuraQuery(GET_PROJECTS_QUERY, HasuraUserRole.Public);
   return (
     <>
       {loading && <div className="flex justify-center mt-10 text-2xl">Loading</div>}
