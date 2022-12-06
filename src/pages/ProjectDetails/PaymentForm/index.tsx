@@ -41,7 +41,7 @@ const PaymentForm: React.FC<PropsType> = ({ budget }) => {
   const [insertPayment, requestPaymentMutation] = useHasuraMutation(REQUEST_PAYMENT_MUTATION, HasuraUserRole.User, {
     variables: { budgetId: budget.id, requestorId: user?.id },
   });
-  const getUserGithubIdsQuery = useHasuraQuery(GET_USER_GITHUB_IDS_QUERY, HasuraUserRole.User);
+  const getUserGithubIdsQuery = useHasuraQuery(GET_USERS_QUERY, HasuraUserRole.User);
   const success = !!requestPaymentMutation.data;
 
   const onSubmit: SubmitHandler<Inputs> = async formData => {
@@ -52,99 +52,108 @@ const PaymentForm: React.FC<PropsType> = ({ budget }) => {
     <>
       {getUserGithubIdsQuery.data && (
         <ProjectCard>
-          <FormProvider {...formMethods}>
-            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3 justify-between">
-              <div className="flex flex-row justify-between flex-grow gap-10">
-                <div className="flex flex-col gap-5 w-2/3">
-                  <Input label="Link to Issue" name="linkToIssue" placeholder="" options={{ required: "Required" }} />
-                  <Select label="Contributor" name="contributor" options={{ required: "Required" }} control={control}>
-                    {getUserGithubIdsQuery.data.users.map((user: any) => (
-                      <option key={user.id} value={user.id}>
-                        {user.displayName}
-                      </option>
-                    ))}
-                  </Select>
-                  <Input label="Memo" name="memo" placeholder="" />
-                </div>
-                <div className="flex flex-col gap-5 w-1/3">
-                  <div className="border-solid border-2 rounded-md border-white p-5">
-                    <RemainingBudget
-                      remainingAmount={budget[REMAINING_AMOUNT_KEY]}
-                      initialAmount={budget[INITIAL_AMOUNT_KEY]}
-                    />
+          <div className="flex flex-col gap-10">
+            <div className="flex text-xl font-bold">Submit Payment</div>
+            <div>
+              <FormProvider {...formMethods}>
+                <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3 justify-between">
+                  <div className="flex flex-row justify-between flex-grow gap-10">
+                    <div className="flex flex-col gap-5 w-2/3">
+                      <Input
+                        label="Link to Issue"
+                        name="linkToIssue"
+                        placeholder=""
+                        options={{ required: "Required" }}
+                      />
+                      <Select
+                        label="Contributor"
+                        name="contributor"
+                        options={{ required: "Required" }}
+                        control={control}
+                      >
+                        {getUserGithubIdsQuery.data.users.map((user: any) => (
+                          <option key={user.id} value={user.id}>
+                            {user.displayName}
+                          </option>
+                        ))}
+                      </Select>
+                      <Input label="Memo" name="memo" placeholder="" />
+                    </div>
+                    <div className="flex flex-col gap-5 w-1/3">
+                      <div className="border-solid border-2 rounded-md border-white p-5">
+                        <RemainingBudget
+                          remainingAmount={budget[REMAINING_AMOUNT_KEY]}
+                          initialAmount={budget[INITIAL_AMOUNT_KEY]}
+                        />
+                      </div>
+                      <div>
+                        Seniority
+                        <Slider
+                          control={control}
+                          name="seniority"
+                          minValue={0}
+                          maxValue={2}
+                          defaultValue={1}
+                          displayValue={(value: number) => SENIORITY[value]}
+                        />
+                      </div>
+                      <div>
+                        Working days
+                        <Slider
+                          control={control}
+                          name="workingDays"
+                          minValue={1}
+                          maxValue={20}
+                          defaultValue={10}
+                          displayValue={(value: number) => `${value} days`}
+                        />
+                      </div>
+                      <div>
+                        Overall satisfaction
+                        <Slider
+                          control={control}
+                          name="satisfaction"
+                          minValue={0}
+                          maxValue={2}
+                          defaultValue={1}
+                          displayValue={(value: number) => SATISFACTION[value]}
+                        />
+                      </div>
+                      <div className="border-solid border-2 rounded-md border-white p-5">
+                        <Input
+                          label="Amount to Wire"
+                          name="amountToWire"
+                          type="number"
+                          placeholder={"0"}
+                          options={{
+                            valueAsNumber: true,
+                            validate: value => value > 0,
+                          }}
+                        />
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    Seniority
-                    <Slider
-                      control={control}
-                      name="seniority"
-                      minValue={0}
-                      maxValue={2}
-                      defaultValue={1}
-                      displayValue={(value: number) => SENIORITY[value]}
-                    />
+                  <div className="flex flex-row gap-5">
+                    <button type="submit" className="self-start border-white border-2 px-3 py-2 rounded-md">
+                      {requestPaymentMutation.loading ? "Loading..." : "Send"}
+                    </button>
+                    {success && <p>Payment request sent !</p>}
                   </div>
-                  <div>
-                    Working days
-                    <Slider
-                      control={control}
-                      name="workingDays"
-                      minValue={1}
-                      maxValue={20}
-                      defaultValue={10}
-                      displayValue={(value: number) => `${value} days`}
-                    />
-                  </div>
-                  <div>
-                    Overall satisfaction
-                    <Slider
-                      control={control}
-                      name="satisfaction"
-                      minValue={0}
-                      maxValue={2}
-                      defaultValue={1}
-                      displayValue={(value: number) => SATISFACTION[value]}
-                    />
-                  </div>
-                  <div className="border-solid border-2 rounded-md border-white p-5">
-                    Amount to wire
-                    <Input
-                      label="Amount to Wire"
-                      name="amountToWire"
-                      type="number"
-                      placeholder={"0"}
-                      options={{
-                        valueAsNumber: true,
-                        validate: value => value > 0,
-                      }}
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-row gap-5">
-                <button type="submit" className="self-start border-white border-2 px-3 py-2 rounded-md">
-                  {requestPaymentMutation.loading ? "Loading..." : "Send"}
-                </button>
-                {success && <p>Payment request sent !</p>}
-              </div>
-            </form>
-          </FormProvider>
+                </form>
+              </FormProvider>
+            </div>
+          </div>
         </ProjectCard>
       )}
     </>
   );
 };
 
-export const GET_USER_GITHUB_IDS_QUERY = gql`
+export const GET_USERS_QUERY = gql`
   query {
     users {
       id
       displayName
-      avatarUrl
-      userProviders(where: { providerId: { _eq: "github" } }) {
-        providerId
-        providerUserId
-      }
     }
   }
 `;
