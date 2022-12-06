@@ -9,7 +9,7 @@ type PropsType = {
   options?: RegisterOptions;
 };
 
-const Input: React.FC<PropsType> = ({ label, type = "string", placeholder, name, options = {} }) => {
+const Input: React.FC<PropsType> = ({ label, type = "text", placeholder, name, options = {} }) => {
   const { register } = useFormContext();
   const { errors } = useFormState({ name });
   const error = errors[name];

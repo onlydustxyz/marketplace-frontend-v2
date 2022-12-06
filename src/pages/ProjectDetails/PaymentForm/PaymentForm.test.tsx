@@ -90,9 +90,7 @@ describe('"Profile" page', () => {
   });
 
   it("should be able to request payment when required info is filled", async () => {
-    const linkToIssueInput = await screen.findByLabelText(/link to issue/i);
     await userEvent.type(await screen.findByLabelText(/link to issue/i), "test-link-name");
-    expect(linkToIssueInput).toHaveValue("test-link-name");
     userEvent.selectOptions(await screen.findByRole("combobox", { name: /contributor/i }), "test-user-id");
     await userEvent.type(await screen.findByRole("spinbutton", { name: /amount to wire/i }), "3");
     await userEvent.click(await screen.findByText(/send/i));
