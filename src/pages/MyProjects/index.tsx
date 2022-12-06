@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "src/hooks/useAuth";
 import { useHasuraQuery } from "src/hooks/useHasuraQuery";
 import { useJwtRole } from "src/hooks/useJwtRole";
+import { HasuraUserRole } from "src/types";
 import MyProject from "./MyProject";
 
 export const PROJECTS_BY_PK_KEY = "projects_by_pk";
@@ -29,7 +30,7 @@ interface MyProjectContainerProps {
 }
 
 function MyProjectContainer({ projectId }: MyProjectContainerProps) {
-  const { data } = useHasuraQuery(GET_MY_PROJECT_QUERY, undefined, {
+  const { data } = useHasuraQuery(GET_MY_PROJECT_QUERY, HasuraUserRole.User, {
     variables: { id: projectId },
   });
   const project = data ? data[PROJECTS_BY_PK_KEY] : null;
