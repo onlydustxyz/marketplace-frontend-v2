@@ -1,5 +1,4 @@
 import { gql } from "@apollo/client";
-import { useMemo } from "react";
 import PaymentTable from "src/components/Payments";
 import QueryWrapper from "src/components/QueryWrapper";
 import { useAuth } from "src/hooks/useAuth";
@@ -12,7 +11,7 @@ const MyContributions = () => {
     variables: { userId: user?.id },
   });
   const { data } = query;
-  const payments = useMemo(() => data?.payment_requests?.map(mapApiPaymentsToProps) ?? null, [data]);
+  const payments = data?.payment_requests?.map(mapApiPaymentsToProps) ?? null;
   const hasPayments = payments && payments.length > 0;
 
   return (
