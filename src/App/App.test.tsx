@@ -12,7 +12,7 @@ import { GET_PROFILE_QUERY } from "src/pages/Profile";
 import { CLAIMS_KEY, PROJECTS_LED_KEY } from "src/types";
 import { GET_MY_PROJECT_QUERY, PROJECTS_BY_PK_KEY, PROJECT_DETAILS_KEY } from "src/pages/MyProjects";
 import { INITIAL_AMOUNT_KEY, REMAINING_AMOUNT_KEY, TELEGRAM_LINK_KEY } from "src/components/ProjectInformation";
-import { ProjectDetailsTab, GET_PROJECT_QUERY } from "src/pages/ProjectDetails";
+import { ProjectDetailsTab, GET_PROJECT_USER_QUERY } from "src/pages/ProjectDetails";
 
 const AUTH_CODE_TEST_VALUE = "code";
 const LOGGING_IN_TEXT_QUERY = /logging in/i;
@@ -103,7 +103,7 @@ const graphQlMocks = [
   },
   {
     request: {
-      query: GET_PROJECT_QUERY,
+      query: GET_PROJECT_USER_QUERY,
       variables: {
         id: TEST_PROJECT_ID,
       },

@@ -1,6 +1,7 @@
 import githubLogo from "assets/img/github-logo.svg";
 import telegramLogo from "assets/img/telegram-logo.svg";
 import onlyDustLogo from "assets/img/onlydust-logo.png";
+import RemainingBudget from "../RemainingBudget";
 
 export const REMAINING_AMOUNT_KEY = "remaining_amount";
 export const INITIAL_AMOUNT_KEY = "initial_amount";
@@ -36,22 +37,10 @@ export default function ProjectInformation({ name, details, budget }: ProjectInf
       </div>
       <div className="flex flex-1 flex-col space-y-1 text-lg w-1/4">
         {budget && (
-          <>
-            <div>Remaining budget</div>
-            <div className="flex flex-row items-center space-x-3 md:flex-nowrap flex-wrap">
-              <div className="text-xl font-black">${budget?.[REMAINING_AMOUNT_KEY]}</div>
-              <div className="w-full bg-gray-700 rounded-full h-2.5">
-                <div
-                  className="bg-blue-600 h-2.5 rounded-full"
-                  style={{
-                    width: budget
-                      ? `${Math.floor((budget?.[REMAINING_AMOUNT_KEY] * 100) / budget?.[INITIAL_AMOUNT_KEY])}%`
-                      : "100%",
-                  }}
-                />
-              </div>
-            </div>
-          </>
+          <RemainingBudget
+            initialAmount={budget?.[INITIAL_AMOUNT_KEY]}
+            remainingAmount={budget?.[REMAINING_AMOUNT_KEY]}
+          />
         )}
       </div>
       <div className="flex flex-1 flex-row space-x-3 justify-end">
