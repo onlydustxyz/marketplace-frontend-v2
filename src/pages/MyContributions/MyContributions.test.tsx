@@ -6,6 +6,7 @@ import MyContributionsPage, { GET_MY_CONTRIBUTIONS_QUERY } from ".";
 import { LOCAL_STORAGE_HASURA_TOKEN_KEY } from "src/hooks/useAuth";
 import { RoutePaths } from "src/App";
 import { MemoryRouterProviderFactory } from "src/test/utils";
+import { PaymentStatus } from "src/types";
 
 expect.extend(matchers);
 
@@ -25,18 +26,21 @@ const mockContribution = {
       amount: 100,
       currency_code: "USD",
     },
-  ],
-  amount_in_usd: 100,
-  budget: [
     {
-      project: {
-        name: "MyAwesomeProject",
-        project_details: {
-          description: "SOOOOOO awesome",
-        },
-      },
+      amount: 100,
+      currency_code: "USD",
     },
   ],
+  amount_in_usd: 200,
+  budget: {
+    project: {
+      id: "632d5da7-e590-4815-85ea-82a5585e6049",
+      name: "MyAwesomeProject",
+      project_details: {
+        description: "SOOOOOO awesome",
+      },
+    },
+  },
 };
 
 const buildMockMyContributionsQuery = (
@@ -70,5 +74,19 @@ describe('"MyContributions" page', () => {
     });
 
     expect(await screen.findByText("No contributions yet")).toBeInTheDocument();
+  });
+
+  it("should render contributions table", async () => {
+    render(<MyContributionsPage />, {
+      wrapper: MemoryRouterProviderFactory({
+        route: RoutePaths.Profile,
+        mocks: [buildMockMyContributionsQuery(userId)],
+      }),
+    });
+
+    expect(await screen.findByText(mockContribution.budget.project.project_details.description)).toBeInTheDocument();
+    expect(await screen.findByText(mockContribution.budget.project.name)).toBeInTheDocument();
+    expect(await screen.findByText("200 USD")).toBeInTheDocument();
+    expect(await screen.findByText("Completed")).toBeInTheDocument();
   });
 });

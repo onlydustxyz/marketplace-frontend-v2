@@ -22,15 +22,10 @@ const MyContributions = () => {
 };
 
 const mapApiPaymentsToProps = (apiPayment: any): Payment => {
-  const getAmount = (apiPayment: any) => {
-    const payment = apiPayment?.payment;
-    if (payment?.amount) return { value: payment.amount, currency: payment.currency };
-
-    return { value: apiPayment.amount_in_usd, currency: Currency.USD };
-  };
-
-  const amount = getAmount(apiPayment);
+  const amount = { value: apiPayment.amount_in_usd, currency: Currency.USD };
   const project = apiPayment.budget.project;
+  const getPaidAmount = (payments: { amount: number }[]) =>
+    payments.reduce((total: number, payment: { amount: number }) => total + payment.amount, 0);
 
   return {
     id: apiPayment.id,
@@ -40,7 +35,10 @@ const mapApiPaymentsToProps = (apiPayment: any): Payment => {
       title: project.name,
       description: project.project_details.description,
     },
-    status: apiPayment?.payment ? PaymentStatus.ACCEPTED : PaymentStatus.WAITING_PAYMENT,
+    status:
+      getPaidAmount(apiPayment.payments) === apiPayment.amount_in_usd
+        ? PaymentStatus.ACCEPTED
+        : PaymentStatus.WAITING_PAYMENT,
   };
 };
 
@@ -55,6 +53,7 @@ export const GET_MY_CONTRIBUTIONS_QUERY = gql`
       amount_in_usd
       budget {
         project {
+          id
           name
           project_details {
             description
