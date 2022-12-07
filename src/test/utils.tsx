@@ -2,6 +2,8 @@ import { MemoryRouter } from "react-router-dom";
 import { PropsWithChildren } from "react";
 import { MockedProvider } from "@apollo/client/testing";
 import { AuthProvider } from "src/hooks/useAuth";
+import { render, RenderOptions } from "@testing-library/react";
+import { IntlProvider } from "src/hooks/useIntl";
 
 interface MemoryRouterProviderFactoryProps {
   route: string;
@@ -42,3 +44,6 @@ export function checkLocalStorageValue<T>({
     expect(localStorageValue).toEqual(expectedValue);
   }
 }
+
+export const renderWithIntl = (ui: React.ReactElement, options?: RenderOptions) =>
+  render(<IntlProvider>{ui}</IntlProvider>, options);

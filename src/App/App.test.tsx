@@ -1,12 +1,12 @@
 import { describe, expect, it, vi } from "vitest";
-import { screen, render, waitFor } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import matchers from "@testing-library/jest-dom/matchers";
 import userEvent from "@testing-library/user-event";
 
 import App, { RoutePaths } from ".";
 import { AUTH_CODE_QUERY_KEY } from "src/pages/Login";
 import { LOCAL_STORAGE_HASURA_TOKEN_KEY } from "src/hooks/useAuth";
-import { checkLocalStorageValue, MemoryRouterProviderFactory } from "src/test/utils";
+import { checkLocalStorageValue, MemoryRouterProviderFactory, renderWithIntl } from "src/test/utils";
 import { GET_PROJECTS_QUERY } from "src/pages/Projects";
 import { GET_PROFILE_QUERY } from "src/pages/Profile";
 import { CLAIMS_KEY, PROJECTS_LED_KEY } from "src/types";
@@ -14,11 +14,11 @@ import { GET_MY_PROJECT_QUERY } from "src/pages/MyProjects";
 import { ProjectDetailsTab, GET_PROJECT_USER_QUERY } from "src/pages/ProjectDetails";
 
 const AUTH_CODE_TEST_VALUE = "code";
-const LOGGING_IN_TEXT_QUERY = /logging in/i;
-const AUTH_TOKEN_MISSING_TEXT_QUERY = /github authentication token missing !/i;
+const LOGGING_IN_TEXT_QUERY = /logging in.../i;
+const AUTH_TOKEN_MISSING_TEXT_QUERY = /github authentication token missing!/i;
 const TEST_USER_ID = "test-user-id";
 const TEST_USER_EMAIL = "test@user.email";
-const EDIT_PROFILE_TITLE = "Edit Profile";
+const EDIT_PROFILE_TITLE = "Edit profile";
 const HASURA_TOKEN_BASIC_TEST_VALUE = {
   user: {
     id: TEST_USER_ID,
@@ -124,7 +124,7 @@ describe('"Login" page', () => {
   });
 
   it("should log in and go to projects page if a refresh token is passed as a query parameter in the URL", async () => {
-    render(<App />, {
+    renderWithIntl(<App />, {
       wrapper: MemoryRouterProviderFactory({
         route: `${RoutePaths.Login}?${AUTH_CODE_QUERY_KEY}=${AUTH_CODE_TEST_VALUE}`,
         mocks: graphQlMocks,
@@ -141,7 +141,7 @@ describe('"Login" page', () => {
 
   it("should be able to access the profile page and display profile info when having a token in local storage", async () => {
     window.localStorage.setItem(LOCAL_STORAGE_HASURA_TOKEN_KEY, JSON.stringify(HASURA_TOKEN_BASIC_TEST_VALUE));
-    render(<App />, {
+    renderWithIntl(<App />, {
       wrapper: MemoryRouterProviderFactory({
         route: `${RoutePaths.Profile}`,
         mocks: graphQlMocks,
@@ -151,7 +151,7 @@ describe('"Login" page', () => {
   });
 
   it("should display an error message if no refresh token is passed as a query parameter in the URL", async () => {
-    render(<App />, { wrapper: MemoryRouterProviderFactory({ route: RoutePaths.Login, mocks: graphQlMocks }) });
+    renderWithIntl(<App />, { wrapper: MemoryRouterProviderFactory({ route: RoutePaths.Login, mocks: graphQlMocks }) });
     await screen.findByText(AUTH_TOKEN_MISSING_TEXT_QUERY);
     checkLocalStorageValue({
       key: LOCAL_STORAGE_HASURA_TOKEN_KEY,
@@ -160,13 +160,15 @@ describe('"Login" page', () => {
   });
 
   it("should redirect to the projects page if the profile route is accessed without a token in the local storage", async () => {
-    render(<App />, { wrapper: MemoryRouterProviderFactory({ route: RoutePaths.Profile, mocks: graphQlMocks }) });
+    renderWithIntl(<App />, {
+      wrapper: MemoryRouterProviderFactory({ route: RoutePaths.Profile, mocks: graphQlMocks }),
+    });
     await screen.findByText(TEST_PROJECT_NAME);
   });
 
   it("should be able to access the my projects page when having a token with the right jwt in local storage", async () => {
     window.localStorage.setItem(LOCAL_STORAGE_HASURA_TOKEN_KEY, JSON.stringify(HASURA_TOKEN_WITH_VALID_JWT_TEST_VALUE));
-    render(<App />, {
+    renderWithIntl(<App />, {
       wrapper: MemoryRouterProviderFactory({
         route: `${RoutePaths.MyProjects}`,
         mocks: graphQlMocks,
@@ -177,7 +179,7 @@ describe('"Login" page', () => {
 
   it("should be able to access the project details page from the projects list and only see the overview tab", async () => {
     window.localStorage.setItem(LOCAL_STORAGE_HASURA_TOKEN_KEY, JSON.stringify(HASURA_TOKEN_BASIC_TEST_VALUE));
-    render(<App />, {
+    renderWithIntl(<App />, {
       wrapper: MemoryRouterProviderFactory({
         route: `${RoutePaths.Projects}`,
         mocks: graphQlMocks,
@@ -193,7 +195,7 @@ describe('"Login" page', () => {
 
   it("should be able to access the project details page from the my projects list and see both the overview and payment tabs", async () => {
     window.localStorage.setItem(LOCAL_STORAGE_HASURA_TOKEN_KEY, JSON.stringify(HASURA_TOKEN_WITH_VALID_JWT_TEST_VALUE));
-    render(<App />, {
+    renderWithIntl(<App />, {
       wrapper: MemoryRouterProviderFactory({
         route: `${RoutePaths.MyProjects}`,
         mocks: graphQlMocks,

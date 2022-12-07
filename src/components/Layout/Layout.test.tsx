@@ -1,10 +1,11 @@
 import { describe, expect, it, vi } from "vitest";
-import { screen, render } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import matchers from "@testing-library/jest-dom/matchers";
 
 import Layout from ".";
 import { AuthProvider, LOCAL_STORAGE_HASURA_TOKEN_KEY } from "src/hooks/useAuth";
 import { BrowserRouter } from "react-router-dom";
+import { renderWithIntl } from "src/test/utils";
 
 expect.extend(matchers);
 
@@ -24,7 +25,7 @@ describe('"Layout" component', () => {
   });
 
   it("should always display the onlydust logo", async () => {
-    render(
+    renderWithIntl(
       <AuthProvider>
         <Layout />
       </AuthProvider>,
@@ -36,7 +37,7 @@ describe('"Layout" component', () => {
   });
 
   it("should display the github logo when there is no hasura jwt in the local storage", async () => {
-    render(
+    renderWithIntl(
       <AuthProvider>
         <Layout />
       </AuthProvider>,
@@ -49,7 +50,7 @@ describe('"Layout" component', () => {
 
   it("should display the github logo if there is no hasura jwt", () => {
     window.localStorage.setItem(LOCAL_STORAGE_HASURA_TOKEN_KEY, JSON.stringify(HASURA_TOKEN_TEST_VALUE));
-    render(
+    renderWithIntl(
       <AuthProvider>
         <Layout />
       </AuthProvider>,

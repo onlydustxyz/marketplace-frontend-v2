@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { screen, render } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import matchers from "@testing-library/jest-dom/matchers";
 
 import MyContributionsPage, { GET_MY_CONTRIBUTIONS_QUERY } from ".";
 import { LOCAL_STORAGE_HASURA_TOKEN_KEY } from "src/hooks/useAuth";
 import { RoutePaths } from "src/App";
-import { MemoryRouterProviderFactory } from "src/test/utils";
+import { MemoryRouterProviderFactory, renderWithIntl } from "src/test/utils";
 
 expect.extend(matchers);
 
@@ -65,7 +65,7 @@ describe('"MyContributions" page', () => {
   });
 
   it("should print message when no contributions returned", async () => {
-    render(<MyContributionsPage />, {
+    renderWithIntl(<MyContributionsPage />, {
       wrapper: MemoryRouterProviderFactory({
         route: RoutePaths.Profile,
         mocks: [buildMockMyContributionsQuery(userId, [])],
@@ -76,7 +76,7 @@ describe('"MyContributions" page', () => {
   });
 
   it("should render contributions table", async () => {
-    render(<MyContributionsPage />, {
+    renderWithIntl(<MyContributionsPage />, {
       wrapper: MemoryRouterProviderFactory({
         route: RoutePaths.Profile,
         mocks: [buildMockMyContributionsQuery(userId)],
