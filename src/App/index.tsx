@@ -1,18 +1,20 @@
-import { Suspense } from "react";
+import { lazy, Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { useRoutes } from "react-router-dom";
 
-import Loader from "src/assets/icons/Loader";
 import Layout from "src/components/Layout";
 import ProtectedRoute from "src/components/ProtectedRoute";
 import ErrorFallback from "src/components/ErrorFallback";
-import Login from "src/pages/Login";
-import Projects from "src/pages/Projects";
-import Profile from "src/pages/Profile";
-import MyProjects from "src/pages/MyProjects";
-import MyContributions from "src/pages/MyContributions";
+
+const Login = lazy(() => import("src/pages/Login"));
+const Projects = lazy(() => import("src/pages/Projects"));
+const Profile = lazy(() => import("src/pages/Profile"));
+const MyProjects = lazy(() => import("src/pages/MyProjects"));
+const MyContributions = lazy(() => import("src/pages/MyContributions"));
+const ProjectDetails = lazy(() => import("src/pages/ProjectDetails"));
+
 import { CustomUserRole, HasuraUserRole } from "src/types";
-import ProjectDetails from "src/pages/ProjectDetails";
+import LoaderFallback from "src/components/LoaderFallback";
 
 export enum RoutePaths {
   Projects = "/",
@@ -75,7 +77,7 @@ function App() {
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
-      <Suspense fallback={<Loader className="animate-spin mt-[30vh]" size={62} />}>{routes}</Suspense>
+      <Suspense fallback={<LoaderFallback />}>{routes}</Suspense>
     </ErrorBoundary>
   );
 }
