@@ -1,5 +1,5 @@
 import { useFormatMessage } from "src/hooks/useIntl";
-import { Payment } from "src/types";
+import { Currency, Payment, PaymentStatus } from "src/types";
 import PaymentLine from "./PaymentLine";
 
 type PropsType = {
@@ -39,4 +39,27 @@ const PaymentTable: React.FC<PropsType> = ({ payments }) => {
     </div>
   );
 };
+
+// TODO: replace this any with GraphQL-generated ts types
+export const mapApiPaymentsToProps = (apiPayment: any): Payment => {
+  const amount = { value: apiPayment.amountInUsd, currency: Currency.USD };
+  const project = apiPayment.budget.project;
+  const getPaidAmount = (payments: { amount: number }[]) =>
+    payments.reduce((total: number, payment: { amount: number }) => total + payment.amount, 0);
+
+  return {
+    id: apiPayment.id,
+    amount,
+    project: {
+      id: project.id,
+      title: project.name,
+      description: project.projectDetails.description,
+    },
+    status:
+      getPaidAmount(apiPayment.payments) === apiPayment.amountInUsd
+        ? PaymentStatus.ACCEPTED
+        : PaymentStatus.WAITING_PAYMENT,
+  };
+};
+
 export default PaymentTable;

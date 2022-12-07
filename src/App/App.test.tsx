@@ -190,7 +190,7 @@ describe('"Login" page', () => {
       screen.getByText(ProjectDetailsTab.Overview);
     });
 
-    expect(screen.queryByText(ProjectDetailsTab.Payment)).not.toBeInTheDocument();
+    expect(screen.queryByText(ProjectDetailsTab.Payments)).not.toBeInTheDocument();
   });
 
   it("should be able to access the project details page from the my projects list and see both the overview and payment tabs", async () => {
@@ -203,6 +203,6 @@ describe('"Login" page', () => {
     });
     userEvent.click(await screen.findByText(TEST_PROJECT_NAME));
     await screen.findByText(ProjectDetailsTab.Overview);
-    await screen.findByText(ProjectDetailsTab.Payment);
+    await screen.findByText(ProjectDetailsTab.Payments);
   });
 });

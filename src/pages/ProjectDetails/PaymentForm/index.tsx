@@ -2,8 +2,6 @@ import { gql } from "@apollo/client";
 import { HasuraUserRole } from "src/types";
 import { useForm, SubmitHandler, FormProvider } from "react-hook-form";
 import { useHasuraMutation, useHasuraQuery } from "src/hooks/useHasuraQuery";
-import ProjectCard from "src/components/ProjectCard";
-import RemainingBudget from "src/components/RemainingBudget";
 import Slider from "./Slider";
 import Select from "./Select";
 import { Inputs } from "./types";
@@ -75,104 +73,96 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ budget }) => {
   return (
     <>
       {getUserGithubIdsQuery.data && (
-        <ProjectCard>
-          <div className="flex flex-col gap-10">
-            <div className="flex text-xl font-bold">Submit Payment</div>
-            <div>
-              <FormProvider {...formMethods}>
-                <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3 justify-between">
-                  <div className="flex flex-row justify-between flex-grow gap-10">
-                    <div className="flex flex-col gap-5 w-2/3">
-                      <Input
-                        label={formatMessage("linkToIssue")}
-                        name="linkToIssue"
-                        placeholder=""
-                        options={{ required: formatMessage("required") }}
-                      />
-                      <Select
-                        label={formatMessage("contributor")}
-                        name="contributor"
-                        options={{ required: formatMessage("required") }}
+        <div className="flex flex-col gap-10">
+          <div className="flex text-xl font-bold">Submit Payment</div>
+          <div>
+            <FormProvider {...formMethods}>
+              <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3 justify-between">
+                <div className="flex flex-row justify-between flex-grow gap-10">
+                  <div className="flex flex-col gap-5 w-2/3">
+                    <Input
+                      label={formatMessage("linkToIssue")}
+                      name="linkToIssue"
+                      placeholder=""
+                      options={{ required: formatMessage("required") }}
+                    />
+                    <Select
+                      label={formatMessage("contributor")}
+                      name="contributor"
+                      options={{ required: formatMessage("required") }}
+                      control={control}
+                    >
+                      {getUserGithubIdsQuery.data.users.map((user: any) => (
+                        <option key={user.id} value={user.id}>
+                          {user.displayName}
+                        </option>
+                      ))}
+                    </Select>
+                    <Input label="Memo" name="memo" placeholder="" />
+                  </div>
+                  <div className="flex flex-col gap-5 w-1/3">
+                    <div>
+                      {formatMessage("seniority")}
+                      <Slider
                         control={control}
-                      >
-                        {getUserGithubIdsQuery.data.users.map((user: any) => (
-                          <option key={user.id} value={user.id}>
-                            {user.displayName}
-                          </option>
-                        ))}
-                      </Select>
-                      <Input label="Memo" name="memo" placeholder="" />
+                        name="seniority"
+                        minValue={0}
+                        maxValue={SENIORITY.length - 1}
+                        defaultValue={1}
+                        displayValue={(value: number) => SENIORITY[value]}
+                      />
                     </div>
-                    <div className="flex flex-col gap-5 w-1/3">
-                      <div className="border-solid border-2 rounded-md border-white p-5">
-                        <RemainingBudget
-                          remainingAmount={budget.remainingAmount}
-                          initialAmount={budget.initialAmount}
-                        />
+                    <div>
+                      {formatMessage("workingDays")}
+                      <Slider
+                        control={control}
+                        name="workingDays"
+                        minValue={1}
+                        maxValue={20}
+                        defaultValue={10}
+                        displayValue={(value: number) => `${value} days`}
+                      />
+                    </div>
+                    <div>
+                      {formatMessage("overallSatisfaction")}
+                      <Slider
+                        control={control}
+                        name="satisfaction"
+                        minValue={0}
+                        maxValue={2}
+                        defaultValue={1}
+                        displayValue={(value: number) => SATISFACTION[value]}
+                      />
+                    </div>
+                    <div className="flex flex-col border-solid border-2 rounded-md border-white p-5 gap-5">
+                      <div className="flex">
+                        {formatMessage("paymentRecommendation", { lowerPaymentBound, upperPaymentBound })}
                       </div>
-                      <div>
-                        {formatMessage("seniority")}
-                        <Slider
-                          control={control}
-                          name="seniority"
-                          minValue={0}
-                          maxValue={SENIORITY.length - 1}
-                          defaultValue={1}
-                          displayValue={(value: number) => SENIORITY[value]}
+                      <div className="flex">
+                        <Input
+                          label={formatMessage("amountToWire")}
+                          name="amountToWire"
+                          type="number"
+                          placeholder={"0"}
+                          options={{
+                            valueAsNumber: true,
+                            validate: value => value > 0,
+                          }}
                         />
-                      </div>
-                      <div>
-                        {formatMessage("workingDays")}
-                        <Slider
-                          control={control}
-                          name="workingDays"
-                          minValue={1}
-                          maxValue={20}
-                          defaultValue={10}
-                          displayValue={(value: number) => `${value} days`}
-                        />
-                      </div>
-                      <div>
-                        {formatMessage("overallSatisfaction")}
-                        <Slider
-                          control={control}
-                          name="satisfaction"
-                          minValue={0}
-                          maxValue={2}
-                          defaultValue={1}
-                          displayValue={(value: number) => SATISFACTION[value]}
-                        />
-                      </div>
-                      <div className="flex flex-col border-solid border-2 rounded-md border-white p-5 gap-5">
-                        <div className="flex">
-                          {formatMessage("paymentRecommendation", { lowerPaymentBound, upperPaymentBound })}
-                        </div>
-                        <div className="flex">
-                          <Input
-                            label={formatMessage("amountToWire")}
-                            name="amountToWire"
-                            type="number"
-                            placeholder={"0"}
-                            options={{
-                              valueAsNumber: true,
-                              validate: value => value > 0,
-                            }}
-                          />
-                        </div>
                       </div>
                     </div>
                   </div>
-                  <div className="flex flex-row gap-5">
-                    <button type="submit" className="self-start border-white border-2 px-3 py-2 rounded-md">
-                      {requestPaymentMutation.loading ? formatMessage("loading") : formatMessage("send")}
-                    </button>
-                    {success && <p>{formatMessage("paymentRequestSent")}</p>}
-                  </div>
-                </form>
-              </FormProvider>
-            </div>
+                </div>
+                <div className="flex flex-row gap-5">
+                  <button type="submit" className="self-start border-white border-2 px-3 py-2 rounded-md">
+                    {requestPaymentMutation.loading ? formatMessage("loading") : formatMessage("send")}
+                  </button>
+                  {success && <p>{formatMessage("paymentRequestSent")}</p>}
+                </div>
+              </form>
+            </FormProvider>
           </div>
-        </ProjectCard>
+        </div>
       )}
     </>
   );
