@@ -23,6 +23,7 @@ const MyContributions = () => {
   );
 };
 
+// TODO: replace this any with GraphQL-generated ts types
 const mapApiPaymentsToProps = (apiPayment: any): Payment => {
   const amount = { value: apiPayment.amountInUsd, currency: Currency.USD };
   const project = apiPayment.budget.project;
