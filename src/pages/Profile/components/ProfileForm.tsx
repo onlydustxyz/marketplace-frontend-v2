@@ -5,6 +5,7 @@ import Input from "src/components/FormInput";
 import { useHasuraMutation } from "src/hooks/useHasuraQuery";
 import Radio from "./Radio";
 import { useFormatMessage } from "src/hooks/useIntl";
+import { ProfileQuery } from "src/__generated/graphql";
 
 type Inputs = {
   paymentReceiverType: PaymentReceiverType;
@@ -22,10 +23,12 @@ type Inputs = {
 };
 
 type PropsType = {
-  user: User;
+  user: ProfileQuery["user"];
 };
 
 const ProfileForm: React.FC<PropsType> = ({ user }) => {
+  if (!user) return <></>;
+
   const formMethods = useForm<Inputs>({
     defaultValues: {
       paymentReceiverType: user.metadata.paymentReceiverType ?? PaymentReceiverType.INDIVIDUAL,

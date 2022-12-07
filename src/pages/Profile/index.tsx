@@ -6,11 +6,12 @@ import { useJwtRole } from "src/hooks/useJwtRole";
 import QueryWrapper from "src/components/QueryWrapper";
 import ProfileForm from "./components/ProfileForm";
 import { useFormatMessage } from "src/hooks/useIntl";
+import { ProfileQuery, ProfileQueryVariables } from "src/__generated/graphql";
 
 const Profile: React.FC = () => {
   const { user, hasuraToken } = useAuth();
   const { isLoggedIn } = useJwtRole(hasuraToken?.accessToken);
-  const query = useHasuraQuery(GET_PROFILE_QUERY, HasuraUserRole.User, {
+  const query = useHasuraQuery<ProfileQuery, ProfileQueryVariables>(GET_PROFILE_QUERY, HasuraUserRole.User, {
     skip: !isLoggedIn,
     variables: { id: user?.id },
   });
@@ -21,7 +22,7 @@ const Profile: React.FC = () => {
       <h1>{formatMessage("editProfile")}</h1>
       <br />
       <QueryWrapper errorMessage={formatMessage("errorFetchingProfile")} query={query}>
-        {data && <ProfileForm user={data.user} />}
+        {data?.user && <ProfileForm user={data.user} />}
       </QueryWrapper>
     </div>
   );

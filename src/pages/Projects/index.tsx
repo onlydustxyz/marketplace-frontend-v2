@@ -3,24 +3,25 @@ import { Link } from "react-router-dom";
 import { useHasuraQuery } from "src/hooks/useHasuraQuery";
 import { HasuraUserRole } from "src/types";
 import Project from "./Project";
+import { MyQueryQuery } from "src/__generated/graphql";
 
 interface Project {
   id: string;
   name: string;
-  projectDetails: {
-    description: string;
-    telegramLink: string;
+  projectDetails?: {
+    description?: string;
+    telegramLink?: string;
   };
 }
 
 export default function Projects() {
-  const { loading, error, data } = useHasuraQuery(GET_PROJECTS_QUERY, HasuraUserRole.Public);
+  const { loading, error, data } = useHasuraQuery<MyQueryQuery>(GET_PROJECTS_QUERY, HasuraUserRole.Public);
   return (
     <>
       {loading && <div className="flex justify-center mt-10 text-2xl">Loading</div>}
       {data && (
         <div className="px-10 flex flex-col align-center items-center">
-          {data.projects.map((project: Project) => (
+          {data.projects.map(project => (
             <Link key={project.id} className="flex w-5/6 my-3" to={`/project/${project.id}`}>
               <Project name={project.name} details={project?.projectDetails} />
             </Link>

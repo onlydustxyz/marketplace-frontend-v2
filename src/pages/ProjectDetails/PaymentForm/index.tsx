@@ -11,6 +11,7 @@ import { useAuth } from "src/hooks/useAuth";
 import Input from "src/components/FormInput";
 import { useMemo } from "react";
 import { useFormatMessage } from "src/hooks/useIntl";
+import { GetUsersQuery } from "src/__generated/graphql";
 
 const BASE_DAILY_RATE_DOLLARS = 200;
 
@@ -46,7 +47,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ budget }) => {
   const [insertPayment, requestPaymentMutation] = useHasuraMutation(REQUEST_PAYMENT_MUTATION, HasuraUserRole.User, {
     variables: { budgetId: budget.id, requestorId: user?.id },
   });
-  const getUserGithubIdsQuery = useHasuraQuery(GET_USERS_QUERY, HasuraUserRole.User);
+  const getUserGithubIdsQuery = useHasuraQuery<GetUsersQuery>(GET_USERS_QUERY, HasuraUserRole.User);
   const success = !!requestPaymentMutation.data;
 
   const onSubmit: SubmitHandler<Inputs> = async formData => {

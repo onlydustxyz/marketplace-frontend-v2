@@ -5,6 +5,7 @@ import { useHasuraQuery } from "src/hooks/useHasuraQuery";
 import { useJwtRole } from "src/hooks/useJwtRole";
 import { HasuraUserRole } from "src/types";
 import MyProject from "./MyProject";
+import { MyProjectQuery, MyProjectQueryVariables } from "src/__generated/graphql";
 
 export default function MyProjects() {
   const { hasuraToken } = useAuth();
@@ -27,7 +28,7 @@ interface MyProjectContainerProps {
 }
 
 function MyProjectContainer({ projectId }: MyProjectContainerProps) {
-  const { data } = useHasuraQuery(GET_MY_PROJECT_QUERY, HasuraUserRole.User, {
+  const { data } = useHasuraQuery<MyProjectQuery, MyProjectQueryVariables>(GET_MY_PROJECT_QUERY, HasuraUserRole.User, {
     variables: { id: projectId },
   });
   const project = data ? data.projectsByPk : null;

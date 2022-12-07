@@ -5,11 +5,12 @@ import {
   useQuery,
   useMutation,
   QueryResult,
+  OperationVariables,
 } from "@apollo/client";
 import merge from "lodash/merge";
 import { HasuraUserRole } from "src/types";
 
-export const useHasuraQuery = <T, V>(
+export const useHasuraQuery = <T, V = OperationVariables>(
   query: TypedDocumentNode<T, V>,
   role: HasuraUserRole,
   options: QueryHookOptions<T, V> = {}
