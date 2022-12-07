@@ -1,5 +1,4 @@
 import { ComponentStory, ComponentMeta } from "@storybook/react";
-import { INITIAL_AMOUNT_KEY, REMAINING_AMOUNT_KEY, TELEGRAM_LINK_KEY } from "src/components/ProjectInformation";
 
 import MyProject from ".";
 
@@ -14,6 +13,6 @@ export const Default = Template.bind({});
 
 Default.args = {
   name: "test",
-  budget: { [REMAINING_AMOUNT_KEY]: 500, [INITIAL_AMOUNT_KEY]: 1000 },
-  details: { [TELEGRAM_LINK_KEY]: "https://web.telegram.org/z/", description: "Test description" },
+  budget: { remainingAmount: 500, initialAmount: 1000 },
+  details: { telegramLink: "https://web.telegram.org/z/", description: "Test description" },
 };

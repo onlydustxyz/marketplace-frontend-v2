@@ -9,7 +9,6 @@ import { CLAIMS_KEY, PROJECTS_LED_KEY } from "src/types";
 import { RoutePaths } from "src/App";
 import { MemoryRouterProviderFactory } from "src/test/utils";
 import PaymentForm from ".";
-import { INITIAL_AMOUNT_KEY, REMAINING_AMOUNT_KEY } from "src/components/ProjectInformation";
 
 const TEST_USER = { id: "test-user-id", displayName: "test-user-name" };
 const TEST_BUDGET_ID = "test-budget-id";
@@ -55,7 +54,7 @@ describe('"Profile" page', () => {
   });
 
   beforeEach(() => {
-    render(<PaymentForm budget={{ [INITIAL_AMOUNT_KEY]: 100, [REMAINING_AMOUNT_KEY]: 40, id: TEST_BUDGET_ID }} />, {
+    render(<PaymentForm budget={{ initialAmount: 100, remainingAmount: 40, id: TEST_BUDGET_ID }} />, {
       wrapper: MemoryRouterProviderFactory({
         route: `${RoutePaths.ProjectDetails}/test-project-id`,
         mocks: graphQlMocks,
@@ -82,6 +81,9 @@ describe('"Profile" page', () => {
 
   it("should display an error when a required field is missing", async () => {
     await userEvent.clear(await screen.findByLabelText<HTMLInputElement>(/link to issue/i));
+    await waitFor(() => {
+      expect(screen.getByLabelText<HTMLInputElement>(/link to issue/i).value).toBe("");
+    });
     await userEvent.click(await screen.findByRole("button", { name: /send/i }));
     await waitFor(() => {
       const errorMessages = screen.getAllByText(/required/i);

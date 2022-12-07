@@ -1,17 +1,15 @@
 import { gql } from "@apollo/client";
 import { Link } from "react-router-dom";
-import { TELEGRAM_LINK_KEY } from "src/components/ProjectInformation";
 import { useHasuraQuery } from "src/hooks/useHasuraQuery";
 import { HasuraUserRole } from "src/types";
-import { PROJECT_DETAILS_KEY } from "../MyProjects";
 import Project from "./Project";
 
 interface Project {
   id: string;
   name: string;
-  [PROJECT_DETAILS_KEY]: {
+  projectDetails: {
     description: string;
-    [TELEGRAM_LINK_KEY]: string;
+    telegramLink: string;
   };
 }
 
@@ -24,7 +22,7 @@ export default function Projects() {
         <div className="px-10 flex flex-col align-center items-center">
           {data.projects.map((project: Project) => (
             <Link key={project.id} className="flex w-5/6 my-3" to={`/project/${project.id}`}>
-              <Project name={project.name} details={project?.[PROJECT_DETAILS_KEY]} />
+              <Project name={project.name} details={project?.projectDetails} />
             </Link>
           ))}
         </div>

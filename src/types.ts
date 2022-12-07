@@ -4,7 +4,7 @@ export enum HasuraUserRole {
 }
 
 export enum CustomUserRole {
-  ProjectLead = "project_lead",
+  ProjectLead = "projectLead",
 }
 
 export type UserRole = HasuraUserRole | CustomUserRole;
