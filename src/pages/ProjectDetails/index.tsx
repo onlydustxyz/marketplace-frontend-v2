@@ -5,7 +5,7 @@ import { useAuth } from "src/hooks/useAuth";
 import { useHasuraQuery } from "src/hooks/useHasuraQuery";
 import { useJwtRole } from "src/hooks/useJwtRole";
 import { HasuraUserRole } from "src/types";
-import PaymentForm from "./PaymentForm";
+import Payments from "./PaymentActions";
 import Project from "./Project";
 
 type ProjectDetailsParams = {
@@ -14,7 +14,7 @@ type ProjectDetailsParams = {
 
 export enum ProjectDetailsTab {
   Overview = "Overview",
-  Payment = "Payment",
+  Payments = "Payments",
 }
 
 export default function ProjectDetails() {
@@ -32,14 +32,14 @@ export default function ProjectDetails() {
 
   const availableTabs =
     projectId && ledProjectIds && ledProjectIds.includes(projectId)
-      ? [ProjectDetailsTab.Overview, ProjectDetailsTab.Payment]
+      ? [ProjectDetailsTab.Overview, ProjectDetailsTab.Payments]
       : [ProjectDetailsTab.Overview];
   const project = data ? data.projectsByPk : null;
 
   return (
     <div className="px-10 flex flex-col align-center items-center">
       {project && (
-        <div className="flex flex-col w-5/6 my-3 gap-5">
+        <div className="flex flex-col w-11/12 my-3 gap-5">
           <Project name={project.name} details={project?.projectDetails} budget={project?.budgets?.[0]}>
             {availableTabs.map((tab: ProjectDetailsTab) => (
               <div
@@ -53,7 +53,7 @@ export default function ProjectDetails() {
               </div>
             ))}
           </Project>
-          {selectedTab === ProjectDetailsTab.Payment && <PaymentForm budget={project?.budgets?.[0]} />}
+          {selectedTab === ProjectDetailsTab.Payments && <Payments budget={project?.budgets?.[0]} />}
         </div>
       )}
     </div>

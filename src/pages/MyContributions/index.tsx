@@ -1,10 +1,10 @@
 import { gql } from "@apollo/client";
-import PaymentTable from "src/components/Payments";
+import PaymentTable, { mapApiPaymentsToProps } from "src/components/PaymentTable";
 import QueryWrapper from "src/components/QueryWrapper";
 import { useAuth } from "src/hooks/useAuth";
 import { useHasuraQuery } from "src/hooks/useHasuraQuery";
 import { useFormatMessage } from "src/hooks/useIntl";
-import { Currency, HasuraUserRole, Payment, PaymentStatus } from "src/types";
+import { HasuraUserRole } from "src/types";
 
 const MyContributions = () => {
   const { user } = useAuth();
@@ -21,28 +21,6 @@ const MyContributions = () => {
       {hasPayments ? <PaymentTable payments={payments} /> : <p>{formatMessage("noContributionsYet")}</p>}
     </QueryWrapper>
   );
-};
-
-// TODO: replace this any with GraphQL-generated ts types
-const mapApiPaymentsToProps = (apiPayment: any): Payment => {
-  const amount = { value: apiPayment.amountInUsd, currency: Currency.USD };
-  const project = apiPayment.budget.project;
-  const getPaidAmount = (payments: { amount: number }[]) =>
-    payments.reduce((total: number, payment: { amount: number }) => total + payment.amount, 0);
-
-  return {
-    id: apiPayment.id,
-    amount,
-    project: {
-      id: project.id,
-      title: project.name,
-      description: project.projectDetails.description,
-    },
-    status:
-      getPaidAmount(apiPayment.payments) === apiPayment.amountInUsd
-        ? PaymentStatus.ACCEPTED
-        : PaymentStatus.WAITING_PAYMENT,
-  };
 };
 
 export const GET_MY_CONTRIBUTIONS_QUERY = gql`

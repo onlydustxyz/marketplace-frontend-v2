@@ -4,14 +4,15 @@ import { MockedProvider } from "@apollo/client/testing";
 import { AuthProvider } from "src/hooks/useAuth";
 import { render, RenderOptions } from "@testing-library/react";
 import { IntlProvider } from "src/hooks/useIntl";
+import { RoutePaths } from "src/App";
 
 interface MemoryRouterProviderFactoryProps {
-  route: string;
+  route?: string;
   mocks?: any;
 }
 
 export const MemoryRouterProviderFactory =
-  ({ route, mocks }: MemoryRouterProviderFactoryProps) =>
+  ({ route = RoutePaths.CatchAll, mocks }: MemoryRouterProviderFactoryProps) =>
   ({ children }: PropsWithChildren) =>
     (
       <MockedProvider mocks={mocks} addTypename={false}>

@@ -48,7 +48,7 @@ const graphQlMocks = [
   },
 ];
 
-describe('"Profile" page', () => {
+describe('"PaymentForm" component', () => {
   beforeAll(() => {
     window.localStorage.setItem(LOCAL_STORAGE_HASURA_TOKEN_KEY, JSON.stringify(HASURA_TOKEN_BASIC_TEST_VALUE));
   });
@@ -67,7 +67,6 @@ describe('"Profile" page', () => {
     await screen.findByText(/link to issue/i);
     await screen.findByText(/contributor/i);
     await screen.findByText(/memo/i);
-    await screen.findByText(/remaining budget/i);
     await screen.findByText(/seniority/i);
     await screen.findByText(/working days/i);
     await screen.findByText(/overall satisfaction/i);

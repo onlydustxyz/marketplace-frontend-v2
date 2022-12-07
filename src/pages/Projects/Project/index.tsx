@@ -1,4 +1,4 @@
-import ProjectCard from "src/components/ProjectCard";
+import ProjectCard from "src/components/Card";
 import ProjectInformation from "src/components/ProjectInformation";
 
 interface ProjectProps {
