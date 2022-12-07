@@ -6,9 +6,6 @@ import { useJwtRole } from "src/hooks/useJwtRole";
 import { HasuraUserRole } from "src/types";
 import MyProject from "./MyProject";
 
-export const PROJECTS_BY_PK_KEY = "projects_by_pk";
-export const PROJECT_DETAILS_KEY = "project_details";
-
 export default function MyProjects() {
   const { hasuraToken } = useAuth();
   const { ledProjectIds } = useJwtRole(hasuraToken?.accessToken);
@@ -33,13 +30,9 @@ function MyProjectContainer({ projectId }: MyProjectContainerProps) {
   const { data } = useHasuraQuery(GET_MY_PROJECT_QUERY, HasuraUserRole.User, {
     variables: { id: projectId },
   });
-  const project = data ? data[PROJECTS_BY_PK_KEY] : null;
+  const project = data ? data.projectsByPk : null;
   return (
-    <>
-      {project && (
-        <MyProject name={project.name} budget={project?.budgets[0]} details={project?.[PROJECT_DETAILS_KEY]} />
-      )}
-    </>
+    <>{project && <MyProject name={project.name} budget={project?.budgets[0]} details={project?.projectDetails} />}</>
   );
 }
 

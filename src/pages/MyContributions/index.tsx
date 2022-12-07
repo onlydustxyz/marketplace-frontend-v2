@@ -11,7 +11,7 @@ const MyContributions = () => {
     variables: { userId: user?.id },
   });
   const { data } = query;
-  const payments = data?.payment_requests?.map(mapApiPaymentsToProps) ?? null;
+  const payments = data?.paymentRequests?.map(mapApiPaymentsToProps) ?? null;
   const hasPayments = payments && payments.length > 0;
 
   return (
@@ -22,7 +22,7 @@ const MyContributions = () => {
 };
 
 const mapApiPaymentsToProps = (apiPayment: any): Payment => {
-  const amount = { value: apiPayment.amount_in_usd, currency: Currency.USD };
+  const amount = { value: apiPayment.amountInUsd, currency: Currency.USD };
   const project = apiPayment.budget.project;
   const getPaidAmount = (payments: { amount: number }[]) =>
     payments.reduce((total: number, payment: { amount: number }) => total + payment.amount, 0);
@@ -33,10 +33,10 @@ const mapApiPaymentsToProps = (apiPayment: any): Payment => {
     project: {
       id: project.id,
       title: project.name,
-      description: project.project_details.description,
+      description: project.projectDetails.description,
     },
     status:
-      getPaidAmount(apiPayment.payments) === apiPayment.amount_in_usd
+      getPaidAmount(apiPayment.payments) === apiPayment.amountInUsd
         ? PaymentStatus.ACCEPTED
         : PaymentStatus.WAITING_PAYMENT,
   };

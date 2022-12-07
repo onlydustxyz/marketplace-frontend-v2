@@ -1,6 +1,5 @@
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 
-import { TELEGRAM_LINK_KEY } from "src/components/ProjectInformation";
 import ProjectDetails from ".";
 
 export default {
@@ -14,5 +13,5 @@ export const Default = Template.bind({});
 
 Default.args = {
   name: "test",
-  details: { [TELEGRAM_LINK_KEY]: "https://web.telegram.org/z/", description: "Test description" },
+  details: { telegramLink: "https://web.telegram.org/z/", description: "Test description" },
 };

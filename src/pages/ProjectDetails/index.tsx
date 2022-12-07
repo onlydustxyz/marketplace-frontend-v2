@@ -5,7 +5,6 @@ import { useAuth } from "src/hooks/useAuth";
 import { useHasuraQuery } from "src/hooks/useHasuraQuery";
 import { useJwtRole } from "src/hooks/useJwtRole";
 import { HasuraUserRole } from "src/types";
-import { PROJECTS_BY_PK_KEY, PROJECT_DETAILS_KEY } from "../MyProjects";
 import PaymentForm from "./PaymentForm";
 import Project from "./Project";
 
@@ -35,13 +34,13 @@ export default function ProjectDetails() {
     projectId && ledProjectIds && ledProjectIds.includes(projectId)
       ? [ProjectDetailsTab.Overview, ProjectDetailsTab.Payment]
       : [ProjectDetailsTab.Overview];
-  const project = data ? data[PROJECTS_BY_PK_KEY] : null;
+  const project = data ? data.projectByPk : null;
 
   return (
     <div className="px-10 flex flex-col align-center items-center">
       {project && (
         <div className="flex flex-col w-5/6 my-3 gap-5">
-          <Project name={project.name} details={project?.[PROJECT_DETAILS_KEY]} budget={project?.budgets?.[0]}>
+          <Project name={project.name} details={project?.projectDetails} budget={project?.budgets?.[0]}>
             {availableTabs.map((tab: ProjectDetailsTab) => (
               <div
                 key={tab}

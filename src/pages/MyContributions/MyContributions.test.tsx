@@ -6,7 +6,6 @@ import MyContributionsPage, { GET_MY_CONTRIBUTIONS_QUERY } from ".";
 import { LOCAL_STORAGE_HASURA_TOKEN_KEY } from "src/hooks/useAuth";
 import { RoutePaths } from "src/App";
 import { MemoryRouterProviderFactory } from "src/test/utils";
-import { PaymentStatus } from "src/types";
 
 expect.extend(matchers);
 
@@ -24,19 +23,19 @@ const mockContribution = {
   payments: [
     {
       amount: 100,
-      currency_code: "USD",
+      currencyCode: "USD",
     },
     {
       amount: 100,
-      currency_code: "USD",
+      currencyCode: "USD",
     },
   ],
-  amount_in_usd: 200,
+  amountInUsd: 200,
   budget: {
     project: {
       id: "632d5da7-e590-4815-85ea-82a5585e6049",
       name: "MyAwesomeProject",
-      project_details: {
+      projectDetails: {
         description: "SOOOOOO awesome",
       },
     },
@@ -55,7 +54,7 @@ const buildMockMyContributionsQuery = (
   },
   result: {
     data: {
-      payment_requests: paymentRequests,
+      paymentRequests: paymentRequests,
     },
   },
 });
@@ -84,7 +83,7 @@ describe('"MyContributions" page', () => {
       }),
     });
 
-    expect(await screen.findByText(mockContribution.budget.project.project_details.description)).toBeInTheDocument();
+    expect(await screen.findByText(mockContribution.budget.project.projectDetails.description)).toBeInTheDocument();
     expect(await screen.findByText(mockContribution.budget.project.name)).toBeInTheDocument();
     expect(await screen.findByText("200 USD")).toBeInTheDocument();
     expect(await screen.findByText("Completed")).toBeInTheDocument();

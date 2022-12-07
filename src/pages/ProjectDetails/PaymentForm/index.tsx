@@ -4,7 +4,6 @@ import { useForm, SubmitHandler, FormProvider } from "react-hook-form";
 import { useHasuraMutation, useHasuraQuery } from "src/hooks/useHasuraQuery";
 import ProjectCard from "src/components/ProjectCard";
 import RemainingBudget from "src/components/RemainingBudget";
-import { INITIAL_AMOUNT_KEY, REMAINING_AMOUNT_KEY } from "src/components/ProjectInformation";
 import Slider from "./Slider";
 import Select from "./Select";
 import { Inputs } from "./types";
@@ -24,8 +23,8 @@ function computePaymentBounds(days: number, seniority: number, satisfaction: num
 
 interface PaymentFormProps {
   budget: {
-    [REMAINING_AMOUNT_KEY]: number;
-    [INITIAL_AMOUNT_KEY]: number;
+    remainingAmount: number;
+    initialAmount: number;
     id: string;
   };
 }
@@ -36,7 +35,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ budget }) => {
       linkToIssue: "",
       contributor: "",
       memo: "",
-      remainingBudget: budget?.[REMAINING_AMOUNT_KEY],
+      remainingBudget: budget?.remainingAmount,
       seniority: 1,
       workingDays: 10,
       satisfaction: 1,
@@ -96,8 +95,8 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ budget }) => {
                     <div className="flex flex-col gap-5 w-1/3">
                       <div className="border-solid border-2 rounded-md border-white p-5">
                         <RemainingBudget
-                          remainingAmount={budget[REMAINING_AMOUNT_KEY]}
-                          initialAmount={budget[INITIAL_AMOUNT_KEY]}
+                          remainingAmount={budget.remainingAmount}
+                          initialAmount={budget.initialAmount}
                         />
                       </div>
                       <div>
