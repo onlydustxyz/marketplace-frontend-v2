@@ -36,4 +36,3 @@ cypress/videos
 
 .nyc_output
 
-src/__generated
