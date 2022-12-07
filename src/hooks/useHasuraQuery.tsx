@@ -10,12 +10,12 @@ import merge from "lodash/merge";
 import { HasuraUserRole } from "src/types";
 import { deepCamelCase } from "src/utils/deepCamelCase";
 
-export const useHasuraQuery = (
-  query: TypedDocumentNode,
+export const useHasuraQuery = <T, V>(
+  query: TypedDocumentNode<T, V>,
   role: HasuraUserRole,
-  options: QueryHookOptions = {}
-): QueryResult => {
-  const apolloQuery = useQuery(query, merge(options, { context: { headers: { "X-Hasura-Role": role } } }));
+  options: QueryHookOptions<T, V> = {}
+): QueryResult<T, V> => {
+  const apolloQuery = useQuery<T, V>(query, merge(options, { context: { headers: { "X-Hasura-Role": role } } }));
 
   return { ...apolloQuery, data: deepCamelCase(apolloQuery.data) };
 };

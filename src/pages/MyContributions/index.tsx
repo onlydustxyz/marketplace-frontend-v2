@@ -5,12 +5,17 @@ import { useAuth } from "src/hooks/useAuth";
 import { useHasuraQuery } from "src/hooks/useHasuraQuery";
 import { useFormatMessage } from "src/hooks/useIntl";
 import { Currency, HasuraUserRole, Payment, PaymentStatus } from "src/types";
+import { GetMyContributionsQuery, GetMyContributionsQueryVariables } from "src/__generated/graphql";
 
 const MyContributions = () => {
   const { user } = useAuth();
-  const query = useHasuraQuery(GET_MY_CONTRIBUTIONS_QUERY, HasuraUserRole.User, {
-    variables: { userId: user?.id },
-  });
+  const query = useHasuraQuery<GetMyContributionsQuery, GetMyContributionsQueryVariables>(
+    GET_MY_CONTRIBUTIONS_QUERY,
+    HasuraUserRole.User,
+    {
+      variables: { userId: user?.id },
+    }
+  );
   const { data } = query;
   const payments = data?.paymentRequests?.map(mapApiPaymentsToProps) ?? null;
   const hasPayments = payments && payments.length > 0;
