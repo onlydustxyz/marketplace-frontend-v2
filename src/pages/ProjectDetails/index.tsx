@@ -62,11 +62,11 @@ export default function ProjectDetails() {
 
 export const GET_PROJECT_PUBLIC_QUERY = gql`
   query getProjectAsPublic($id: uuid!) {
-    projects_by_pk(id: $id) {
+    projectsByPk(id: $id) {
       name
-      project_details {
+      projectDetails {
         description
-        telegram_link
+        telegramLink
       }
     }
   }
@@ -74,16 +74,16 @@ export const GET_PROJECT_PUBLIC_QUERY = gql`
 
 export const GET_PROJECT_USER_QUERY = gql`
   query getProjectAsUser($id: uuid!) {
-    projects_by_pk(id: $id) {
+    projectsByPk(id: $id) {
       name
       budgets {
         id
-        initial_amount
-        remaining_amount
+        initialAmount
+        remainingAmount
       }
-      project_details {
+      projectDetails {
         description
-        telegram_link
+        telegramLink
       }
     }
   }

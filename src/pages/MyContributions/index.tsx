@@ -46,19 +46,19 @@ const mapApiPaymentsToProps = (apiPayment: any): Payment => {
 };
 
 export const GET_MY_CONTRIBUTIONS_QUERY = gql`
-  query GetPaymentRequests($userId: uuid!) {
-    payment_requests(where: { recipient_id: { _eq: $userId } }) {
+  query GetMyContributions($userId: uuid!) {
+    paymentRequests(where: { recipientId: { _eq: $userId } }) {
       id
       payments {
         amount
-        currency_code
+        currencyCode
       }
-      amount_in_usd
+      amountInUsd
       budget {
         project {
           id
           name
-          project_details {
+          projectDetails {
             description
           }
         }
