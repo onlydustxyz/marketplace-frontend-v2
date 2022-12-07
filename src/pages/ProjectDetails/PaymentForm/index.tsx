@@ -179,7 +179,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ budget }) => {
 };
 
 export const GET_USERS_QUERY = gql`
-  query {
+  query getUsers {
     users {
       id
       displayName
@@ -188,7 +188,7 @@ export const GET_USERS_QUERY = gql`
 `;
 
 export const REQUEST_PAYMENT_MUTATION = gql`
-  mutation ($amount: Int!, $contributorId: Uuid!, $budgetId: Uuid!, $requestorId: Uuid!) {
+  mutation requestNewPayment($amount: Int!, $contributorId: Uuid!, $budgetId: Uuid!, $requestorId: Uuid!) {
     requestPayment(
       amountInUsd: $amount
       budgetId: $budgetId

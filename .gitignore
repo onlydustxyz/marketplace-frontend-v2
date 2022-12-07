@@ -35,3 +35,5 @@ cypress/videos
 !.env.test
 
 .nyc_output
+
+src/__generated
