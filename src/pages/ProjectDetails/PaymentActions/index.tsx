@@ -7,7 +7,7 @@ import RemainingBudget from "src/components/RemainingBudget";
 import { useHasuraQuery } from "src/hooks/useHasuraQuery";
 import { useFormatMessage } from "src/hooks/useIntl";
 import { HasuraUserRole } from "src/types";
-import PaymentForm from "../PaymentForm";
+import PaymentForm from "./PaymentForm";
 
 enum Action {
   List = "List",

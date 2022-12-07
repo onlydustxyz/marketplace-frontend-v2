@@ -48,7 +48,7 @@ const graphQlMocks = [
   },
 ];
 
-describe('"Profile" page', () => {
+describe('"PaymentForm" component', () => {
   beforeAll(() => {
     window.localStorage.setItem(LOCAL_STORAGE_HASURA_TOKEN_KEY, JSON.stringify(HASURA_TOKEN_BASIC_TEST_VALUE));
   });
