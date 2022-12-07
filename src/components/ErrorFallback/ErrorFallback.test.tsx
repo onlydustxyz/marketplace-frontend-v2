@@ -10,6 +10,6 @@ describe('"ErrorFallback" component', () => {
   render(<ErrorFallback />);
 
   it("should display the logo", () => {
-    expect(screen.queryByText("Try to refresh the app")).toBeInTheDocument();
+    expect(screen.queryByText("Try to refresh the page")).toBeInTheDocument();
   });
 });
