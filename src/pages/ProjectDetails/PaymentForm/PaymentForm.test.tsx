@@ -81,6 +81,9 @@ describe('"Profile" page', () => {
 
   it("should display an error when a required field is missing", async () => {
     await userEvent.clear(await screen.findByLabelText<HTMLInputElement>(/link to issue/i));
+    await waitFor(() => {
+      expect(screen.getByLabelText<HTMLInputElement>(/link to issue/i).value).toBe("");
+    });
     await userEvent.click(await screen.findByRole("button", { name: /send/i }));
     await waitFor(() => {
       const errorMessages = screen.getAllByText(/required/i);

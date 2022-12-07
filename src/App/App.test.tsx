@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { screen, render } from "@testing-library/react";
+import { screen, render, waitFor } from "@testing-library/react";
 import matchers from "@testing-library/jest-dom/matchers";
 import userEvent from "@testing-library/user-event";
 
@@ -184,7 +184,10 @@ describe('"Login" page', () => {
       }),
     });
     userEvent.click(await screen.findByText(TEST_PROJECT_NAME));
-    await screen.findByText(ProjectDetailsTab.Overview);
+    await waitFor(() => {
+      screen.getByText(ProjectDetailsTab.Overview);
+    });
+
     expect(screen.queryByText(ProjectDetailsTab.Payment)).not.toBeInTheDocument();
   });
 
