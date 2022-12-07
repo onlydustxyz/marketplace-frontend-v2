@@ -1,0 +1,9 @@
+{
+  "myContributions": "My contributions",
+  "myProjects": "My projects",
+  "projects": "Projects",
+  "remainingBudget": "Remaining budget",
+  "signInWithGithub": "Sign in with Github",
+  "loggingIn": "Logging in...",
+  "githubAuthenticationTokenMissing": "Github authentication token missing!"
+}
