@@ -3,6 +3,7 @@ import PaymentTable from "src/components/Payments";
 import QueryWrapper from "src/components/QueryWrapper";
 import { useAuth } from "src/hooks/useAuth";
 import { useHasuraQuery } from "src/hooks/useHasuraQuery";
+import { useFormatMessage } from "src/hooks/useIntl";
 import { Currency, HasuraUserRole, Payment, PaymentStatus } from "src/types";
 
 const MyContributions = () => {
@@ -13,14 +14,16 @@ const MyContributions = () => {
   const { data } = query;
   const payments = data?.paymentRequests?.map(mapApiPaymentsToProps) ?? null;
   const hasPayments = payments && payments.length > 0;
+  const formatMessage = useFormatMessage();
 
   return (
     <QueryWrapper query={query}>
-      {hasPayments ? <PaymentTable payments={payments} /> : <p>No contributions yet</p>}
+      {hasPayments ? <PaymentTable payments={payments} /> : <p>{formatMessage("noContributionsYet")}</p>}
     </QueryWrapper>
   );
 };
 
+// TODO: replace this any with GraphQL-generated ts types
 const mapApiPaymentsToProps = (apiPayment: any): Payment => {
   const amount = { value: apiPayment.amountInUsd, currency: Currency.USD };
   const project = apiPayment.budget.project;

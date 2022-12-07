@@ -2,6 +2,7 @@ import githubLogo from "assets/img/github-logo.svg";
 import telegramLogo from "assets/img/telegram-logo.svg";
 import onlyDustLogo from "assets/img/onlydust-logo.png";
 import RemainingBudget from "../RemainingBudget";
+import { MouseEvent } from "react";
 
 interface ProjectInformationProps {
   name: string;
@@ -16,7 +17,7 @@ interface ProjectInformationProps {
 }
 
 export default function ProjectInformation({ name, details, budget }: ProjectInformationProps) {
-  const linkClickHandlerFactory = (url: string) => (e: any) => {
+  const linkClickHandlerFactory = (url: string) => (e: MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
     window?.open(url, "_blank")?.focus();
   };

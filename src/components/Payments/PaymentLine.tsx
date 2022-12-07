@@ -1,15 +1,24 @@
+import { useFormatMessage } from "src/hooks/useIntl";
 import { Payment, PaymentStatus } from "src/types";
 
 type PropsType = {
   payment: Payment;
 };
 
-const renderPaymentStatus = (paymentStatus: PaymentStatus): React.ReactElement => (
-  <>
-    {paymentStatus === PaymentStatus.ACCEPTED && <span className="text-green-500">Completed</span>}
-    {paymentStatus === PaymentStatus.WAITING_PAYMENT && <span className="text-blue-600">Processing</span>}
-  </>
-);
+const renderPaymentStatus = (paymentStatus: PaymentStatus): React.ReactElement => {
+  const formatMessage = useFormatMessage();
+
+  return (
+    <>
+      {paymentStatus === PaymentStatus.ACCEPTED && (
+        <span className="text-green-500">{formatMessage("paymentCompleted")}</span>
+      )}
+      {paymentStatus === PaymentStatus.WAITING_PAYMENT && (
+        <span className="text-blue-600">{formatMessage("paymentProcessing")}</span>
+      )}
+    </>
+  );
+};
 
 const PaymentLine: React.FC<PropsType> = ({ payment }) => (
   <tr className="border-b">

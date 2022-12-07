@@ -1,6 +1,7 @@
 import { Link, Outlet } from "react-router-dom";
 import { RoutePaths } from "src/App";
 import { useAuth } from "src/hooks/useAuth";
+import { useFormatMessage } from "src/hooks/useIntl";
 import { useJwtRole } from "src/hooks/useJwtRole";
 import { CustomUserRole, HasuraUserRole } from "src/types";
 import GithubLink from "./GithubLink";
@@ -10,6 +11,7 @@ import ProfileButton from "./ProfileButton";
 export default function Layout() {
   const { hasuraToken } = useAuth();
   const { isLoggedIn, roleList } = useJwtRole(hasuraToken?.accessToken);
+  const formatMessage = useFormatMessage();
   return (
     <div>
       <div className="bg-black/50">
@@ -18,16 +20,16 @@ export default function Layout() {
             <OnlyDustLogo />
           </div>
           <div className="flex flex-1 justify-center align-center text-3xl drop-shadow-lg saturate-200 outline-4 font-alfreda font-extrabold">
-            <Link to={RoutePaths.Projects}>Projects</Link>
+            <Link to={RoutePaths.Projects}>{formatMessage("projects")}</Link>
           </div>
           {roleList.includes(CustomUserRole.ProjectLead) && (
             <div className="flex flex-1 justify-center align-center text-3xl drop-shadow-lg saturate-200 outline-4 font-alfreda font-extrabold">
-              <Link to={RoutePaths.MyProjects}>My Projects</Link>
+              <Link to={RoutePaths.MyProjects}>{formatMessage("myProjects")}</Link>
             </div>
           )}
           {roleList.includes(HasuraUserRole.User) && (
             <div className="flex flex-1 justify-center align-center text-3xl drop-shadow-lg saturate-200 outline-4 font-alfreda font-extrabold">
-              <Link to={RoutePaths.MyContributions}>My Contributions</Link>
+              <Link to={RoutePaths.MyContributions}>{formatMessage("myContributions")}</Link>
             </div>
           )}
           <div className="flex flex-1 justify-end">{!isLoggedIn ? <GithubLink /> : <ProfileButton />}</div>

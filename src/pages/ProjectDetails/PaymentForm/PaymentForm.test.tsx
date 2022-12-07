@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { screen, render, waitFor } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import matchers from "@testing-library/jest-dom/matchers";
 
@@ -7,7 +7,7 @@ import { GET_USERS_QUERY, REQUEST_PAYMENT_MUTATION } from ".";
 import { LOCAL_STORAGE_HASURA_TOKEN_KEY } from "src/hooks/useAuth";
 import { CLAIMS_KEY, PROJECTS_LED_KEY } from "src/types";
 import { RoutePaths } from "src/App";
-import { MemoryRouterProviderFactory } from "src/test/utils";
+import { MemoryRouterProviderFactory, renderWithIntl } from "src/test/utils";
 import PaymentForm from ".";
 
 const TEST_USER = { id: "test-user-id", displayName: "test-user-name" };
@@ -54,7 +54,7 @@ describe('"Profile" page', () => {
   });
 
   beforeEach(() => {
-    render(<PaymentForm budget={{ initialAmount: 100, remainingAmount: 40, id: TEST_BUDGET_ID }} />, {
+    renderWithIntl(<PaymentForm budget={{ initialAmount: 100, remainingAmount: 40, id: TEST_BUDGET_ID }} />, {
       wrapper: MemoryRouterProviderFactory({
         route: `${RoutePaths.ProjectDetails}/test-project-id`,
         mocks: graphQlMocks,

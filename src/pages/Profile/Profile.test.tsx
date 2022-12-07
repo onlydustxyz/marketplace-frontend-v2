@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { screen, render, waitFor } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import matchers from "@testing-library/jest-dom/matchers";
 
@@ -8,7 +8,7 @@ import { LOCAL_STORAGE_HASURA_TOKEN_KEY } from "src/hooks/useAuth";
 import { GET_PROFILE_QUERY } from "src/pages/Profile";
 import { CLAIMS_KEY, Email, PaymentReceiverType, PayoutSettingsType, PROJECTS_LED_KEY, UserInfo } from "src/types";
 import { RoutePaths } from "src/App";
-import { MemoryRouterProviderFactory } from "src/test/utils";
+import { MemoryRouterProviderFactory, renderWithIntl } from "src/test/utils";
 import { UPDATE_USER_MUTATION } from "./components/ProfileForm";
 
 const mockUser = {
@@ -74,7 +74,7 @@ describe('"Profile" page', () => {
   });
 
   beforeEach(() => {
-    render(<ProfilePage />, {
+    renderWithIntl(<ProfilePage />, {
       wrapper: MemoryRouterProviderFactory({
         route: RoutePaths.Profile,
         mocks: [
@@ -86,23 +86,23 @@ describe('"Profile" page', () => {
   });
 
   it("should print form with default values", async () => {
-    await screen.findByText("Edit Profile");
-    expect((await screen.findByLabelText<HTMLInputElement>("FirstName")).value).toBe(mockUser.metadata.firstName);
-    expect((await screen.findByLabelText<HTMLInputElement>("LastName")).value).toBe(mockUser.metadata.lastName);
+    await screen.findByText("Edit profile");
+    expect((await screen.findByLabelText<HTMLInputElement>("Firstname")).value).toBe(mockUser.metadata.firstName);
+    expect((await screen.findByLabelText<HTMLInputElement>("Lastname")).value).toBe(mockUser.metadata.lastName);
     expect((await screen.findByLabelText<HTMLInputElement>("Email")).value).toBe(mockUser.email);
     expect((await screen.findByLabelText<HTMLInputElement>("Location")).value).toBe(mockUser.metadata.location.address);
-    expect((await screen.findByPlaceholderText<HTMLInputElement>("zipcode")).value).toBe(
+    expect((await screen.findByPlaceholderText<HTMLInputElement>("Zip code")).value).toBe(
       mockUser.metadata.location.zipcode
     );
-    expect((await screen.findByPlaceholderText<HTMLInputElement>("city")).value).toBe(mockUser.metadata.location.city);
-    expect((await screen.findByPlaceholderText<HTMLInputElement>("country")).value).toBe(
+    expect((await screen.findByPlaceholderText<HTMLInputElement>("City")).value).toBe(mockUser.metadata.location.city);
+    expect((await screen.findByPlaceholderText<HTMLInputElement>("Country")).value).toBe(
       mockUser.metadata.location.country
     );
   });
 
   it("should display error when required field missing", async () => {
     await userEvent.clear(await screen.findByLabelText<HTMLInputElement>("Email"));
-    await userEvent.clear(await screen.findByLabelText<HTMLInputElement>("FirstName"));
+    await userEvent.clear(await screen.findByLabelText<HTMLInputElement>("Firstname"));
     expect((await screen.findByLabelText<HTMLInputElement>("Email")).value).toBe("");
     await userEvent.click(await screen.findByText("Send"));
     waitFor(() => {

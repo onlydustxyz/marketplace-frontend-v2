@@ -1,12 +1,15 @@
+import { useFormatMessage } from "src/hooks/useIntl";
+
 interface RemainingBudgetProps {
   remainingAmount: number;
   initialAmount: number;
 }
 
 export default function RemainingBudget({ remainingAmount, initialAmount }: RemainingBudgetProps) {
+  const formatMessage = useFormatMessage();
   return (
     <>
-      <div>Remaining budget</div>
+      <div>{formatMessage("remainingBudget")}</div>
       <div className="flex flex-row items-center space-x-3 md:flex-nowrap flex-wrap">
         <div className="text-xl font-black">${remainingAmount}</div>
         <div className="w-full bg-gray-700 rounded-full h-2.5">

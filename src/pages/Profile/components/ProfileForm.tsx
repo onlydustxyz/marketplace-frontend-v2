@@ -4,6 +4,7 @@ import { useForm, SubmitHandler, FormProvider } from "react-hook-form";
 import Input from "src/components/FormInput";
 import { useHasuraMutation } from "src/hooks/useHasuraQuery";
 import Radio from "./Radio";
+import { useFormatMessage } from "src/hooks/useIntl";
 
 type Inputs = {
   paymentReceiverType: PaymentReceiverType;
@@ -52,71 +53,108 @@ const ProfileForm: React.FC<PropsType> = ({ user }) => {
   };
 
   const payoutSettingsType = formMethods.watch("payoutSettingsType");
+  const formatMessage = useFormatMessage();
 
   return (
     <FormProvider {...formMethods}>
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3">
         <>
           <div className="flex flex-col">
-            Type of Profile
+            {formatMessage("typeOfProfile")}
             <div className="flex flex-row gap-3">
               <Radio
                 name="paymentReceiverType"
                 options={[
                   {
                     value: PaymentReceiverType.INDIVIDUAL,
-                    label: "Individual",
+                    label: formatMessage("individualProfile"),
                   },
                   {
                     value: PaymentReceiverType.COMPANY,
-                    label: "Company",
+                    label: formatMessage("companyProfile"),
                   },
                 ]}
               />
             </div>
           </div>
           <div className="flex flex-row gap-5">
-            <Input label="FirstName" name="firstName" placeholder="firstName" options={{ required: "Required" }} />
-            <Input label="LastName" name="lastName" placeholder="lastName" options={{ required: "Required" }} />
+            <Input
+              label={formatMessage("firstname")}
+              name="firstName"
+              placeholder={formatMessage("firstname")}
+              options={{ required: formatMessage("required") }}
+            />
+            <Input
+              label={formatMessage("lastname")}
+              name="lastName"
+              placeholder={formatMessage("lastname")}
+              options={{ required: formatMessage("required") }}
+            />
           </div>
-          <Input label="Email" name="email" placeholder="email" options={{ required: "Required" }} />
-          <Input label="Location" name="address" placeholder="address" options={{ required: "Required" }} />
+          <Input
+            label={formatMessage("email")}
+            name="email"
+            placeholder={formatMessage("email")}
+            options={{ required: formatMessage("required") }}
+          />
+          <Input
+            label={formatMessage("location")}
+            name="address"
+            placeholder={formatMessage("location")}
+            options={{ required: formatMessage("required") }}
+          />
           <div className="flex flex-row gap-5">
-            <Input name="zipcode" placeholder="zipcode" options={{ required: "Required" }} />
-            <Input name="city" placeholder="city" options={{ required: "Required" }} />
-            <Input name="country" placeholder="country" options={{ required: "Required" }} />
+            <Input
+              name="zipcode"
+              placeholder={formatMessage("zipCode")}
+              options={{ required: formatMessage("required") }}
+            />
+            <Input name="city" placeholder={formatMessage("city")} options={{ required: formatMessage("required") }} />
+            <Input
+              name="country"
+              placeholder={formatMessage("country")}
+              options={{ required: formatMessage("required") }}
+            />
           </div>
           <div className="flex flex-col">
-            Payout settings
+            {formatMessage("payoutSettings")}
             <div className="flex flex-row gap-3">
               <Radio
                 name="payoutSettingsType"
                 options={[
                   {
                     value: PayoutSettingsType.ETH,
-                    label: "Ethereum",
+                    label: formatMessage("ethereum"),
                   },
                   {
                     value: PayoutSettingsType.IBAN,
-                    label: "Bank wire",
+                    label: formatMessage("bankWire"),
                   },
                 ]}
               />
             </div>
           </div>
           {payoutSettingsType === PayoutSettingsType.ETH && (
-            <Input name="ethWalletAddress" placeholder="Ethereum address" options={{ required: "Required" }} />
+            <Input
+              name="ethWalletAddress"
+              placeholder={formatMessage("ethereumWalletAddress")}
+              options={{ required: formatMessage("required") }}
+            />
           )}
           {payoutSettingsType === PayoutSettingsType.IBAN && (
             <div className="flex flex-row gap-5">
-              <Input name="iban" placeholder="IBAN" options={{ required: "Required" }} />
-              <Input name="bic" placeholder="BIC" options={{ required: "Required" }} />
+              <Input
+                name="iban"
+                placeholder={formatMessage("iban")}
+                options={{ required: formatMessage("required") }}
+              />
+              <Input name="bic" placeholder={formatMessage("bic")} options={{ required: formatMessage("required") }} />
             </div>
           )}
           <button type="submit" className="self-start border-white border-2 px-3 py-2 rounded-md">
-            {loading ? "Loading..." : "Send"}
+            {loading ? formatMessage("loading") : formatMessage("send")}
           </button>
-          {success && <p>Your data has been saved!</p>}
+          {success && <p>{formatMessage("dataSaved")}</p>}
         </>
       </form>
     </FormProvider>
