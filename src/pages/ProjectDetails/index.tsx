@@ -34,7 +34,7 @@ export default function ProjectDetails() {
     projectId && ledProjectIds && ledProjectIds.includes(projectId)
       ? [ProjectDetailsTab.Overview, ProjectDetailsTab.Payment]
       : [ProjectDetailsTab.Overview];
-  const project = data ? data.projectByPk : null;
+  const project = data ? data.projectsByPk : null;
 
   return (
     <div className="px-10 flex flex-col align-center items-center">
