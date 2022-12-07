@@ -1,9 +1,23 @@
-import { QueryHookOptions, MutationHookOptions, TypedDocumentNode, useQuery, useMutation } from "@apollo/client";
+import {
+  QueryHookOptions,
+  MutationHookOptions,
+  TypedDocumentNode,
+  useQuery,
+  useMutation,
+  QueryResult,
+} from "@apollo/client";
 import merge from "lodash/merge";
 import { HasuraUserRole } from "src/types";
+import { deepCamelCase } from "src/utils/deepCamelCase";
 
-export const useHasuraQuery = (query: TypedDocumentNode, role: HasuraUserRole, options: QueryHookOptions = {}) => {
-  return useQuery(query, merge(options, { context: { headers: { "X-Hasura-Role": role } } }));
+export const useHasuraQuery = (
+  query: TypedDocumentNode,
+  role: HasuraUserRole,
+  options: QueryHookOptions = {}
+): QueryResult => {
+  const apolloQuery = useQuery(query, merge(options, { context: { headers: { "X-Hasura-Role": role } } }));
+
+  return { ...apolloQuery, data: deepCamelCase(apolloQuery.data) };
 };
 
 export const useHasuraMutation = (
