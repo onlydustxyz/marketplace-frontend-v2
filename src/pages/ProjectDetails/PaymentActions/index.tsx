@@ -73,18 +73,18 @@ function PaymentTableQueryContainer({ budgetId }: PaymentTableQueryContainerProp
 
 export const GET_BUDGET_PAYMENTS_QUERY = gql`
   query GetPaymentRequests($budgetId: uuid!) {
-    payment_requests(where: { budget_id: { _eq: $budgetId } }) {
+    paymentRequests(where: { budgetId: { _eq: $budgetId } }) {
       id
       payments {
         amount
-        currency_code
+        currencyCode
       }
-      amount_in_usd
+      amountInUsd
       budget {
         project {
           id
           name
-          project_details {
+          projectDetails {
             description
           }
         }

@@ -37,9 +37,9 @@ export const GET_PROJECTS_QUERY = gql`
     projects {
       id
       name
-      project_details {
+      projectDetails {
         description
-        telegram_link
+        telegramLink
       }
     }
   }
