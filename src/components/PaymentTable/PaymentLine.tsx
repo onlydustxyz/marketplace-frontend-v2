@@ -1,4 +1,4 @@
-import { useFormatMessage } from "src/hooks/useIntl";
+import { useT } from "talkr";
 import { Payment, PaymentStatus } from "src/types";
 
 type PropsType = {
@@ -6,15 +6,13 @@ type PropsType = {
 };
 
 const renderPaymentStatus = (paymentStatus: PaymentStatus): React.ReactElement => {
-  const formatMessage = useFormatMessage();
+  const { T } = useT();
 
   return (
     <>
-      {paymentStatus === PaymentStatus.ACCEPTED && (
-        <span className="text-green-500">{formatMessage("paymentCompleted")}</span>
-      )}
+      {paymentStatus === PaymentStatus.ACCEPTED && <span className="text-green-500">{T("paymentCompleted")}</span>}
       {paymentStatus === PaymentStatus.WAITING_PAYMENT && (
-        <span className="text-blue-600">{formatMessage("paymentProcessing")}</span>
+        <span className="text-blue-600">{T("paymentProcessing")}</span>
       )}
     </>
   );

@@ -1,4 +1,4 @@
-import { useFormatMessage } from "src/hooks/useIntl";
+import { useT } from "talkr";
 
 interface RemainingBudgetProps {
   remainingAmount: number;
@@ -6,10 +6,10 @@ interface RemainingBudgetProps {
 }
 
 export default function RemainingBudget({ remainingAmount, initialAmount }: RemainingBudgetProps) {
-  const formatMessage = useFormatMessage();
+  const { T } = useT();
   return (
     <div className="flex flex-col">
-      <div>{formatMessage("remainingBudget")}</div>
+      <div>{T("remainingBudget")}</div>
       <div className="flex flex-row items-center space-x-3 md:flex-nowrap flex-wrap">
         <div className="text-xl font-black">${remainingAmount}</div>
         <div className="w-full bg-gray-700 rounded-full h-2.5">

@@ -4,7 +4,7 @@ import { useForm, SubmitHandler, FormProvider } from "react-hook-form";
 import Input from "src/components/FormInput";
 import { useHasuraMutation } from "src/hooks/useHasuraQuery";
 import Radio from "./Radio";
-import { useFormatMessage } from "src/hooks/useIntl";
+import { useT } from "talkr";
 
 type Inputs = {
   paymentReceiverType: PaymentReceiverType;
@@ -53,25 +53,25 @@ const ProfileForm: React.FC<PropsType> = ({ user }) => {
   };
 
   const payoutSettingsType = formMethods.watch("payoutSettingsType");
-  const formatMessage = useFormatMessage();
+  const { T } = useT();
 
   return (
     <FormProvider {...formMethods}>
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3">
         <>
           <div className="flex flex-col">
-            {formatMessage("typeOfProfile")}
+            {T("typeOfProfile")}
             <div className="flex flex-row gap-3">
               <Radio
                 name="paymentReceiverType"
                 options={[
                   {
                     value: PaymentReceiverType.INDIVIDUAL,
-                    label: formatMessage("individualProfile"),
+                    label: T("individualProfile"),
                   },
                   {
                     value: PaymentReceiverType.COMPANY,
-                    label: formatMessage("companyProfile"),
+                    label: T("companyProfile"),
                   },
                 ]}
               />
@@ -79,56 +79,43 @@ const ProfileForm: React.FC<PropsType> = ({ user }) => {
           </div>
           <div className="flex flex-row gap-5">
             <Input
-              label={formatMessage("firstname")}
+              label={T("firstname")}
               name="firstName"
-              placeholder={formatMessage("firstname")}
-              options={{ required: formatMessage("required") }}
+              placeholder={T("firstname")}
+              options={{ required: T("required") }}
             />
             <Input
-              label={formatMessage("lastname")}
+              label={T("lastname")}
               name="lastName"
-              placeholder={formatMessage("lastname")}
-              options={{ required: formatMessage("required") }}
+              placeholder={T("lastname")}
+              options={{ required: T("required") }}
             />
           </div>
+          <Input label={T("email")} name="email" placeholder={T("email")} options={{ required: T("required") }} />
           <Input
-            label={formatMessage("email")}
-            name="email"
-            placeholder={formatMessage("email")}
-            options={{ required: formatMessage("required") }}
-          />
-          <Input
-            label={formatMessage("location")}
+            label={T("location")}
             name="address"
-            placeholder={formatMessage("location")}
-            options={{ required: formatMessage("required") }}
+            placeholder={T("location")}
+            options={{ required: T("required") }}
           />
           <div className="flex flex-row gap-5">
-            <Input
-              name="zipcode"
-              placeholder={formatMessage("zipCode")}
-              options={{ required: formatMessage("required") }}
-            />
-            <Input name="city" placeholder={formatMessage("city")} options={{ required: formatMessage("required") }} />
-            <Input
-              name="country"
-              placeholder={formatMessage("country")}
-              options={{ required: formatMessage("required") }}
-            />
+            <Input name="zipcode" placeholder={T("zipCode")} options={{ required: T("required") }} />
+            <Input name="city" placeholder={T("city")} options={{ required: T("required") }} />
+            <Input name="country" placeholder={T("country")} options={{ required: T("required") }} />
           </div>
           <div className="flex flex-col">
-            {formatMessage("payoutSettings")}
+            {T("payoutSettings")}
             <div className="flex flex-row gap-3">
               <Radio
                 name="payoutSettingsType"
                 options={[
                   {
                     value: PayoutSettingsType.ETH,
-                    label: formatMessage("ethereum"),
+                    label: T("ethereum"),
                   },
                   {
                     value: PayoutSettingsType.IBAN,
-                    label: formatMessage("bankWire"),
+                    label: T("bankWire"),
                   },
                 ]}
               />
@@ -137,24 +124,20 @@ const ProfileForm: React.FC<PropsType> = ({ user }) => {
           {payoutSettingsType === PayoutSettingsType.ETH && (
             <Input
               name="ethWalletAddress"
-              placeholder={formatMessage("ethereumWalletAddress")}
-              options={{ required: formatMessage("required") }}
+              placeholder={T("ethereumWalletAddress")}
+              options={{ required: T("required") }}
             />
           )}
           {payoutSettingsType === PayoutSettingsType.IBAN && (
             <div className="flex flex-row gap-5">
-              <Input
-                name="iban"
-                placeholder={formatMessage("iban")}
-                options={{ required: formatMessage("required") }}
-              />
-              <Input name="bic" placeholder={formatMessage("bic")} options={{ required: formatMessage("required") }} />
+              <Input name="iban" placeholder={T("iban")} options={{ required: T("required") }} />
+              <Input name="bic" placeholder={T("bic")} options={{ required: T("required") }} />
             </div>
           )}
           <button type="submit" className="self-start border-white border-2 px-3 py-2 rounded-md">
-            {loading ? formatMessage("loading") : formatMessage("send")}
+            {loading ? T("loading") : T("send")}
           </button>
-          {success && <p>{formatMessage("dataSaved")}</p>}
+          {success && <p>{T("dataSaved")}</p>}
         </>
       </form>
     </FormProvider>

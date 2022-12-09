@@ -40,7 +40,7 @@
   "paymentCompleted": "Completed",
   "paymentProcessing": "Processing",
   "paymentProject": "Project",
-  "paymentRecommendation": "Based on your input we recommend a payment between {lowerPaymentBound} and {upperPaymentBound}",
+  "paymentRecommendation": "Based on your input we recommend a payment between __lowerPaymentBound__ and __upperPaymentBound__",
   "paymentRequestSent": "Payment request sent!",
   "paymentStatus": "Status",
   "payoutSettings": "Payout settings",
