@@ -8,7 +8,6 @@ import {
 } from "@apollo/client";
 import merge from "lodash/merge";
 import { HasuraUserRole } from "src/types";
-import { deepCamelCase } from "src/utils/deepCamelCase";
 
 export const useHasuraQuery = (
   query: TypedDocumentNode,
@@ -17,7 +16,7 @@ export const useHasuraQuery = (
 ): QueryResult => {
   const apolloQuery = useQuery(query, merge(options, { context: { headers: { "X-Hasura-Role": role } } }));
 
-  return { ...apolloQuery, data: deepCamelCase(apolloQuery.data) };
+  return { ...apolloQuery, data: apolloQuery.data };
 };
 
 export const useHasuraMutation = (

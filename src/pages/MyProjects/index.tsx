@@ -38,15 +38,15 @@ function MyProjectContainer({ projectId }: MyProjectContainerProps) {
 
 export const GET_MY_PROJECT_QUERY = gql`
   query MyProject($id: uuid!) {
-    projects_by_pk(id: $id) {
+    projectsByPk(id: $id) {
       name
       budgets {
-        initial_amount
-        remaining_amount
+        initialAmount
+        remainingAmount
       }
-      project_details {
+      projectDetails {
         description
-        telegram_link
+        telegramLink
       }
     }
   }

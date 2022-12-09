@@ -103,7 +103,7 @@ export enum PaymentReceiverType {
 }
 
 export const CLAIMS_KEY = "https://hasura.io/jwt/claims";
-export const PROJECTS_LED_KEY = "x-hasura-projects_leaded";
+export const PROJECTS_LED_KEY = "x-hasura-projectsLeaded";
 
 export interface HasuraJWT {
   [CLAIMS_KEY]?: {
