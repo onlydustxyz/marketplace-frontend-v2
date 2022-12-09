@@ -1,4 +1,4 @@
-import { useT } from "talkr";
+import { useIntl } from "src/hooks/useIntl";
 import { Currency, Payment, PaymentStatus } from "src/types";
 import PaymentLine from "./PaymentLine";
 
@@ -7,7 +7,7 @@ type PropsType = {
 };
 
 const PaymentTable: React.FC<PropsType> = ({ payments }) => {
-  const { T } = useT();
+  const { T } = useIntl();
   return (
     <div className="flex flex-col">
       <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -17,13 +17,13 @@ const PaymentTable: React.FC<PropsType> = ({ payments }) => {
               <thead className="border-b">
                 <tr>
                   <th scope="col" className="px-6 py-4 text-left">
-                    {T("paymentProject")}
+                    {T("payment.table.project")}
                   </th>
                   <th scope="col" className="px-6 py-4 text-left">
-                    {T("paymentAmount")}
+                    {T("payment.table.amount")}
                   </th>
                   <th scope="col" className="px-6 py-4 text-left">
-                    {T("paymentStatus")}
+                    {T("payment.table.status")}
                   </th>
                 </tr>
               </thead>

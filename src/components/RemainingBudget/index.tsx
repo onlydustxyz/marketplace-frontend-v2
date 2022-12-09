@@ -1,4 +1,4 @@
-import { useT } from "talkr";
+import { useIntl } from "src/hooks/useIntl";
 
 interface RemainingBudgetProps {
   remainingAmount: number;
@@ -6,10 +6,10 @@ interface RemainingBudgetProps {
 }
 
 export default function RemainingBudget({ remainingAmount, initialAmount }: RemainingBudgetProps) {
-  const { T } = useT();
+  const { T } = useIntl();
   return (
     <div className="flex flex-col">
-      <div>{T("remainingBudget")}</div>
+      <div>{T("project.remainingBudget")}</div>
       <div className="flex flex-row items-center space-x-3 md:flex-nowrap flex-wrap">
         <div className="text-xl font-black">${remainingAmount}</div>
         <div className="w-full bg-gray-700 rounded-full h-2.5">

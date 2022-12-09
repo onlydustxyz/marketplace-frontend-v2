@@ -5,7 +5,7 @@ import { HasuraUserRole } from "src/types";
 import { useJwtRole } from "src/hooks/useJwtRole";
 import QueryWrapper from "src/components/QueryWrapper";
 import ProfileForm from "./components/ProfileForm";
-import { useT } from "talkr";
+import { useIntl } from "src/hooks/useIntl";
 
 const Profile: React.FC = () => {
   const { user, hasuraToken } = useAuth();
@@ -14,13 +14,13 @@ const Profile: React.FC = () => {
     skip: !isLoggedIn,
     variables: { id: user?.id },
   });
-  const { T } = useT();
+  const { T } = useIntl();
   const { data } = query;
   return (
     <div className="flex flex-col mt-10 text-2xl">
-      <h1>{T("editProfile")}</h1>
+      <h1>{T("profile.edit")}</h1>
       <br />
-      <QueryWrapper errorMessage={T("errorFetchingProfile")} query={query}>
+      <QueryWrapper errorMessage={T("profile.fetchingError")} query={query}>
         {data && <ProfileForm user={data.user} />}
       </QueryWrapper>
     </div>

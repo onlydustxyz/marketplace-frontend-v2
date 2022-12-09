@@ -4,12 +4,12 @@ import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { Fragment } from "react";
 import { Link } from "react-router-dom";
 import { RoutePaths } from "src/App";
-import { useT } from "talkr";
+import { useIntl } from "src/hooks/useIntl";
 
 const ProfileButton = () => {
   const { logout, user } = useAuth();
   const { avatarUrl, displayName } = user ?? { avatarUrl: null, displayName: "My Account" };
-  const { T } = useT();
+  const { T } = useIntl();
   return (
     <div className="relative w-56 text-right">
       <Menu as="div" className="relative inline-block text-left">
@@ -54,7 +54,7 @@ const ProfileButton = () => {
                       active ? "bg-violet-500 text-white" : "text-gray-900"
                     } group flex w-full items-center rounded-md px-2 py-2 text-sm cursor-pointer`}
                   >
-                    {T("editProfile")}
+                    {T("profile.edit")}
                   </Link>
                 )}
               </Menu.Item>
@@ -68,7 +68,7 @@ const ProfileButton = () => {
                       active ? "bg-violet-500 text-white" : "text-gray-900"
                     } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                   >
-                    {T("logout")}
+                    {T("navbar.logout")}
                   </button>
                 )}
               </Menu.Item>

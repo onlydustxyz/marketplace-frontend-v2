@@ -8,7 +8,7 @@ import { Inputs } from "./types";
 import { useAuth } from "src/hooks/useAuth";
 import Input from "src/components/FormInput";
 import { useMemo } from "react";
-import { useT } from "talkr";
+import { useIntl } from "src/hooks/useIntl";
 
 const BASE_DAILY_RATE_DOLLARS = 200;
 
@@ -56,10 +56,19 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ budget }) => {
     () => computePaymentBounds(...formValues),
     [JSON.stringify(formValues)]
   );
-  const { T } = useT();
+  const { T } = useIntl();
 
-  const SENIORITY = [T("juniorSeniority"), T("advancedSeniority"), T("seniorSeniority"), T("expertSeniority")];
-  const SATISFACTION = [T("fairSatisfaction"), T("goodSatisfaction"), T("excellentSatisfaction")];
+  const SENIORITY = [
+    T("seniority.levels.junior"),
+    T("seniority.levels.advanced"),
+    T("seniority.levels.senior"),
+    T("seniority.levels.expert"),
+  ];
+  const SATISFACTION = [
+    T("payment.form.statisfaction.levels.fair"),
+    T("payment.form.statisfaction.levels.good"),
+    T("payment.form.statisfaction.levels.excellent"),
+  ];
 
   return (
     <>
@@ -72,15 +81,15 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ budget }) => {
                 <div className="flex flex-row justify-between flex-grow gap-10">
                   <div className="flex flex-col gap-5 w-2/3">
                     <Input
-                      label={T("linkToIssue")}
+                      label={T("payment.form.linkToIssue")}
                       name="linkToIssue"
                       placeholder=""
-                      options={{ required: T("required") }}
+                      options={{ required: T("form.required") }}
                     />
                     <Select
-                      label={T("contributor")}
+                      label={T("payment.form.contributor")}
                       name="contributor"
-                      options={{ required: T("required") }}
+                      options={{ required: T("form.required") }}
                       control={control}
                     >
                       {getUserGithubIdsQuery.data.users.map((user: any) => (
@@ -93,7 +102,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ budget }) => {
                   </div>
                   <div className="flex flex-col gap-5 w-1/3">
                     <div>
-                      {T("seniority")}
+                      {T("seniority.title")}
                       <Slider
                         control={control}
                         name="seniority"
@@ -104,7 +113,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ budget }) => {
                       />
                     </div>
                     <div>
-                      {T("workingDays")}
+                      {T("payment.form.workingDays")}
                       <Slider
                         control={control}
                         name="workingDays"
@@ -115,7 +124,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ budget }) => {
                       />
                     </div>
                     <div>
-                      {T("overallSatisfaction")}
+                      {T("payment.form.statisfaction.title")}
                       <Slider
                         control={control}
                         name="satisfaction"
@@ -126,10 +135,12 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ budget }) => {
                       />
                     </div>
                     <div className="flex flex-col border-solid border-2 rounded-md border-white p-5 gap-5">
-                      <div className="flex">{T("paymentRecommendation", { lowerPaymentBound, upperPaymentBound })}</div>
+                      <div className="flex">
+                        {T("payment.form.recommendation", { lowerPaymentBound, upperPaymentBound })}
+                      </div>
                       <div className="flex">
                         <Input
-                          label={T("amountToWire")}
+                          label={T("payment.form.amountToWire")}
                           name="amountToWire"
                           type="number"
                           placeholder={"0"}
@@ -144,9 +155,9 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ budget }) => {
                 </div>
                 <div className="flex flex-row gap-5">
                   <button type="submit" className="self-start border-white border-2 px-3 py-2 rounded-md">
-                    {requestPaymentMutation.loading ? T("loading") : T("send")}
+                    {requestPaymentMutation.loading ? T("state.loading") : T("profile.form.send")}
                   </button>
-                  {success && <p>{T("paymentRequestSent")}</p>}
+                  {success && <p>{T("payment.form.sent")}</p>}
                 </div>
               </form>
             </FormProvider>

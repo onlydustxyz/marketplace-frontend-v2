@@ -4,8 +4,7 @@ import { MockedProvider } from "@apollo/client/testing";
 import { AuthProvider } from "src/hooks/useAuth";
 import { render, RenderOptions } from "@testing-library/react";
 import { RoutePaths } from "src/App";
-import { Talkr } from "talkr";
-import en from "src/translations/en.json";
+import { IntlProvider } from "src/hooks/useIntl";
 
 interface MemoryRouterProviderFactoryProps {
   route?: string;
@@ -48,9 +47,4 @@ export function checkLocalStorageValue<T>({
 }
 
 export const renderWithIntl = (ui: React.ReactElement, options?: RenderOptions) =>
-  render(
-    <Talkr languages={{ en }} defaultLanguage="en">
-      {ui}
-    </Talkr>,
-    options
-  );
+  render(<IntlProvider>{ui}</IntlProvider>, options);

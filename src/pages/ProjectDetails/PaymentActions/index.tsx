@@ -5,7 +5,7 @@ import PaymentTable, { mapApiPaymentsToProps } from "src/components/PaymentTable
 import QueryWrapper from "src/components/QueryWrapper";
 import RemainingBudget from "src/components/RemainingBudget";
 import { useHasuraQuery } from "src/hooks/useHasuraQuery";
-import { useT } from "talkr";
+import { useIntl } from "src/hooks/useIntl";
 import { HasuraUserRole } from "src/types";
 import PaymentForm from "./PaymentForm";
 
@@ -22,7 +22,7 @@ interface PaymentsProps {
   };
 }
 export default function PaymentActions({ budget }: PaymentsProps) {
-  const { T } = useT();
+  const { T } = useIntl();
 
   const [action, setAction] = useState<Action>(Action.List);
 
@@ -42,7 +42,7 @@ export default function PaymentActions({ budget }: PaymentsProps) {
               className="flex border-solid border-white border-2 w-fit p-2 hover:cursor-pointer"
               onClick={() => setAction(action === Action.List ? Action.Submit : Action.List)}
             >
-              {T(action === Action.List ? "submitPayment" : "listPayments")}
+              {T(action === Action.List ? "payment.form.submit" : "payment.list")}
             </div>
           </div>
         </Card>
@@ -62,11 +62,11 @@ function PaymentTableQueryContainer({ budgetId }: PaymentTableQueryContainerProp
   const { data } = query;
   const payments = data?.paymentRequests?.map(mapApiPaymentsToProps) ?? null;
   const hasPayments = payments && payments.length > 0;
-  const { T } = useT();
+  const { T } = useIntl();
 
   return (
     <QueryWrapper query={query}>
-      {hasPayments ? <PaymentTable payments={payments} /> : <p>{T("noContributionsYet")}</p>}
+      {hasPayments ? <PaymentTable payments={payments} /> : <p>{T("contributions.empty")}</p>}
     </QueryWrapper>
   );
 }

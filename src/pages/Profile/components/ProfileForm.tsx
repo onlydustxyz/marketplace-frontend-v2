@@ -4,7 +4,7 @@ import { useForm, SubmitHandler, FormProvider } from "react-hook-form";
 import Input from "src/components/FormInput";
 import { useHasuraMutation } from "src/hooks/useHasuraQuery";
 import Radio from "./Radio";
-import { useT } from "talkr";
+import { useIntl } from "src/hooks/useIntl";
 
 type Inputs = {
   paymentReceiverType: PaymentReceiverType;
@@ -53,25 +53,25 @@ const ProfileForm: React.FC<PropsType> = ({ user }) => {
   };
 
   const payoutSettingsType = formMethods.watch("payoutSettingsType");
-  const { T } = useT();
+  const { T } = useIntl();
 
   return (
     <FormProvider {...formMethods}>
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3">
         <>
           <div className="flex flex-col">
-            {T("typeOfProfile")}
+            {T("profile.form.typeOfProfile")}
             <div className="flex flex-row gap-3">
               <Radio
                 name="paymentReceiverType"
                 options={[
                   {
                     value: PaymentReceiverType.INDIVIDUAL,
-                    label: T("individualProfile"),
+                    label: T("profile.form.individualProfile"),
                   },
                   {
                     value: PaymentReceiverType.COMPANY,
-                    label: T("companyProfile"),
+                    label: T("profile.form.companyProfile"),
                   },
                 ]}
               />
@@ -79,43 +79,48 @@ const ProfileForm: React.FC<PropsType> = ({ user }) => {
           </div>
           <div className="flex flex-row gap-5">
             <Input
-              label={T("firstname")}
+              label={T("profile.form.firstname")}
               name="firstName"
-              placeholder={T("firstname")}
-              options={{ required: T("required") }}
+              placeholder={T("profile.form.firstname")}
+              options={{ required: T("form.required") }}
             />
             <Input
-              label={T("lastname")}
+              label={T("profile.form.lastname")}
               name="lastName"
-              placeholder={T("lastname")}
-              options={{ required: T("required") }}
+              placeholder={T("profile.form.lastname")}
+              options={{ required: T("form.required") }}
             />
           </div>
-          <Input label={T("email")} name="email" placeholder={T("email")} options={{ required: T("required") }} />
           <Input
-            label={T("location")}
+            label={T("profile.form.email")}
+            name="email"
+            placeholder={T("profile.form.email")}
+            options={{ required: T("form.required") }}
+          />
+          <Input
+            label={T("profile.form.location")}
             name="address"
-            placeholder={T("location")}
-            options={{ required: T("required") }}
+            placeholder={T("profile.form.location")}
+            options={{ required: T("form.required") }}
           />
           <div className="flex flex-row gap-5">
-            <Input name="zipcode" placeholder={T("zipCode")} options={{ required: T("required") }} />
-            <Input name="city" placeholder={T("city")} options={{ required: T("required") }} />
-            <Input name="country" placeholder={T("country")} options={{ required: T("required") }} />
+            <Input name="zipcode" placeholder={T("profile.form.zipCode")} options={{ required: T("form.required") }} />
+            <Input name="city" placeholder={T("profile.form.city")} options={{ required: T("form.required") }} />
+            <Input name="country" placeholder={T("profile.form.country")} options={{ required: T("form.required") }} />
           </div>
           <div className="flex flex-col">
-            {T("payoutSettings")}
+            {T("profile.form.payoutSettings")}
             <div className="flex flex-row gap-3">
               <Radio
                 name="payoutSettingsType"
                 options={[
                   {
                     value: PayoutSettingsType.ETH,
-                    label: T("ethereum"),
+                    label: T("profile.form.ethereum"),
                   },
                   {
                     value: PayoutSettingsType.IBAN,
-                    label: T("bankWire"),
+                    label: T("profile.form.bankWire"),
                   },
                 ]}
               />
@@ -124,20 +129,20 @@ const ProfileForm: React.FC<PropsType> = ({ user }) => {
           {payoutSettingsType === PayoutSettingsType.ETH && (
             <Input
               name="ethWalletAddress"
-              placeholder={T("ethereumWalletAddress")}
-              options={{ required: T("required") }}
+              placeholder={T("profile.form.ethereumWalletAddress")}
+              options={{ required: T("form.required") }}
             />
           )}
           {payoutSettingsType === PayoutSettingsType.IBAN && (
             <div className="flex flex-row gap-5">
-              <Input name="iban" placeholder={T("iban")} options={{ required: T("required") }} />
-              <Input name="bic" placeholder={T("bic")} options={{ required: T("required") }} />
+              <Input name="iban" placeholder={T("profile.form.iban")} options={{ required: T("form.required") }} />
+              <Input name="bic" placeholder={T("profile.form.bic")} options={{ required: T("form.required") }} />
             </div>
           )}
           <button type="submit" className="self-start border-white border-2 px-3 py-2 rounded-md">
-            {loading ? T("loading") : T("send")}
+            {loading ? T("state.loading") : T("profile.form.send")}
           </button>
-          {success && <p>{T("dataSaved")}</p>}
+          {success && <p>{T("profile.form.saved")}</p>}
         </>
       </form>
     </FormProvider>

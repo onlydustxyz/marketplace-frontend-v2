@@ -2,8 +2,7 @@ import "tailwindcss/tailwind.css";
 import "src/assets/css/index.css";
 import "src/assets/fonts/Alfreda/stylesheet.css";
 import "src/assets/fonts/GTWalsheimPro/stylesheet.css";
-import en from "src/translations/en.json";
-import { Talkr } from "talkr";
+import { IntlProvider } from "src/hooks/useIntl";
 import React from "react";
 
 export const parameters = {
@@ -18,8 +17,8 @@ export const parameters = {
 
 export const decorators = [
   Story => (
-    <Talkr languages={{ en }} defaultLanguage="en">
+    <IntlProvider>
       <Story />
-    </Talkr>
+    </IntlProvider>
   ),
 ];
