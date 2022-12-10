@@ -3,7 +3,7 @@ import PaymentTable, { mapApiPaymentsToProps } from "src/components/PaymentTable
 import QueryWrapper from "src/components/QueryWrapper";
 import { useAuth } from "src/hooks/useAuth";
 import { useHasuraQuery } from "src/hooks/useHasuraQuery";
-import { useFormatMessage } from "src/hooks/useIntl";
+import { useIntl } from "src/hooks/useIntl";
 import { HasuraUserRole } from "src/types";
 
 const MyContributions = () => {
@@ -14,11 +14,11 @@ const MyContributions = () => {
   const { data } = query;
   const payments = data?.paymentRequests?.map(mapApiPaymentsToProps) ?? null;
   const hasPayments = payments && payments.length > 0;
-  const formatMessage = useFormatMessage();
+  const { T } = useIntl();
 
   return (
     <QueryWrapper query={query}>
-      {hasPayments ? <PaymentTable payments={payments} /> : <p>{formatMessage("noContributionsYet")}</p>}
+      {hasPayments ? <PaymentTable payments={payments} /> : <p>{T("contributions.empty")}</p>}
     </QueryWrapper>
   );
 };

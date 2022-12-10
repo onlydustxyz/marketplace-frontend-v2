@@ -1,4 +1,4 @@
-import { useFormatMessage } from "src/hooks/useIntl";
+import { useIntl } from "src/hooks/useIntl";
 import { Payment, PaymentStatus } from "src/types";
 
 type PropsType = {
@@ -6,15 +6,15 @@ type PropsType = {
 };
 
 const renderPaymentStatus = (paymentStatus: PaymentStatus): React.ReactElement => {
-  const formatMessage = useFormatMessage();
+  const { T } = useIntl();
 
   return (
     <>
       {paymentStatus === PaymentStatus.ACCEPTED && (
-        <span className="text-green-500">{formatMessage("paymentCompleted")}</span>
+        <span className="text-green-500">{T("payment.status.completed")}</span>
       )}
       {paymentStatus === PaymentStatus.WAITING_PAYMENT && (
-        <span className="text-blue-600">{formatMessage("paymentProcessing")}</span>
+        <span className="text-blue-600">{T("payment.status.processing")}</span>
       )}
     </>
   );

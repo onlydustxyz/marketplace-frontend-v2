@@ -8,7 +8,7 @@ import { Inputs } from "./types";
 import { useAuth } from "src/hooks/useAuth";
 import Input from "src/components/FormInput";
 import { useMemo } from "react";
-import { useFormatMessage } from "src/hooks/useIntl";
+import { useIntl } from "src/hooks/useIntl";
 
 const BASE_DAILY_RATE_DOLLARS = 200;
 
@@ -56,18 +56,18 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ budget }) => {
     () => computePaymentBounds(...formValues),
     [JSON.stringify(formValues)]
   );
-  const formatMessage = useFormatMessage();
+  const { T } = useIntl();
 
   const SENIORITY = [
-    formatMessage("juniorSeniority"),
-    formatMessage("advancedSeniority"),
-    formatMessage("seniorSeniority"),
-    formatMessage("expertSeniority"),
+    T("seniority.levels.junior"),
+    T("seniority.levels.advanced"),
+    T("seniority.levels.senior"),
+    T("seniority.levels.expert"),
   ];
   const SATISFACTION = [
-    formatMessage("fairSatisfaction"),
-    formatMessage("goodSatisfaction"),
-    formatMessage("excellentSatisfaction"),
+    T("payment.form.statisfaction.levels.fair"),
+    T("payment.form.statisfaction.levels.good"),
+    T("payment.form.statisfaction.levels.excellent"),
   ];
 
   return (
@@ -81,15 +81,15 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ budget }) => {
                 <div className="flex flex-row justify-between flex-grow gap-10">
                   <div className="flex flex-col gap-5 w-2/3">
                     <Input
-                      label={formatMessage("linkToIssue")}
+                      label={T("payment.form.linkToIssue")}
                       name="linkToIssue"
                       placeholder=""
-                      options={{ required: formatMessage("required") }}
+                      options={{ required: T("form.required") }}
                     />
                     <Select
-                      label={formatMessage("contributor")}
+                      label={T("payment.form.contributor")}
                       name="contributor"
-                      options={{ required: formatMessage("required") }}
+                      options={{ required: T("form.required") }}
                       control={control}
                     >
                       {getUserGithubIdsQuery.data.users.map((user: any) => (
@@ -102,7 +102,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ budget }) => {
                   </div>
                   <div className="flex flex-col gap-5 w-1/3">
                     <div>
-                      {formatMessage("seniority")}
+                      {T("seniority.title")}
                       <Slider
                         control={control}
                         name="seniority"
@@ -113,7 +113,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ budget }) => {
                       />
                     </div>
                     <div>
-                      {formatMessage("workingDays")}
+                      {T("payment.form.workingDays")}
                       <Slider
                         control={control}
                         name="workingDays"
@@ -124,7 +124,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ budget }) => {
                       />
                     </div>
                     <div>
-                      {formatMessage("overallSatisfaction")}
+                      {T("payment.form.statisfaction.title")}
                       <Slider
                         control={control}
                         name="satisfaction"
@@ -136,11 +136,11 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ budget }) => {
                     </div>
                     <div className="flex flex-col border-solid border-2 rounded-md border-white p-5 gap-5">
                       <div className="flex">
-                        {formatMessage("paymentRecommendation", { lowerPaymentBound, upperPaymentBound })}
+                        {T("payment.form.recommendation", { lowerPaymentBound, upperPaymentBound })}
                       </div>
                       <div className="flex">
                         <Input
-                          label={formatMessage("amountToWire")}
+                          label={T("payment.form.amountToWire")}
                           name="amountToWire"
                           type="number"
                           placeholder={"0"}
@@ -155,9 +155,9 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ budget }) => {
                 </div>
                 <div className="flex flex-row gap-5">
                   <button type="submit" className="self-start border-white border-2 px-3 py-2 rounded-md">
-                    {requestPaymentMutation.loading ? formatMessage("loading") : formatMessage("send")}
+                    {requestPaymentMutation.loading ? T("state.loading") : T("profile.form.send")}
                   </button>
-                  {success && <p>{formatMessage("paymentRequestSent")}</p>}
+                  {success && <p>{T("payment.form.sent")}</p>}
                 </div>
               </form>
             </FormProvider>

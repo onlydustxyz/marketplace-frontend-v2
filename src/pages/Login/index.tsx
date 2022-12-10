@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useAuth } from "src/hooks/useAuth";
-import { useFormatMessage } from "src/hooks/useIntl";
+import { useIntl } from "src/hooks/useIntl";
 
 export const AUTH_CODE_QUERY_KEY = "refreshToken";
 
@@ -9,7 +9,7 @@ export default function Login() {
   const { login } = useAuth();
   const [searchParams] = useSearchParams();
   const refreshToken = searchParams.get(AUTH_CODE_QUERY_KEY);
-  const formatMessage = useFormatMessage();
+  const { T } = useIntl();
   useEffect(() => {
     if (refreshToken) {
       login(refreshToken);
@@ -17,11 +17,9 @@ export default function Login() {
   }, [refreshToken]);
   return (
     <>
-      {refreshToken && <div className="flex justify-center mt-10 text-2xl">{formatMessage("loggingIn")}</div>}
+      {refreshToken && <div className="flex justify-center mt-10 text-2xl">{T("github.loggingIn")}</div>}
       {!refreshToken && (
-        <div className="flex justify-center mt-10 text-2xl text-red-600">
-          {formatMessage("githubAuthenticationTokenMissing")}
-        </div>
+        <div className="flex justify-center mt-10 text-2xl text-red-600">{T("github.tokenMissing")}</div>
       )}
     </>
   );
