@@ -51,7 +51,6 @@
   },
   "profile": {
     "edit": "Edit profile",
-    "fetchingError": "Error fetching profile",
     "form": {
       "bankWire": "Bank wire",
       "bic": "BIC",

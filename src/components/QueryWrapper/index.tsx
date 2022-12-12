@@ -1,24 +1,21 @@
 import { QueryResult } from "@apollo/client";
 import Loader from "src/components/Loader";
+import ErrorFallback from "../ErrorFallback";
 
-type PropsType = {
+interface PropsType extends React.PropsWithChildren {
   query: QueryResult;
-  errorMessage?: string;
-};
+}
 
-const DEFAULT_ERROR = "Something happened...";
-
-const QueryWrapper: React.FC<React.PropsWithChildren<PropsType>> = ({
-  query,
-  errorMessage = DEFAULT_ERROR,
-  children,
-}) => {
+const QueryWrapper: React.FC<React.PropsWithChildren<PropsType>> = ({ query, children }) => {
   const { loading, data, error } = query;
+  if (error) {
+    console.error(error);
+  }
   return (
     <>
       {loading && <Loader />}
       {data && children}
-      {error && <div className="flex justify-center mt-10 text-2xl">{errorMessage}</div>}
+      {error && <ErrorFallback />}
     </>
   );
 };
