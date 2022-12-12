@@ -8,7 +8,7 @@ import { HasuraUserRole } from "src/types";
 
 const MyContributions = () => {
   const { user } = useAuth();
-  const query = useHasuraQuery(GET_MY_CONTRIBUTIONS_QUERY, HasuraUserRole.User, {
+  const query = useHasuraQuery(GET_MY_CONTRIBUTIONS_QUERY, HasuraUserRole.RegisteredUser, {
     variables: { userId: user?.id },
   });
   const { data } = query;

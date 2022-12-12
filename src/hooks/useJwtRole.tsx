@@ -13,7 +13,7 @@ function getRoleListFromJwt(jwtString?: string) {
   const newRoleList: UserRole[] = [HasuraUserRole.Public];
   if (!jwtString) return newRoleList;
 
-  newRoleList.push(HasuraUserRole.User);
+  newRoleList.push(HasuraUserRole.RegisteredUser);
 
   try {
     const decodedToken = jwtDecode<HasuraJWT>(jwtString);

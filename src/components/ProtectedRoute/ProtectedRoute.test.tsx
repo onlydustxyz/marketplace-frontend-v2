@@ -35,7 +35,7 @@ describe('"ProtectedRoute" component', () => {
     window.localStorage.setItem(LOCAL_STORAGE_HASURA_TOKEN_KEY, JSON.stringify(HASURA_TOKEN_BASIC_TEST_VALUE));
     renderWithIntl(
       <AuthProvider>
-        <ProtectedRoute requiredRole={HasuraUserRole.User}>{CHILD_ELEMENT_TEXT}</ProtectedRoute>
+        <ProtectedRoute requiredRole={HasuraUserRole.RegisteredUser}>{CHILD_ELEMENT_TEXT}</ProtectedRoute>
       </AuthProvider>,
       { wrapper: BrowserRouter }
     );

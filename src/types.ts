@@ -1,6 +1,6 @@
 export enum HasuraUserRole {
   Public = "public",
-  User = "user",
+  RegisteredUser = "registered_user",
 }
 
 export enum CustomUserRole {

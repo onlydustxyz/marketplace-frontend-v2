@@ -10,7 +10,7 @@ import { useIntl } from "src/hooks/useIntl";
 const Profile: React.FC = () => {
   const { user, hasuraToken } = useAuth();
   const { isLoggedIn } = useJwtRole(hasuraToken?.accessToken);
-  const query = useHasuraQuery(GET_PROFILE_QUERY, HasuraUserRole.User, {
+  const query = useHasuraQuery(GET_PROFILE_QUERY, HasuraUserRole.RegisteredUser, {
     skip: !isLoggedIn,
     variables: { id: user?.id },
   });
