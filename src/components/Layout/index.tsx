@@ -27,7 +27,7 @@ export default function Layout() {
               <Link to={RoutePaths.MyProjects}>{T("navbar.myProjects")}</Link>
             </div>
           )}
-          {roleList.includes(HasuraUserRole.User) && (
+          {roleList.includes(HasuraUserRole.RegisteredUser) && (
             <div className="flex flex-1 justify-center align-center text-3xl drop-shadow-lg saturate-200 outline-4 font-alfreda font-extrabold">
               <Link to={RoutePaths.MyContributions}>{T("navbar.myContributions")}</Link>
             </div>

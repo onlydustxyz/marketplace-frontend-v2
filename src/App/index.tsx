@@ -38,7 +38,7 @@ function App() {
         {
           path: RoutePaths.Profile,
           element: (
-            <ProtectedRoute requiredRole={HasuraUserRole.User}>
+            <ProtectedRoute requiredRole={HasuraUserRole.RegisteredUser}>
               <Profile />
             </ProtectedRoute>
           ),
@@ -46,7 +46,7 @@ function App() {
         {
           path: RoutePaths.MyContributions,
           element: (
-            <ProtectedRoute requiredRole={HasuraUserRole.User}>
+            <ProtectedRoute requiredRole={HasuraUserRole.RegisteredUser}>
               <MyContributions />
             </ProtectedRoute>
           ),

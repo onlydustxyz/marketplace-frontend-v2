@@ -9,7 +9,10 @@ interface ProtectedRouteProps extends PropsWithChildren {
   requiredRole: UserRole;
 }
 
-export default function ProtectedRoute({ requiredRole = HasuraUserRole.User, children }: ProtectedRouteProps) {
+export default function ProtectedRoute({
+  requiredRole = HasuraUserRole.RegisteredUser,
+  children,
+}: ProtectedRouteProps) {
   const { hasuraToken } = useAuth();
   const { roleList } = useJwtRole(hasuraToken?.accessToken);
   if (roleList.includes(requiredRole)) {

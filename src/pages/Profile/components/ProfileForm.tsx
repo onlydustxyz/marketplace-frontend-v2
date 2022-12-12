@@ -43,7 +43,7 @@ const ProfileForm: React.FC<PropsType> = ({ user }) => {
     },
   });
   const { handleSubmit } = formMethods;
-  const [updateUser, { data, loading }] = useHasuraMutation(UPDATE_USER_MUTATION, HasuraUserRole.User, {
+  const [updateUser, { data, loading }] = useHasuraMutation(UPDATE_USER_MUTATION, HasuraUserRole.RegisteredUser, {
     variables: { userId: user.id },
   });
   const success = !!data;

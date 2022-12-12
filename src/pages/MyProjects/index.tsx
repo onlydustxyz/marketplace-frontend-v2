@@ -27,7 +27,7 @@ interface MyProjectContainerProps {
 }
 
 function MyProjectContainer({ projectId }: MyProjectContainerProps) {
-  const { data } = useHasuraQuery(GET_MY_PROJECT_QUERY, HasuraUserRole.User, {
+  const { data } = useHasuraQuery(GET_MY_PROJECT_QUERY, HasuraUserRole.RegisteredUser, {
     variables: { id: projectId },
   });
   const project = data ? data.projectsByPk : null;

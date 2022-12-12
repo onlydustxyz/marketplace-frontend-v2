@@ -39,11 +39,15 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ budget }) => {
   });
   const { handleSubmit, control, watch } = formMethods;
 
-  const [insertPayment, requestPaymentMutation] = useHasuraMutation(REQUEST_PAYMENT_MUTATION, HasuraUserRole.User, {
-    variables: { budgetId: budget.id },
-  });
+  const [insertPayment, requestPaymentMutation] = useHasuraMutation(
+    REQUEST_PAYMENT_MUTATION,
+    HasuraUserRole.RegisteredUser,
+    {
+      variables: { budgetId: budget.id },
+    }
+  );
   const success = !!requestPaymentMutation.data;
-  const getUserGithubIdsQuery = useHasuraQuery(GET_USERS_QUERY, HasuraUserRole.User);
+  const getUserGithubIdsQuery = useHasuraQuery(GET_USERS_QUERY, HasuraUserRole.RegisteredUser);
 
   const onSubmit: SubmitHandler<Inputs> = async formData => {
     await insertPayment(mapFormDataToSchema(formData));

@@ -24,7 +24,7 @@ export default function ProjectDetails() {
   const { ledProjectIds, isLoggedIn } = useJwtRole(hasuraToken?.accessToken);
   const { data } = useHasuraQuery(
     isLoggedIn ? GET_PROJECT_USER_QUERY : GET_PROJECT_PUBLIC_QUERY,
-    isLoggedIn ? HasuraUserRole.User : HasuraUserRole.Public,
+    isLoggedIn ? HasuraUserRole.RegisteredUser : HasuraUserRole.Public,
     {
       variables: { id: projectId },
     }

@@ -56,7 +56,7 @@ interface PaymentTableQueryContainerProps {
 }
 
 function PaymentTableQueryContainer({ budgetId }: PaymentTableQueryContainerProps) {
-  const query = useHasuraQuery(GET_BUDGET_PAYMENTS_QUERY, HasuraUserRole.User, {
+  const query = useHasuraQuery(GET_BUDGET_PAYMENTS_QUERY, HasuraUserRole.RegisteredUser, {
     variables: { budgetId },
   });
   const { data } = query;
