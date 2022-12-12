@@ -5,7 +5,6 @@ import { useHasuraMutation, useHasuraQuery } from "src/hooks/useHasuraQuery";
 import Slider from "./Slider";
 import Select from "./Select";
 import { Inputs } from "./types";
-import { useAuth } from "src/hooks/useAuth";
 import Input from "src/components/FormInput";
 import { useMemo } from "react";
 import { useIntl } from "src/hooks/useIntl";
@@ -40,12 +39,11 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ budget }) => {
   });
   const { handleSubmit, control, watch } = formMethods;
 
-  const { user } = useAuth();
   const [insertPayment, requestPaymentMutation] = useHasuraMutation(REQUEST_PAYMENT_MUTATION, HasuraUserRole.User, {
-    variables: { budgetId: budget.id, requestorId: user?.id },
+    variables: { budgetId: budget.id },
   });
-  const getUserGithubIdsQuery = useHasuraQuery(GET_USERS_QUERY, HasuraUserRole.User);
   const success = !!requestPaymentMutation.data;
+  const getUserGithubIdsQuery = useHasuraQuery(GET_USERS_QUERY, HasuraUserRole.User);
 
   const onSubmit: SubmitHandler<Inputs> = async formData => {
     await insertPayment(mapFormDataToSchema(formData));
@@ -178,14 +176,8 @@ export const GET_USERS_QUERY = gql`
 `;
 
 export const REQUEST_PAYMENT_MUTATION = gql`
-  mutation ($amount: Int!, $contributorId: Uuid!, $budgetId: Uuid!, $requestorId: Uuid!) {
-    requestPayment(
-      amountInUsd: $amount
-      budgetId: $budgetId
-      reason: "{}"
-      recipientId: $contributorId
-      requestorId: $requestorId
-    )
+  mutation ($amount: Int!, $contributorId: Uuid!, $budgetId: Uuid!) {
+    requestPayment(amountInUsd: $amount, budgetId: $budgetId, reason: "{}", recipientId: $contributorId)
   }
 `;
 
