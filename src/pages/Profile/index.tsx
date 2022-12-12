@@ -15,14 +15,12 @@ const Profile: React.FC = () => {
     variables: { id: user?.id },
   });
   const { T } = useIntl();
-  const { data } = query;
+
   return (
     <div className="flex flex-col mt-10 text-2xl">
       <h1>{T("profile.edit")}</h1>
       <br />
-      <QueryWrapper errorMessage={T("profile.fetchingError")} query={query}>
-        {data && <ProfileForm user={data.user} />}
-      </QueryWrapper>
+      <QueryWrapper query={query}>{query.data && <ProfileForm user={query.data.user} />}</QueryWrapper>
     </div>
   );
 };
