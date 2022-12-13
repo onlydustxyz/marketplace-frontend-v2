@@ -5,6 +5,7 @@ import { useAuth } from "src/hooks/useAuth";
 import { useHasuraQuery } from "src/hooks/useHasuraQuery";
 import { useJwtRole } from "src/hooks/useJwtRole";
 import { HasuraUserRole } from "src/types";
+import Overview from "./Overview";
 import Payments from "./PaymentActions";
 import Project from "./Project";
 
@@ -35,6 +36,9 @@ export default function ProjectDetails() {
       ? [ProjectDetailsTab.Overview, ProjectDetailsTab.Payments]
       : [ProjectDetailsTab.Overview];
   const project = data ? data.projectsByPk : null;
+  const githubRepo = project ? project.githubRepo : null;
+
+  console.log(project);
 
   return (
     <div className="px-10 flex flex-col align-center items-center">
@@ -53,6 +57,13 @@ export default function ProjectDetails() {
               </div>
             ))}
           </Project>
+          {selectedTab === ProjectDetailsTab.Overview && (
+            <Overview
+              decodedReadme={decodeURIComponent(escape(atob(githubRepo.readme.content)))}
+              contributors={githubRepo.contributors}
+              repo={{ name: githubRepo.name, owner: githubRepo.owner }}
+            />
+          )}
           {selectedTab === ProjectDetailsTab.Payments && <Payments budget={project?.budgets?.[0]} />}
         </div>
       )}
@@ -60,7 +71,23 @@ export default function ProjectDetails() {
   );
 }
 
+const GITHUB_REPO_FIELDS_FRAGMENT = gql`
+  fragment ProjectDetailsGithubRepoFields on Repository {
+    name
+    owner
+    readme {
+      content
+      encoding
+    }
+    contributors {
+      avatarUrl
+      login
+    }
+  }
+`;
+
 export const GET_PROJECT_PUBLIC_QUERY = gql`
+  ${GITHUB_REPO_FIELDS_FRAGMENT}
   query Project($id: uuid!) {
     projectsByPk(id: $id) {
       name
@@ -68,11 +95,15 @@ export const GET_PROJECT_PUBLIC_QUERY = gql`
         description
         telegramLink
       }
+      githubRepo {
+        ...ProjectDetailsGithubRepoFields
+      }
     }
   }
 `;
 
 export const GET_PROJECT_USER_QUERY = gql`
+  ${GITHUB_REPO_FIELDS_FRAGMENT}
   query Project($id: uuid!) {
     projectsByPk(id: $id) {
       name
@@ -84,6 +115,9 @@ export const GET_PROJECT_USER_QUERY = gql`
       projectDetails {
         description
         telegramLink
+      }
+      githubRepo {
+        ...ProjectDetailsGithubRepoFields
       }
     }
   }
